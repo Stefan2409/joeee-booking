@@ -1,0 +1,43 @@
+{
+  "name": "stefanjoebstl/joeee_booking",
+  "description": "A booking/reservation plugin for hostels, hotels and so on.",
+  "type": "project",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+	{
+	  "name": "Stefan Jöbstl",
+	  "email": "stefan.joebstl@gmx.at",
+	  "homepage": "https://joebstl.solutions",
+	  "role": "Developer"
+	}
+  ],
+  "require": {
+	"php": ">=7.1.0",
+	"tgmpa/tgm-plugin-activation": "~2.6"
+  },
+  "minimum-stability": "stable",
+  "archive": {
+	"exclude": [
+	  "!vendor/*",
+	  "node_modules/*",
+	  "*.zip",
+	  ".gitignore",
+	  ".github",
+	  ".travis.yml",
+	  "composer.phar",
+	  "composer.json",
+	  "composer.lock",
+	  "phpunit.xml",
+	  "README.md"
+	]
+  },
+  "autoload": {
+	"psr-4": {
+	  "Joeee_Booking\\": "src/"
+	}
+  },
+  "config": {
+	"archive-format": "zip",
+	"optimize-autoloader": true
+  }
+}

@@ -1,0 +1,147 @@
+# Copyright (C) 2020 Stefan Jöbstl
+# This file is distributed under the same license as the Jö's Booking Plugin plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Jö's Booking Plugin 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/joeee-booking\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2020-01-07T13:02:25+01:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.4.0\n"
+"X-Domain: joeee-booking\n"
+
+#. Plugin Name of the plugin
+msgid "Jö's Booking Plugin"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+msgid "https://joebstl.solutions"
+msgstr ""
+
+#. Description of the plugin
+msgid "A booking/reservation plugin for hostels, hotels and so on."
+msgstr ""
+
+#. Author of the plugin
+msgid "Stefan Jöbstl"
+msgstr ""
+
+#: src/admin/class-settings.php:66
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: src/admin/class-settings.php:76
+msgid "This plugin uses the WordPress Customizer to set its options."
+msgstr ""
+
+#: src/admin/class-settings.php:77
+msgid "Click the button below to be taken directly to this plugin's section within the WordPress Customizer."
+msgstr ""
+
+#: src/admin/class-settings.php:79
+msgid "TODO: Add more text here"
+msgstr ""
+
+#: src/admin/class-settings.php:84
+msgid "Edit Plugin Settings in WP Customizer"
+msgstr ""
+
+#. translators: 1: plugin name(s).
+#: src/class-bootstrap.php:111
+msgid "The following plugin needs to be updated to its latest version to ensure maximum compatibility with "
+msgid_plural "The following plugins need to be updated to their latest version to ensure maximum compatibility with "
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/class-bootstrap.php:117
+msgid "Plugin not activated. A higher version of %s is needed for "
+msgstr ""
+
+#: src/class-bootstrap.php:133
+msgid "%1$s requires at least PHP version %2$s in order to work. You have version %3$s. Please see %4$s for more information."
+msgstr ""
+
+#: src/class-bootstrap.php:201
+msgid " and %1$s child theme "
+msgstr ""
+
+#: src/class-bootstrap.php:207
+msgid "The %1$s plugin requires the %2$s parent theme%3$sin order to work.%4$s"
+msgstr ""
+
+#: src/common/class-settings.php:61
+msgid "Settings"
+msgstr ""
+
+#: src/common/class-settings.php:187
+msgid "Facebook"
+msgstr ""
+
+#: src/common/class-settings.php:192
+msgid "Twitter"
+msgstr ""
+
+#: src/common/class-settings.php:197
+msgid "Pinterest"
+msgstr ""
+
+#: src/common/class-settings.php:202
+msgid "LinkedIn"
+msgstr ""
+
+#: src/common/utilities/class-debug.php:55
+msgid "%1$s - Message from %2$s():%3$s%4$s%5$s"
+msgstr ""
+
+#: src/common/utilities/class-debug.php:77
+msgctxt "Successfully emailed from output_to_log()"
+msgid "Email sent."
+msgstr ""
+
+#: src/common/utilities/class-debug.php:79
+msgctxt "Unsuccessfully emailed from output_to_log()"
+msgid "Email attempted but failed."
+msgstr ""
+
+#: src/customizer/class-customizer.php:70
+msgid "Plugin options and settings"
+msgstr ""
+
+#: src/customizer/class-customizer.php:78
+msgid "Example Section"
+msgstr ""
+
+#: src/customizer/class-customizer.php:79
+msgid "Example Section description."
+msgstr ""
+
+#: src/customizer/class-customizer.php:144
+msgid "Social Network(s)"
+msgstr ""
+
+#: src/customizer/class-customizer.php:145
+msgid "Checked ones will output; unchecked ones will not. Drag and drop to set your preferred display order."
+msgstr ""
+
+#: src/customizer/class-customizer.php:194
+msgid "Post Type(s)"
+msgstr ""
+
+#: src/customizer/class-customizer.php:195
+msgid "Which Post Types should be enabled?"
+msgstr ""
+
+#: src/shortcodes/class-shortcode.php:124
+msgctxt "Shortcode error cause default text"
+msgid "Unspecified"
+msgstr ""
+
+#: src/shortcodes/class-shortcode.php:128
+msgctxt "Shortcode error message"
+msgid "Your attempt to use the `[%1$s]` shortcode resulted in an error because: %2$s. Please reference the documentation or inspect the code and try again. (Message only shown to users with the `%3$s` capability.)"
+msgstr ""
