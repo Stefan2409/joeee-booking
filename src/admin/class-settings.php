@@ -66,27 +66,10 @@ if ( ! class_exists( Settings::class ) ) {
 				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'joeee-booking' ) );
 			}
 
-			$link_to_customizer_panel = $this->settings->get_link_to_customizer_panel();
-
 			?>
 			<div class="wrap">
-				<h1><?php echo Plugin_Data::get_plugin_display_name() . ' ' . $this->settings->get_settings_word();
-					?></h1>
-
-				<p><?php esc_html_e( "This plugin uses the WordPress Customizer to set its options.", 'joeee-booking' ); ?></p>
-				<p><?php esc_html_e( "Click the button below to be taken directly to this plugin's section within the WordPress Customizer.", 'joeee-booking' ); ?></p>
-				<p>
-					<?php esc_html_e( "TODO: Add more text here", 'joeee-booking' ); ?>
-				</p>
-				<p>
-					<a href="<?php echo esc_url( $link_to_customizer_panel ); ?>"
-					   class="button-primary">
-						<?php esc_html_e( 'Edit Plugin Settings in WP Customizer', 'joeee-booking' ) ?>
-					</a>
-				</p>
-				<br><br>
-				<?php
-				?>
+				<h1><?php echo Plugin_Data::get_plugin_display_name() . ' ' . $this->settings->get_settings_word();?>
+				</h1>
 			</div>
 			<?php
 		}

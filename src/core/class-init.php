@@ -4,7 +4,6 @@ namespace Joeee_Booking\Core;
 
 use Joeee_Booking\Admin as Admin;
 use Joeee_Booking\Common as Common;
-use Joeee_Booking\Customizer as Customizer;
 use Joeee_Booking\Frontend as Frontend;
 use Joeee_Booking\Shortcodes as Shortcodes;
 use Joeee_Booking\Plugin_Data as Plugin_Data;
@@ -36,7 +35,6 @@ if ( ! class_exists( Init::class ) ) {
 			$this->load_dependencies();
 			$this->set_locale();
 			$this->define_common_hooks();
-			$this->define_customizer_hooks();
 			$this->define_admin_hooks();
 			$this->define_public_hooks();
 			$this->register_shortcodes();
@@ -75,17 +73,6 @@ if ( ! class_exists( Init::class ) ) {
 			// Example: $this->loader->add_filter( 'gform_currencies', $plugin_common, 'gf_currency_usd_whole_dollars', 50 );
 		}
 
-		/**
-		 * Register all of the hooks related to the WordPress Customizer.
-		 *
-		 * Customizer must not be within Admin or Frontend or else it won't load properly.
-		 * We could have included in Common, since it is the same loading logic, but we separate it out for sanity.
-		 */
-		private function define_customizer_hooks(): void {
-			$plugin_customizer = new Customizer\Customizer();
-
-			$this->loader->add_action( 'customize_register', $plugin_customizer, 'customizer_options' );
-		}
 
 		/**
 		 * Register all of the hooks related to the admin area functionality of the plugin.
