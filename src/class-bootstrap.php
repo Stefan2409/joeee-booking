@@ -36,12 +36,12 @@ if ( ! class_exists( Bootstrap::class ) ) {
 		 */
 		private $required_plugins = [
 			[
-				'name'         => 'Gravity Forms',
+/* 				'name'         => 'Gravity Forms',
 				'slug'         => 'gravityforms',
 				'source'       => 'external',
 				'required'     => false,
 				'external_url' => 'http://rocketgenius.pxf.io/c/1235520/445235/7938',
-				'version'      => '2.4.8.9',
+				'version'      => '2.4.8.9', */
 			],
 		];
 
