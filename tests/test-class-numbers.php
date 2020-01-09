@@ -23,6 +23,8 @@ class Numbers_VerifyTest extends WP_UnitTestCase {
     var $output_negative_number = -23;
     var $output_negative_number_pl1 = -23.5;
     var $output_negative_number_pl2 = -23.51;
+    var $interval = 15;
+    var $output_round_up_to_next = 45;
 
     public function setUp() {
         parent::setUp();
@@ -69,5 +71,12 @@ class Numbers_VerifyTest extends WP_UnitTestCase {
 
         $this->assertEquals($this->output_negative_number_pl2, $rounded);
 		
-	}
+    }
+    
+    public function test_round_up_to_next() {
+        $rounded = $this->class_instance->round_up_to_next($this->input_number, $this->interval);
+
+        $this->assertEquals($this->output_round_up_to_next, $rounded);
+    }
+    
 }
