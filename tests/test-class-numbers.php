@@ -1,19 +1,19 @@
 <?php
 /**
- * Class SampleTest
+ * Class Numbers_Test
  *
  * @package Joeee_Booking
  */
 
 /**
- * Sample test case.
+ * Numbers test case.
  */
 use Joeee_Booking\Common\Utilities\Numbers as Numbers;
 
-class Numbers_VerifyTest extends WP_UnitTestCase {
+class Numbers_Test extends WP_UnitTestCase {
 
 	/**
-	 * A single example test.
+	 * Tests the methods of the Numbers class 
 	 */
     var $input_number = 34.55;
     var $output_number_pl0 = 35;
