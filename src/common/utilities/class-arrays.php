@@ -44,69 +44,7 @@ if ( ! class_exists( Arrays::class ) ) {
 			return $result;
 		}
 
-		/**
-		 * Sanitize an array (or comma-separated string) of values, only allowing values that are in the array
-		 * of allowable values.
-		 *
-		 * Does not support multidimensional arrays but could be altered to.
-		 *
-		 * @param array|string $values Array or JSON string.
-		 * @param array        $allowables
-		 *
-		 * @return string|array If original value was a string (assumed JSON), outputs as JSON string, else array.
-		 */
-		public function sanitize_multiple_values( $values, array $allowables ) {
-			$orig_values = $values;
 
-			// handle booleans, such as single checkbox value
-			if ( is_bool( $values ) ) {
-				return $values;
-			}
-
-			if ( is_string( $orig_values ) ) {
-				$values = json_decode( $values, true );
-			}
-
-			if ( ! is_array( $allowables ) ) {
-				// return as same type that came in
-				if ( is_string( $orig_values ) ) {
-					return '';
-				} else {
-					return [];
-				}
-			}
-
-			if ( ! is_array( $values ) ) {
-				$values_array = (array) explode( ',', $values );
-			} else {
-				$values_array = (array) $values;
-			}
-
-			$result = [];
-
-			foreach ( $values_array as $k => $v ) {
-				if ( array_key_exists( $k, $allowables ) ) {
-
-					// stick with JSON encoded format for booleans instead of 1/0 from PHP
-					if ( is_bool( $v ) ) {
-						if ( $v ) {
-							$v = 'true';
-						} else {
-							$v = 'false';
-						}
-					}
-
-					$result[$k] = sanitize_text_field( $v );
-				}
-			}
-
-			// return as same type that came in
-			if ( is_string( $orig_values ) ) {
-				$result = json_encode( $result, true );
-			}
-
-			return $result;
-		}
 
 	}
 }
