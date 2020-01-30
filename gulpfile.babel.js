@@ -15,6 +15,8 @@ import sourcemaps from 'gulp-sourcemaps';
 import autoprefixer from 'autoprefixer';
 //We use webpack-stream to process our js files
 import webpack from 'webpack-stream';
+//We use gulp-rename to rename our minified js and css files in production
+import rename from 'gulp-rename';
 
 
 //Constant used for production
@@ -27,6 +29,7 @@ export const adminstyles = () => {
         .pipe(gulpif(PRODUCTION, postcss([ autoprefixer ]))) //prefixes for firefox, ie etc.
         .pipe(gulpif(PRODUCTION, cleanCss({compatibility:'*'}))) //Minifys the css if in production mode; compatibility '*' ie10+ compatibility mode
         .pipe(gulpif(!PRODUCTION, sourcemaps.write())) //writes the sourcemaps if not in production
+        .pipe(gulpif(PRODUCTION, rename('style.min.css'))) //renames the file in production mode
         .pipe(dest('src/admin/css')); //Destination folder
 }
 
@@ -37,6 +40,7 @@ export const frontendstyles = () => {
         .pipe(gulpif(PRODUCTION, postcss([ autoprefixer ]))) //prefixes for firefox, ie etc.
         .pipe(gulpif(PRODUCTION, cleanCss({compatibility:'*'}))) //Minifys the css if in production mode; compatibility '*' ie10+ compatibility mode
         .pipe(gulpif(!PRODUCTION, sourcemaps.write())) //writes the sourcemaps if not in production
+        .pipe(gulpif(PRODUCTION, rename('style.min.css'))) //renames the file in production mode
         .pipe(dest('src/frontend/css')); //Destination folder
 }
 
@@ -77,6 +81,7 @@ export const adminscripts = () => {
                 jquery: 'jQuery'
             },
         }))
+        .pipe(gulpif(PRODUCTION, rename('script.min.js'))) //renames the file in production mode
         .pipe(dest('src/admin/js'));
 }
 
@@ -105,6 +110,7 @@ export const frontendscripts = () => {
                 jquery: 'jQuery'
             },
         }))
+        .pipe(gulpif(PRODUCTION, rename('script.min.js'))) //renames the file in production mode
         .pipe(dest('src/frontend/js'));
 }
 
