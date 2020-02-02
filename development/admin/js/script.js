@@ -34,6 +34,8 @@ import './components/test';
 import { Calendar } from '@fullcalendar/core';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 
+const { __, _x, _n, _nx } = wp.i18n;
+
 $(document).ready(function() {
     // jQuery methods go here...
 });
