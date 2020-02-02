@@ -31,9 +31,27 @@ import $ from 'jquery';
 // @TODO This is an example import. Remove for production
 import './components/test';
 
+import { Calendar } from '@fullcalendar/core';
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+
 $(document).ready(function() {
     // jQuery methods go here...
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+	let calendarEl = document.getElementById('joeeeBookingCalendar');
+	let calendar = new Calendar(calendarEl, {
+		plugins: [ resourceTimelinePlugin ],
+		defaultView: 'resourceTimeline',
+		resources: [
+	
+		]
+	});
+	calendar.render();
+});
+
+
+
 
 // @TODO This is an example console.log(). Remove for production
 console.log("admin_script.js");

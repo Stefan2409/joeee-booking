@@ -6,6 +6,10 @@
  // @TODO This import is an test import. Remove for production
 @import './components/testcomponent.scss';
 
+@import '../../../node_modules/@fullcalendar/core/main.css';
+@import '../../../node_modules/@fullcalendar/timeline/main.css';
+@import '../../../node_modules/@fullcalendar/resource-timeline/main.css';
+
 // @TODO This is a red color variable example. Remove for production 
 $color: white;
 
