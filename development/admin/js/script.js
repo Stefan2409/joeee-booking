@@ -30,7 +30,6 @@
 import $ from 'jquery';
 // @TODO This is an example import. Remove for production
 import './components/test';
-
 import { Calendar } from '@fullcalendar/core';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 
@@ -41,20 +40,49 @@ $(document).ready(function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
+	var setLocale = 'en';
 	let calendarEl = document.getElementById('joeeeBookingCalendar');
 	let calendar = new Calendar(calendarEl, {
 		schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
 		plugins: [ resourceTimelinePlugin ],
-		defaultView: 'resourceTimeline',
+		aspectRatio: 1.5,
+		resourceAreaWidth: '10%',
+		slotDuration: '12:00',
+		locale: setLocale,
+		header: {
+			left: 'addRoom, today, prev, next',
+			center: 'title',
+			right: 'timelineThirtyDays, month',
+		},
+		customButtons: {
+			addRoom: {
+				text: __('Add room', 'joeee-booking')
+				
+			}
+		},
+		defaultView: 'timelineThirtyDays',
+		views: {
+			timelineThirtyDays: {
+				type: 'resourceTimeline',
+				labelText: 'Test',
+				duration: { days: 31 }
+			}
+		},
+		resourceColumns: [
+			{
+				labelText: __( 'Room', 'joeee-booking' ),
+				field: 'title',
+				width: '15px'
+			},
+			{
+				labelText: __( 'Capacity', 'joeee-booking' ),
+				field: 'capacity'
+			}
+		],
 		resources: [
-	
+			{ id: 'a', title: 'Auditorium A', capacity: 40 },
+			{ id: 'b', title: 'Auditorium B', capacity: 60 }
 		]
 	});
 	calendar.render();
 });
-
-
-
-
-// @TODO This is an example console.log(). Remove for production
-console.log("admin_script.js");
