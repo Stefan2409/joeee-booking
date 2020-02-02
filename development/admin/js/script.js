@@ -41,6 +41,7 @@ $(document).ready(function() {
 document.addEventListener('DOMContentLoaded', function() {
 	let calendarEl = document.getElementById('joeeeBookingCalendar');
 	let calendar = new Calendar(calendarEl, {
+		schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
 		plugins: [ resourceTimelinePlugin ],
 		defaultView: 'resourceTimeline',
 		resources: [
