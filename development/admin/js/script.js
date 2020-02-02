@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		header: {
 			left: 'addRoom, today, prev, next',
 			center: 'title',
-			right: 'timelineThirtyDays, month',
+			right: 'resourceTimelineMonth, resourceTimelineWeek',
 		},
 		customButtons: {
 			addRoom: {
@@ -60,14 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				
 			}
 		},
-		defaultView: 'timelineThirtyDays',
-		views: {
-			timelineThirtyDays: {
-				type: 'resourceTimeline',
-				labelText: 'Test',
-				duration: { days: 31 }
-			}
-		},
+		defaultView: 'resourceTimelineMonth',
 		resourceColumns: [
 			{
 				labelText: __( 'Room', 'joeee-booking' ),
