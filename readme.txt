@@ -3,7 +3,7 @@
 Contributors: stefanjoebstl
 Donate link: 
 Tags: booking, reservations, hostels, hotels
-Requires at least: 4.5
+Requires at least: 5.0
 Tested up to: 5.3.2
 Requires PHP: 7.1.0
 Stable tag: 1.0.0
@@ -33,7 +33,7 @@ This section describes how to install the plugin and get it working.
 
 
 = 1.0.0 =
-* February, 2019
+* February, 2020
 * List versions from most recent at top to oldest at bottom.
 * Reference https://semver.org/ for determine your version numbers.
 * Make sure to update the readme.txt header, the joeee-booking.php header, and the `PLUGIN_VERSION` constant each time you release a new version.
