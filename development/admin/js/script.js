@@ -32,6 +32,7 @@ import $ from 'jquery';
 import './components/test';
 import { Calendar } from '@fullcalendar/core';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import calendarInteraction from '@fullcalendar/interaction';
 
 const { __, _x, _n, _nx } = wp.i18n;
 
@@ -44,10 +45,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	let calendarEl = document.getElementById('joeeeBookingCalendar');
 	let calendar = new Calendar(calendarEl, {
 		schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-		plugins: [ resourceTimelinePlugin ],
+		plugins: [ calendarInteraction, resourceTimelinePlugin ],
 		aspectRatio: 1.5,
 		resourceAreaWidth: '10%',
 		slotDuration: '12:00',
+		scrollTime: '00:00', // undo default 6am scrollTime
 		locale: setLocale,
 		header: {
 			left: 'addRoom, today, prev, next',
@@ -61,6 +63,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		},
 		defaultView: 'resourceTimelineMonth',
+		selectable: true,
+		selectHelper: true,
+		editable: true, // enable draggable events
 		resourceColumns: [
 			{
 				labelText: __( 'Room', 'joeee-booking' ),
@@ -75,7 +80,29 @@ document.addEventListener('DOMContentLoaded', function() {
 		resources: [
 			{ id: 'a', title: 'Auditorium A', capacity: 40 },
 			{ id: 'b', title: 'Auditorium B', capacity: 60 }
-		]
+		],
+		events: [
+			{id: '1', resourceId: 'a', title: 'Test User', start: '2020-02-04T12:00:00', end: '2020-02-09T12:00:00', color: 'green' },
+			{id: '2', resourceId: 'b', title: 'Test User2', start: '2020-02-04', end: '2020-02-09' }
+		],
+		eventClick: function(info) {
+			alert('Event: ' + info.event.title);
+		},
+		select: function(arg) {
+			console.log(
+				'select callback',
+				arg.startStr,
+				arg.endStr,
+				arg.resource ? arg.resource.id : '(no resource)'
+			);
+		},
+		dateClick: function(arg) {
+			console.log(
+				'dateClick',
+				arg.date,
+				arg.resource ? arg.resource.id : '(no resource)'
+			);
+		}
 	});
 	calendar.render();
 });
