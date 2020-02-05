@@ -24,6 +24,17 @@ if ( ! class_exists( Plugin_Data::class ) ) {
 			return '1.0.0';
 		}
 
+				/**
+		 * Get this plugin's database version.
+		 *
+		 * @TODO Keep current with readme.txt header and changelog + class-activator.php.
+		 *
+		 * @return string
+		 */
+		public static function plugin_db_version(): string {
+			return '1.0.0';
+		}
+
 		/**
 		 * Get this plugin's required minimum version of PHP.
 		 *

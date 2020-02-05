@@ -2,6 +2,8 @@
 
 namespace Joeee_Booking\Core;
 
+use Joeee_Booking\Plugin_Data as Plugin_Data;
+
 // Abort if this file is called directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,7 +24,7 @@ if ( ! class_exists( Activator::class ) ) {
 		 */
 		public static function activate() {
 			global $joeee_db_version;
-			$joeee_db_version = '1.0.0';
+			$joeee_db_version = Plugin_Data::plugin_db_version();
 
 			global $wpdb;
 			$charset_collate = $wpdb->get_charset_collate();
