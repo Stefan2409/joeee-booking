@@ -21,6 +21,9 @@ if ( ! class_exists( Activator::class ) ) {
 		 * 
 		 */
 		public static function activate() {
+			global $joeee_db_version;
+			$joeee_db_version = '1.0.0';
+
 			global $wpdb;
 			$charset_collate = $wpdb->get_charset_collate();
 
@@ -48,7 +51,7 @@ if ( ! class_exists( Activator::class ) ) {
 				FOREIGN KEY  (nationality_id) REFERENCES $table_country (id)
 				) $charset_collate;";
 
-			$sql_address = "CREATE TABLE $table_address (
+			$sql_address = "CREATE TABLE IF NOT EXISTS $table_address (
 				id int(10) NOT NULL AUTO_INCREMENT,
 				user_id bigint(20) unsigned,
 				street varchar(255),
@@ -59,10 +62,12 @@ if ( ! class_exists( Activator::class ) ) {
 				FOREIGN KEY  (state_id) REFERENCES $table_country (id) 
 				) $charset_collate;";
 
-			$sql_fellow = "CREATE TABLE $table_fellow (
+			$sql_fellow = "CREATE TABLE IF NOT EXISTS $table_fellow (
 				reservation_id int(10),
 				person_id int(10),
-				PRIMARY KEY  (reservation_id, person_id)
+				CONSTRAINT fellow_foreign PRIMARY KEY  (reservation_id, person_id),
+				FOREIGN KEY  (person_id) REFERENCES $table_person (id),
+				FOREIGN KEY  (reservation_id) REFERENCES $table_reservation (id) 
 				) $charset_collate;";
 
 			$sql_country = "CREATE TABLE $table_country (
@@ -83,16 +88,14 @@ if ( ! class_exists( Activator::class ) ) {
 				PRIMARY KEY  (id)
 				) $charset_collate;";
 
-			$sql_reservation = "CREATE TABLE $table_reservation (
+			$sql_reservation = "CREATE TABLE IF NOT EXISTS $table_reservation (
 				id int(10) NOT NULL AUTO_INCREMENT,
 				person_id int(10) NOT NULL,
 				CONSTRAINT reservation_foreign PRIMARY KEY  (id),
-				FOREIGN KEY  (id) REFERENCES $table_fellow (reservation_id),
-				FOREIGN KEY  (person_id) REFERENCES $table_person (id),
-				FOREIGN KEY  (id) REFERENCES $table_booked (reservation_id)
+				FOREIGN KEY  (person_id) REFERENCES $table_person (id)
 				) $charset_collate;";
 
-			$sql_booked = "CREATE TABLE $table_booked (
+			$sql_booked = "CREATE TABLE IF NOT EXISTS $table_booked (
 				room_id int(10) NOT NULL AUTO_INCREMENT,
 				reservation_id int(10) NOT NULL,
 				booked_from datetime NOT NULL,
@@ -102,18 +105,20 @@ if ( ! class_exists( Activator::class ) ) {
 				) $charset_collate;";
 
 			
-			$sql = [$sql_fellow, $sql_country, $sql_room];
+			$sql = [$sql_country, $sql_room];
 			require_once( ABSPATH . 'wp-admin/includes/upgrade.php');
 			
 			foreach($sql as $query) {
 				dbDelta( $query );
 			}
 
-			$sql_foreign = [$sql_address, $sql_booked, $sql_person, $sql_reservation];
+			$sql_foreign = [$sql_address, $sql_booked, $sql_person, $sql_reservation, $sql_fellow];
 			
 			foreach($sql_foreign as $query) {
 				$wpdb->query( $query );
 			}
+
+			add_option( 'joeee_booking_db_version', $joeee_db_version );
 
 		}
 
