@@ -41,8 +41,8 @@ if ( ! class_exists( Activator::class ) ) {
 			$sql_person = "CREATE TABLE $table_person (
 				id int(10) NOT NULL AUTO_INCREMENT,
 				user_id bigint(20) unsigned,
-				first_name varchar(255),
-				last_name varchar(255),
+				first_name varchar(255) NOT NULL,
+				last_name varchar(255) NOT NULL,
 				gender boolean,
 				address_id int(10),
 				birth date,
@@ -86,13 +86,17 @@ if ( ! class_exists( Activator::class ) ) {
 			$sql_room = "CREATE TABLE $table_room (
 				id int(10) NOT NULL AUTO_INCREMENT,
 				number varchar(255) NOT NULL,
-  				floor smallint(5) NOT NULL,
+  				capacity smallint(5) NOT NULL,
+				floor smallint(5) NOT NULL,
+				active boolean,
+				created timestamp,
 				PRIMARY KEY  (id)
 				) $charset_collate;";
 
 			$sql_reservation = "CREATE TABLE IF NOT EXISTS $table_reservation (
 				id int(10) NOT NULL AUTO_INCREMENT,
 				person_id int(10) NOT NULL,
+				created timestamp,
 				CONSTRAINT reservation_foreign PRIMARY KEY  (id),
 				FOREIGN KEY  (person_id) REFERENCES $table_person (id)
 				) $charset_collate;";
@@ -102,6 +106,7 @@ if ( ! class_exists( Activator::class ) ) {
 				reservation_id int(10) NOT NULL,
 				booked_from datetime NOT NULL,
 				booked_to datetime NOT NULL,
+				confirmation tinyint(3),
 				CONSTRAINT booked_foreign PRIMARY KEY  (room_id, reservation_id),
 				FOREIGN KEY  (room_id) REFERENCES $table_room (id)
 				) $charset_collate;";
