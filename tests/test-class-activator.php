@@ -41,6 +41,7 @@ class Activator_Test extends WP_UnitTestCase {
     public function test_if_db_person_exists() {
         global $wpdb;
         $table_person = $wpdb->prefix . "joeee_person";
+        
         $this->assertEquals($wpdb->get_var("SHOW TABLES LIKE '$table_person'"), $table_person);
     }
 }

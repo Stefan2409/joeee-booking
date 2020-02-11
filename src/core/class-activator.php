@@ -3,6 +3,7 @@
 namespace Joeee_Booking\Core;
 
 use Joeee_Booking\Plugin_Data as Plugin_Data;
+use Joeee_Booking\Common\Utilities\Country as Country;
 
 // Abort if this file is called directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -27,7 +28,7 @@ if ( ! class_exists( Activator::class ) ) {
 			$joeee_db_version = Plugin_Data::plugin_db_version();
 
 			global $wpdb;
-			$charset_collate = $wpdb->get_charset_collate();
+			$charset_collate = $wpdb->get_charset_collate() . ' ENGINE=innoDB';
 
 			$table_users = $wpdb->prefix . "users";
 			$table_person = $wpdb->prefix . "joeee_person";
@@ -73,13 +74,10 @@ if ( ! class_exists( Activator::class ) ) {
 				) $charset_collate;";
 
 			$sql_country = "CREATE TABLE $table_country (
-				id int(10) NOT NULL AUTO_INCREMENT,
-				lang varchar(5),
-				lang_name varchar(50),
-				country_alpha2_code char(2),
-				country_alpha3_code char(3),
-				country_numeric_code char(3),
-				country_name varchar(200),
+				id int(10) NOT NULL,
+				alpha2_code char(2) NOT NULL,
+				en_name varchar(64) NOT NULL,
+				de_name varchar(64) NOT NULL,
 				PRIMARY KEY  (id)
 				) $charset_collate;";
 
@@ -88,7 +86,8 @@ if ( ! class_exists( Activator::class ) ) {
 				number varchar(255) NOT NULL,
   				capacity smallint(5) NOT NULL,
 				floor smallint(5) NOT NULL,
-				active boolean,
+				price float(10) NOT NULL,
+				active boolean NOT NULL,
 				created timestamp,
 				PRIMARY KEY  (id)
 				) $charset_collate;";
@@ -106,6 +105,7 @@ if ( ! class_exists( Activator::class ) ) {
 				reservation_id int(10) NOT NULL,
 				booked_from datetime NOT NULL,
 				booked_to datetime NOT NULL,
+				price float(10) NOT NULL,
 				confirmation tinyint(3),
 				CONSTRAINT booked_foreign PRIMARY KEY  (room_id, reservation_id),
 				FOREIGN KEY  (room_id) REFERENCES $table_room (id)
@@ -124,6 +124,28 @@ if ( ! class_exists( Activator::class ) ) {
 			foreach($sql_foreign as $query) {
 				$wpdb->query( $query );
 			}
+			
+			$Country = new Country();
+			$country_en = $Country->get_en_countries();
+			$country_de = $Country->get_de_countries();
+			$alpha2 = array_keys($country_en);
+			$i = 1;
+			foreach($alpha2 as $iso) {
+				$wpdb->replace(
+					$table_country,
+					array(
+						'id' => $i,
+						'alpha2_code' => $iso,
+						'en_name' => $country_en[$iso]['name'],
+						'de_name' => $country_de[$iso]['name'],
+					),
+					array('%d', '%s', '%s', '%s')
+				);
+				$i++;
+			}
+			
+
+
 
 			add_option( 'joeee_booking_db_version', $joeee_db_version );
 

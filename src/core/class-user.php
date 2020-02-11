@@ -17,14 +17,17 @@ if ( ! class_exists( User::class ) ) {
 	 *
 	 */
 	class User {
-        private $first_name;
-        private $last_name;
-        private $gender;
-        private $birth_date;
-        private $nationality_id;
-        private $address = [];
+        protected $first_name;
+        protected $last_name;
+        protected $gender;
+        protected $birth_date;
+        protected $nationality_id;
+        protected $address = [];
+
+              
         
-        
+
+
         
         public function create_user($first_name, $last_name, $gender, $birth_date, $nationality_id, $address=[]) {
             
