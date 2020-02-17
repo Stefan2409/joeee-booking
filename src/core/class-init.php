@@ -7,6 +7,7 @@ use Joeee_Booking\Common as Common;
 use Joeee_Booking\Frontend as Frontend;
 use Joeee_Booking\Shortcodes as Shortcodes;
 use Joeee_Booking\Plugin_Data as Plugin_Data;
+use Joeee_Booking\Rest_Controller as Rest_Controller;
 
 // Abort if this file is called directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -38,6 +39,7 @@ if ( ! class_exists( Init::class ) ) {
 			$this->define_admin_hooks();
 			$this->define_public_hooks();
 			$this->register_shortcodes();
+			$this->load_rest_api();
 		}
 
 		/**
@@ -102,7 +104,6 @@ if ( ! class_exists( Init::class ) ) {
 			// Calendar menu
 			$this->loader->add_action( 'admin_menu', $calendar, 'add_calendar_menu' );
 
-			
 		}
 
 		/**
@@ -146,5 +147,18 @@ if ( ! class_exists( Init::class ) ) {
 		public function get_loader(): Loader {
 			return $this->loader;
 		}
+		/**
+		 * Loads the REST Api used for the plugin
+		 * 
+		 */
+		public function load_rest_api() {
+			$rest_api = new Rest_Controller();
+			$this->loader->add_action( 'rest_api_init', $rest_api, 'register_routes' );
+
+		}
+
+		
+
+
 	}
 }

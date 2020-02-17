@@ -57,6 +57,7 @@ if ( ! class_exists( Activator::class ) ) {
 			$sql_address = "CREATE TABLE IF NOT EXISTS $table_address (
 				id int(10) NOT NULL AUTO_INCREMENT,
 				user_id bigint(20) unsigned,
+				tin varchar(50),
 				street varchar(255),
 				zip varchar(255),
 				city varchar(255),
