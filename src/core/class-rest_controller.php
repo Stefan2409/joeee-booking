@@ -28,6 +28,9 @@ if ( ! class_exists( Rest_Controller::class ) ) {
          * Registers our REST endpoints.
          */
         public function register_routes() {
+            /**
+             * Registers users specific routes.
+             */
             register_rest_route( 'joeee-booking/v1/user', '/get', array(
                 array(
                     'methods'   => 'POST',
@@ -52,7 +55,26 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                 ),
                 'schema' => array( $this, 'get_users_schema' ),
             ));
+            register_rest_route( 'joeee-booking/v1/user', '/register', array(
+                array(
+                    'methods'   => 'POST',
+                    'callback'  => array( $this, 'register_user' ),
+                    'permission_callback' => array($this, 'check_users_permission'),
+                ),
+                'schema' => array( $this, 'get_users_schema' ),
+            ));
 
+            /**
+             * Registers room specific routes.
+             */
+            register_rest_route( 'joeee-booking/v1/room', '/create', array(
+                array(
+                    'methods'   => 'POST',
+                    'callback'  => array( $this, 'create_room' ),
+                    'permission_callback' => array($this, 'check_users_permission'),
+                ),
+                'schema' => array( $this, 'get_rooms_schema' ),
+            ));
 
         }
 
@@ -73,6 +95,17 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             array_push($response, $request->get_json_params() );
             return $response;
         }
+        public function register_user( $request ) {
+            $response = array();
+            array_push($response, $request->get_json_params() );
+            return $response;
+        }
+
+        public function create_room( $request ) {
+            $response = $request->get_json_params();
+            return $response;
+        }
+        
         /**
          * @TODO Set the correct user permissions in build. 
          */
@@ -85,7 +118,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
 
 
         /**
-         * Get our sample schema for users.
+         * Get our schema for users.
          */
         public function get_users_schema() {
             $schema = array(
@@ -159,6 +192,56 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                             ),
                         ),
                         
+                    ),
+                ),
+            );
+        
+            return $schema;
+        }
+
+        public function get_rooms_schema() {
+            $schema = array(
+                // This tells the spec of JSON Schema we are using which is draft 4.
+                '$schema'              => 'http://json-schema.org/draft-04/schema#',
+                // The title property marks the identity of the resource.
+                'title'                => 'room',
+                'type'                 => 'object',
+                // In JSON Schema you can specify object properties in the properties attribute.
+                'properties'           => array(
+                    'id' => array(
+                        'description'  => esc_html__( 'Unique identifier for the object.', 'joeee-booking' ),
+                        'type'         => 'integer',
+                        'context'      => array( 'view', 'edit', 'embed' ),
+                        'readonly'     => true,
+                    ),
+                    'room_id' => array(
+                        'description'  => esc_html__( 'The id of the room object.', 'joeee-booking' ),
+                        'type'         => 'integer',
+                    ),
+                    'number' => array(
+                        'description'  => esc_html__( 'The room number.', 'joeee-booking' ),
+                        'type'         => 'string',
+                        'context'      => array('view', 'edit'),
+                    ),
+                    'capacity' => array(
+                        'description'  => esc_html__( 'The rooms maximum capacity', 'joeee-booking' ),
+                        'type'         => 'integer',
+                        'context'      => array('view', 'edit', 'embed'),
+                    ),
+                    'floor' => array(
+                        'description'  => esc_html__( 'The rooms floor number.', 'joeee-booking' ),
+                        'type'         => 'integer',
+                        'context'      => array('view', 'edit', 'embed'),
+                    ),
+                    'price' => array(
+                        'description'  => esc_html__( 'The room price.', 'joeee-booking' ),
+                        'type'         => 'number',
+                        'context'      => array('view', 'edit', 'embed'),
+                    ),
+                    'active' => array(
+                        'description'  => esc_html__( 'Info if the room can be booked or not.', 'joeee-booking' ),
+                        'type'         => 'boolean',
+                        'context'      => array('view', 'edit', 'embed'),
                     ),
                 ),
             );
