@@ -8,3 +8,4 @@ package-lock.json
 .vscode/
 cypress/
 rest_request.http
+room_request.http

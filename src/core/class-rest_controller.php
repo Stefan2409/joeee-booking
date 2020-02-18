@@ -2,6 +2,9 @@
 
 namespace Joeee_Booking;
 
+use Joeee_Booking\Room as Room;
+
+
 // Abort if this file is called directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,7 +22,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
          * Declares our endpoint names.
          */
         public function __construct() {
-            $this->namespace = '/joeee-booking/v1';
+            $this->namespace = 'joeee-booking/v1/';
             $this->resource_user = 'user'; 
         }
 
@@ -31,7 +34,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             /**
              * Registers users specific routes.
              */
-            register_rest_route( 'joeee-booking/v1/user', '/get', array(
+            register_rest_route( $this->namespace . 'user', '/get', array(
                 array(
                     'methods'   => 'POST',
                     'callback'  => array( $this, 'get_users' ),
@@ -39,7 +42,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                 ),
                 'schema' => array( $this, 'get_users_schema' ),
             ));
-            register_rest_route( 'joeee-booking/v1/user', '/create', array(
+            register_rest_route( $this->namespace . 'user', '/create', array(
                 array(
                     'methods'   => 'POST',
                     'callback'  => array( $this, 'create_user' ),
@@ -47,7 +50,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                 ),
                 'schema' => array( $this, 'get_users_schema' ),
             ));
-            register_rest_route( 'joeee-booking/v1/user', '/update', array(
+            register_rest_route( $this->namespace . 'user', '/update', array(
                 array(
                     'methods'   => 'POST',
                     'callback'  => array( $this, 'update_user' ),
@@ -55,7 +58,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                 ),
                 'schema' => array( $this, 'get_users_schema' ),
             ));
-            register_rest_route( 'joeee-booking/v1/user', '/register', array(
+            register_rest_route( $this->namespace . 'user', '/register', array(
                 array(
                     'methods'   => 'POST',
                     'callback'  => array( $this, 'register_user' ),
@@ -67,7 +70,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             /**
              * Registers room specific routes.
              */
-            register_rest_route( 'joeee-booking/v1/room', '/create', array(
+            register_rest_route( $this->namespace . 'room', '/create', array(
                 array(
                     'methods'   => 'POST',
                     'callback'  => array( $this, 'create_room' ),
@@ -76,6 +79,32 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                 'schema' => array( $this, 'get_rooms_schema' ),
             ));
 
+            register_rest_route( $this->namespace . 'room', '/get', array(
+                array(
+                    'methods'   => 'POST',
+                    'callback'  => array( $this, 'get_room' ),
+                    'permission_callback' => array($this, 'check_users_permission'),
+                ),
+                'schema' => array( $this, 'get_rooms_schema' ),
+            ));
+
+            register_rest_route( $this->namespace . 'room', '/update', array(
+                array(
+                    'methods'   => 'POST',
+                    'callback'  => array( $this, 'update_room' ),
+                    'permission_callback' => array($this, 'check_users_permission'),
+                ),
+                'schema' => array( $this, 'get_rooms_schema' ),
+            ));
+
+            register_rest_route( $this->namespace . 'room', '/delete', array(
+                array(
+                    'methods'   => 'POST',
+                    'callback'  => array( $this, 'delete_room' ),
+                    'permission_callback' => array($this, 'check_users_permission'),
+                ),
+                'schema' => array( $this, 'get_rooms_schema' ),
+            ));
         }
 
         public function get_users( $request ) {
@@ -101,17 +130,49 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             return $response;
         }
 
+        /**
+         * Room specific functionality.
+         */
         public function create_room( $request ) {
+            $room = new Room();
+            $data = $request->get_json_params();
+            
+            
+            $response = $room->create_room( $data );
+
+            return $response;
+        }
+
+        public function update_room( $request ) {
             $response = $request->get_json_params();
             return $response;
         }
+
+        public function get_room( $request ) {
+            $room = new Room();
+            $data = $request->get_json_params();
+
+            $response = $room->get_room( $data );
+
+            return $response;
+        }
+
+        public function delete_room( $request ) {
+            $room = new Room();
+            $data = $request->get_json_params();
+
+            $response = $room->delete_room( $data );
+
+            return $response;
+        }
+
         
         /**
          * @TODO Set the correct user permissions in build. 
          */
         public function check_users_permission() {
             if ( current_user_can( 'read' ) ) {
-                return new WP_Error( 'rest_forbidden', esc_html__( "You aren't allowed to see the users.", 'joeee-booking' ));
+                return new WP_Error( 'rest_forbidden', esc_html__( "You aren't allowed to go this way.", 'joeee-booking' ));
             }
             return true;
         }
@@ -208,13 +269,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                 'type'                 => 'object',
                 // In JSON Schema you can specify object properties in the properties attribute.
                 'properties'           => array(
-                    'id' => array(
-                        'description'  => esc_html__( 'Unique identifier for the object.', 'joeee-booking' ),
-                        'type'         => 'integer',
-                        'context'      => array( 'view', 'edit', 'embed' ),
-                        'readonly'     => true,
-                    ),
-                    'room_id' => array(
+                        'id' => array(
                         'description'  => esc_html__( 'The id of the room object.', 'joeee-booking' ),
                         'type'         => 'integer',
                     ),
