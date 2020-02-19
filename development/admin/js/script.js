@@ -37,10 +37,49 @@ import calendarInteraction from '@fullcalendar/interaction';
 const { __, _x, _n, _nx } = wp.i18n;
 
 $(document).ready(function() {
-    // jQuery methods go here...
+	// jQuery methods go here...
+	// $.ajax({
+	// 	type: 'POST',
+	// 	url: joeeeRest.restURL + 'joeee-booking/v1/room/create',
+	// 	beforeSend: function (xhr) {
+	// 		xhr.setRequestHeader('X-WP-Nonce', joeeeRest.restNonce);
+	// 	},
+	// 	data: {
+			
+	// 	}
+	// });
 });
 
 document.addEventListener('DOMContentLoaded', function() {
+
+	function checkRoomFormInputs() {
+		const roomnumberValue = roomnumber.value.trim();
+		const floornumberValue = floornumber.value.trim();
+		const roomcapacityValue = roomcapacity.value.trim();
+		const roompriceValue = roomprice.value.trim();
+		const roomactiveValue = roomactive.value.trim();
+	
+		if ( parseInt(floornumberValue) == NaN || floornumberValue === '') {
+			setErrorFor(floornumber, 'The floornumber must be an integer!');
+		}
+		else {
+			setSuccessFor(floornumber);
+		}
+			
+	}
+	
+	function setErrorFor(input, message) {
+		const formControl = input.parentElement;
+		const small = formControl.querySelector('small');
+		formControl.className = 'joeee-booking-room-form-control error';
+		small.innerText = message;
+	}
+	
+	function setSuccessFor(input) {
+		const formControl = input.parentElement;
+		formControl.className = 'joeee-booking-room-form-control success';
+	}
+
 	const roomform = document.getElementById('joeee-roombooking-room-form');
 	const roomnumber = document.getElementById('joeee-booking-room-roomnumber');
 	const floornumber = document.getElementById('joeee-booking-room-floornumber');
@@ -48,11 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	const roomprice = document.getElementById('joeee-booking-room-price');
 	const roomactive = document.getElementById('joeee-booking-room-active');
 
-	roomform.addEventListener('submit', e => {
-		e.preventDefault();
 
-		checkRoomFormInputs();
-	});
 	var setLocale = 'en';
 	let calendarEl = document.getElementById('joeeeBookingCalendar');
 	let calendar = new Calendar(calendarEl, {
@@ -127,15 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 });
 
-function checkRoomFormInputs() {
-	const roomnumberValue = roomnumber.value.trim();
-	const floornumberValue = floornumber.value.trim();
-	const roomcapacityValue = roomcapacity.value.trim();
-	const roompriceValue = roomprice.value.trim();
-	const roomactiveValue = roomactive.value.trim();
 
 	
-}
-
 
 
