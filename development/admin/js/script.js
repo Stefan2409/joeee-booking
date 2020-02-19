@@ -41,6 +41,18 @@ $(document).ready(function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
+	const roomform = document.getElementById('joeee-roombooking-room-form');
+	const roomnumber = document.getElementById('joeee-booking-room-roomnumber');
+	const floornumber = document.getElementById('joeee-booking-room-floornumber');
+	const roomcapacity = document.getElementById('joeee-booking-room-capacity');
+	const roomprice = document.getElementById('joeee-booking-room-price');
+	const roomactive = document.getElementById('joeee-booking-room-active');
+
+	roomform.addEventListener('submit', e => {
+		e.preventDefault();
+
+		checkRoomFormInputs();
+	});
 	var setLocale = 'en';
 	let calendarEl = document.getElementById('joeeeBookingCalendar');
 	let calendar = new Calendar(calendarEl, {
@@ -58,7 +70,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		},
 		customButtons: {
 			addRoom: {
-				text: __('Add room', 'joeee-booking')
+				text: __('Add room', 'joeee-booking'),
+				click: function() {
+					document.querySelector('.joeee-booking-room-bg-modal').style.display = 'flex';
+				}
 				
 			}
 		},
@@ -105,4 +120,22 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 	calendar.render();
+
+	document.querySelector('.joeee-booking-room-close').addEventListener('click', function() {
+		document.querySelector('.joeee-booking-room-bg-modal').style.display = 'none';
+	});
+	
 });
+
+function checkRoomFormInputs() {
+	const roomnumberValue = roomnumber.value.trim();
+	const floornumberValue = floornumber.value.trim();
+	const roomcapacityValue = roomcapacity.value.trim();
+	const roompriceValue = roomprice.value.trim();
+	const roomactiveValue = roomactive.value.trim();
+
+	
+}
+
+
+

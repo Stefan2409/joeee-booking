@@ -143,10 +143,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             return $response;
         }
 
-        public function update_room( $request ) {
-            $response = $request->get_json_params();
-            return $response;
-        }
+
 
         public function get_room( $request ) {
             $room = new Room();
@@ -162,6 +159,15 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             $data = $request->get_json_params();
 
             $response = $room->delete_room( $data );
+
+            return $response;
+        }
+
+        public function update_room( $request ) {
+            $room = new Room();
+            $data = $request->get_json_params();
+
+            $response = $room->update_room( $data );
 
             return $response;
         }

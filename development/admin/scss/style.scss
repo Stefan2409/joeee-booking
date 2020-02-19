@@ -9,6 +9,7 @@
 @import '../../../node_modules/@fullcalendar/core/main.css';
 @import '../../../node_modules/@fullcalendar/timeline/main.css';
 @import '../../../node_modules/@fullcalendar/resource-timeline/main.css';
+@import './components/roomform.scss';
 
 // @TODO This is a red color variable example. Remove for production 
 $color: white;
@@ -17,3 +18,4 @@ $color: white;
 body {
     background-color: $color;
 }
+

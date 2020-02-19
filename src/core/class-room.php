@@ -93,7 +93,7 @@ if ( ! class_exists( Room::class ) ) {
                 $check_room_number = $wpdb->prepare("SELECT id FROM $this->room_table WHERE number = '%s'", $filtered['number']);
                 $room_number_exists = $wpdb->get_row($check_room_number, ARRAY_A);
                 if($room_number_exists != null) {
-                    return new WP_Error('rest_error', esc_html__('The room number already exists!', 'joeee-booking' ));
+                    return new WP_Error('joeee_booking_room_error', esc_html__('The room number already exists!', 'joeee-booking' ));
                 }
                 unset($filtered['id']);
                 $wpdb->insert($this->room_table, $filtered);
@@ -103,7 +103,7 @@ if ( ! class_exists( Room::class ) ) {
                     return true;
                 }
                 else {
-                    return new WP_Error('rest_error', esc_html__( 'Error by creating the new room.', 'joeee-booking' ), array('status' => 400));
+                    return new WP_Error('joeee_booking_room_error', esc_html__( 'Error by creating the new room.', 'joeee-booking' ), array('status' => 400));
                 }
 
             }
@@ -118,12 +118,12 @@ if ( ! class_exists( Room::class ) ) {
             if($validation_result === true ) {
                 $filtered = $this->filter_data( $request );
                 if( empty($filtered['id']) ) {
-                    return new WP_Error('rest_error', esc_html__( 'A valid ID is required!', 'joeee-booking'), array('status' => 400));
+                    return new WP_Error('joeee_booking_room_error', esc_html__( 'A valid ID is required!', 'joeee-booking'), array('status' => 400));
                 }
                 $query = $wpdb->prepare("SELECT id, number, floor, capacity, price, active FROM $this->room_table WHERE id = %d", array( $filtered['id']));
                 $result = $wpdb->get_row($query, ARRAY_A);
                 if ( empty($result)) {
-                    return new WP_Error('rest_error', esc_html__( 'A valid ID is required!', 'joeee-booking'), array('status' => 400));
+                    return new WP_Error('joeee_booking_room_error', esc_html__( 'A valid ID is required!', 'joeee-booking'), array('status' => 400));
                 }
                 else {
                     return $result;
@@ -142,15 +142,39 @@ if ( ! class_exists( Room::class ) ) {
             if($validation_result === true ) {
                 $filtered = $this->filter_data( $request );
                 if( empty($filtered['id']) ) {
-                    return new WP_Error('rest_error', esc_html__( 'A valid ID is required!', 'joeee-booking'), array('status' => 400));
+                    return new WP_Error('joeee_booking_room_error', esc_html__( 'A valid ID is required!', 'joeee-booking'), array('status' => 400));
                 }
                 $delete_room_id = array('id' => $filtered['id']);
                 $result = $wpdb->delete($this->room_table ,$delete_room_id);
                 if ( $result == 0 || $result == false ) {
-                    return new WP_Error('rest_error', esc_html__( 'Error by deleting the room.', 'joeee-booking'), array('status' => 400));
+                    return new WP_Error('joeee_booking_room_error', esc_html__( 'Error by deleting the room.', 'joeee-booking'), array('status' => 400));
                 }
                 else {
                     return array("success" => "Room deleted.");
+                }               
+               
+            }
+            else {
+                return $validation_result;
+            }
+            
+        }
+
+        public function update_room( $request ) {
+            global $wpdb;
+            $validation_result = $this->check_data( $request); 
+            if($validation_result === true ) {
+                $filtered = $this->filter_data( $request );
+                if( empty($filtered['id']) ) {
+                    return new WP_Error('joeee_booking_room_error', esc_html__( 'A valid ID is required!', 'joeee-booking'), array('status' => 400));
+                }
+                $update_room_id = array('id' => $filtered['id']);
+                $result = $wpdb->update($this->room_table, $filtered, $update_room_id);
+                if ( $result === false ) {
+                    return new WP_Error('joeee_booking_room_error', esc_html__( 'Error by updating the room.', 'joeee-booking'), array('status' => 400));
+                }
+                else {
+                    return array("success" => "Room updated.");
                 }               
                
             }

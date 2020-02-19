@@ -1,0 +1,78 @@
+.joeee-booking-room-bg-modal {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    display: none;
+}
+
+.joeee-booking-room-modal-form-content {
+    width: 500px;
+    max-width: 100%;
+    height: 400px;
+    background-color: white;
+    border-radius: 4px;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+}
+
+.joeee-booking-room-form-control input {
+    width: 50%;
+    display: block;
+    margin: 10px auto;
+}
+
+.joeee-booking-room-form-control i {
+    visibility: hidden;
+    position: absolute;
+    top: 40px;
+    right: 10px;
+}
+
+.joeee-booking-room-form-control.error i.dashicons-warning {
+    color: #e74c3c;
+    visibility: visible;
+}
+
+.joeee-booking-room-form-control.success i.dashicons-yes-alt {
+    color: #2ecc71;
+    visibility: visible;
+}
+
+.joeee-booking-room-form-control small {
+    color: #e74c3c;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    visibility: hidden;
+}
+
+.joeee-booking-room-form-control.error small {
+    visibility: visible;
+}
+
+.joeee-booking-button {
+    display: block;
+    margin: 15px;
+}
+
+.joeee-booking-room-close {
+    position: absolute;
+    top: 5px;
+    right: 14px;
+    font-size: 42px;
+    transform: rotate(45deg);
+    cursor: pointer;
+
+}
+
+small {
+    margin: 0px;
+}
+

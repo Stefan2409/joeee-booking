@@ -7,3 +7,45 @@
     <div id="joeeeBookingCalendar"></div>
 
 </div>
+
+
+<!-- Modal Section -->
+<div class="joeee-booking-room-bg-modal">
+    <div class="joeee-booking-room-modal-form-content">
+        <div class="joeee-booking-room-close">+</div>
+        <div class="joeee-booking-room-header">
+            <h2>Rooms</h2>
+        </div>
+        <form id="joeee-roombooking-room-form" action="">
+            <div class="joeee-booking-room-form-control">
+                <input type="text" placeholder="Room Number" id="joeee-booking-room-roomnumber">
+                <i class="dashicons dashicons-yes-alt"></i>
+                <i class="dashicons dashicons-warning"></i>
+                <small class="joeee-booking-form-error">Error message</small>
+            </div>
+            <div class="joeee-booking-room-form-control">
+                <input type="text" placeholder="Floor Number" id="joeee-booking-room-floornumber">
+                <i class="dashicons dashicons-yes-alt"></i>
+                <i class="dashicons dashicons-warning"></i>
+                <small class="joeee-booking-form-error">Error message</small>
+            </div>
+                <div class="joeee-booking-room-form-control">
+                <input type="text" placeholder="Capacity" id="joeee-booking-room-number">
+                <i class="dashicons dashicons-yes-alt"></i>
+                <i class="dashicons dashicons-warning"></i>
+                <small class="joeee-booking-form-error">Error message</small>
+            </div>
+            <div class="joeee-booking-room-form-control">
+                <input type="text" placeholder="Price" id="joeee-booking-room-price">
+                <i class="dashicons dashicons-yes-alt"></i>
+                <i class="dashicons dashicons-warning"></i>
+                <small class="joeee-booking-form-error">Error message</small>
+            </div>
+            <div class="joeee-booking-room-form-check">
+                <input type="checkbox" name="joeee-booking-room-active" id="joeee-booking-room-active">
+                <label for="room-active">Active</label>
+            </div>
+            <a href="" class="joeee-booking-button">Submit</a>
+        </form>
+    </div>
+</div>
