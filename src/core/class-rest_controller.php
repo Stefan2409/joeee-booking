@@ -177,7 +177,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
          * @TODO Set the correct user permissions in build. 
          */
         public function check_users_permission() {
-            if ( current_user_can( 'read' ) ) {
+            if ( !current_user_can( 'read' ) ) {
                 return new WP_Error( 'rest_forbidden', esc_html__( "You aren't allowed to go this way.", 'joeee-booking' ));
             }
             return true;

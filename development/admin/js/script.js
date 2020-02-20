@@ -36,8 +36,7 @@ import calendarInteraction from '@fullcalendar/interaction';
 
 const { __, _x, _n, _nx } = wp.i18n;
 
-$(document).ready(function() {
-	// jQuery methods go here...
+
 	// $.ajax({
 	// 	type: 'POST',
 	// 	url: joeeeRest.restURL + 'joeee-booking/v1/room/create',
@@ -48,44 +47,96 @@ $(document).ready(function() {
 			
 	// 	}
 	// });
-});
 
-document.addEventListener('DOMContentLoaded', function() {
+
+jQuery(document).ready(function() {
 
 	function checkRoomFormInputs() {
-		const roomnumberValue = roomnumber.value.trim();
-		const floornumberValue = floornumber.value.trim();
-		const roomcapacityValue = roomcapacity.value.trim();
-		const roompriceValue = roomprice.value.trim();
-		const roomactiveValue = roomactive.value.trim();
-	
+		var formout = {id: false};
+
+		const roomform = $('#joeee-roombooking-room-form');
+		const roomnumber = $('#joeee-booking-room-roomnumber');
+		const floornumber = $('#joeee-booking-room-floornumber');
+		const roomcapacity = $('#joeee-booking-room-capacity');
+		const roomprice = $('#joeee-booking-room-price');
+		const roomactive = $('#joeee-booking-room-active');
+
+		const roomnumberValue = roomnumber.val().trim();
+		const floornumberValue = floornumber.val().trim();
+		const roomcapacityValue = roomcapacity.val().trim();
+		const roompriceValue = roomprice.val().trim();
+		const roomactiveValue = roomactive.val().trim();
+		
+
+		if ( roomnumberValue.toString() == NaN || roomnumberValue === '') {
+			setErrorFor(roomnumber, 'The room number must be set as string!');
+			return false;
+		}
+		else {
+			setSuccessFor(roomnumber);
+			formout.number = roomnumberValue.toString();
+		}
+
 		if ( parseInt(floornumberValue) == NaN || floornumberValue === '') {
-			setErrorFor(floornumber, 'The floornumber must be an integer!');
+			setErrorFor(floornumber, 'The floor number must be an integer!');
+			return false;
 		}
 		else {
 			setSuccessFor(floornumber);
+			formout.floor = parseInt(floornumberValue);
 		}
+
+		if ( parseInt(roomcapacityValue) == NaN || roomcapacityValue === '') {
+			setErrorFor(roomcapacity, 'The capacity must be an integer!');
+			return false;
+		}
+		else {
+			setSuccessFor(roomcapacity);
+			formout.capacity = parseInt(roomcapacityValue);
+		}
+		if ( parseFloat(roompriceValue) == NaN || roompriceValue === '') {
+			setErrorFor(roomprice, 'The price must be a float number!');
+			return false;
+		}
+		else {
+			setSuccessFor(roomprice);
+			formout.price = parseFloat(roompriceValue.replace(',', '.'));
+		}
+		if ( roomactiveValue == "on") {
+			formout.active = true;
+		}
+		else {
+			formout.active = false;
+		}
+
+
+		console.log(JSON.stringify(formout));
+		return formout;
 			
 	}
 	
 	function setErrorFor(input, message) {
-		const formControl = input.parentElement;
-		const small = formControl.querySelector('small');
-		formControl.className = 'joeee-booking-room-form-control error';
-		small.innerText = message;
+		const formControl = input.parent();
+		const small = formControl.find('small');
+		formControl.addClass('error');
+		small.text(message);
 	}
 	
 	function setSuccessFor(input) {
-		const formControl = input.parentElement;
-		formControl.className = 'joeee-booking-room-form-control success';
+		const formControl = input.parent();
+		formControl.addClass('success');
 	}
 
-	const roomform = document.getElementById('joeee-roombooking-room-form');
-	const roomnumber = document.getElementById('joeee-booking-room-roomnumber');
-	const floornumber = document.getElementById('joeee-booking-room-floornumber');
-	const roomcapacity = document.getElementById('joeee-booking-room-capacity');
-	const roomprice = document.getElementById('joeee-booking-room-price');
-	const roomactive = document.getElementById('joeee-booking-room-active');
+
+
+	const roomData = {
+		id: 1,
+		number: "108",
+		floor: 2,
+		capacity: 2,
+		price: 27.2,
+		active: false
+	};
 
 
 	var setLocale = 'en';
@@ -107,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			addRoom: {
 				text: __('Add room', 'joeee-booking'),
 				click: function() {
-					document.querySelector('.joeee-booking-room-bg-modal').style.display = 'flex';
+					$('.joeee-booking-room-bg-modal').css("display", "flex");
 				}
 				
 			}
@@ -156,8 +207,32 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 	calendar.render();
 
-	document.querySelector('.joeee-booking-room-close').addEventListener('click', function() {
-		document.querySelector('.joeee-booking-room-bg-modal').style.display = 'none';
+	$('.joeee-booking-room-close').click(function() {
+		$('.joeee-booking-room-bg-modal').css("display", "none");
+	});
+
+	$('#joeee-roombooking-room-form').submit(function( event ) {
+		event.preventDefault();
+		var checked = checkRoomFormInputs();
+		if(checked) {
+
+				$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			contentType: 'application/json',
+			url: joeeeRest.restURL + 'joeee-booking/v1/room/create',
+			success: function (data) {
+				console.log(data);
+			},
+			error: function (data) {
+				console.log(data);
+			},
+			beforeSend: function (xhr) {
+				xhr.setRequestHeader('X-WP-Nonce', joeeeRest.restNonce);
+			},
+			data: JSON.stringify(checked),
+		});
+	}
 	});
 	
 });

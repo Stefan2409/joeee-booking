@@ -30,7 +30,7 @@
                 <small>Error message</small>
             </div>
                 <div class="joeee-booking-room-form-control">
-                <input type="text" placeholder="Capacity" id="joeee-booking-room-number">
+                <input type="text" placeholder="Capacity" id="joeee-booking-room-capacity">
                 <i class="dashicons dashicons-yes-alt"></i>
                 <i class="dashicons dashicons-warning"></i>
                 <small>Error message</small>

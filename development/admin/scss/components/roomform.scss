@@ -55,9 +55,10 @@
 
 .joeee-booking-room-form-control small {
     color: #e74c3c;
-    position: absolute;
+    position: relative;
+    float: left;
     bottom: 0;
-    left: 0;
+    left: 5px;
     visibility: hidden;
 }
 
