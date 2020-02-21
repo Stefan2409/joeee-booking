@@ -109,8 +109,6 @@ jQuery(document).ready(function() {
 			formout.active = false;
 		}
 
-
-		console.log(JSON.stringify(formout));
 		return formout;
 			
 	}
@@ -208,31 +206,53 @@ jQuery(document).ready(function() {
 	calendar.render();
 
 	$('.joeee-booking-room-close').click(function() {
-		$('.joeee-booking-room-bg-modal').css("display", "none");
+		$('.joeee-booking-room-cancel-btn').trigger('click');
 	});
 
-	$('#joeee-roombooking-room-form').submit(function( event ) {
-		event.preventDefault();
-		var checked = checkRoomFormInputs();
-		if(checked) {
+	$('#joeee-booking-room-submit').click(function(ev) {
+		ev.preventDefault();
+	
+		
+			
+			var checked = checkRoomFormInputs();
+			if(checked) {
 
-				$.ajax({
-			type: 'POST',
-			dataType: 'json',
-			contentType: 'application/json',
-			url: joeeeRest.restURL + 'joeee-booking/v1/room/create',
-			success: function (data) {
-				console.log(data);
-			},
-			error: function (data) {
-				console.log(data);
-			},
-			beforeSend: function (xhr) {
-				xhr.setRequestHeader('X-WP-Nonce', joeeeRest.restNonce);
-			},
-			data: JSON.stringify(checked),
-		});
-	}
+					$.ajax({
+				type: 'POST',
+				dataType: 'json',
+				contentType: 'application/json',
+				url: joeeeRest.restURL + 'joeee-booking/v1/room/create',
+				success: function (data) {
+					var success = $('.joeee-booking-room-success');
+					success.addClass('success');
+					success.text('Saved changes successfully.');
+					setTimeout(function() {
+						$('.joeee-booking-room-cancel-btn').trigger('click');
+					}, 2000);
+
+
+				},
+				error: function (data) {
+					var err = data.responseJSON.message;
+					var submitError = $('.joeee-booking-room-error');
+					submitError.addClass('error');
+					submitError.text(err);
+				},
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', joeeeRest.restNonce);
+				},
+				data: JSON.stringify(checked),
+			});
+		}
+		
+	});
+
+	$('.joeee-booking-room-cancel-btn').click(function(ev) {
+		ev.preventDefault();
+		$('#joeee-roombooking-room-form').trigger('reset');
+		$('.joeee-booking-room-bg-modal').css("display", "none");
+
+
 	});
 	
 });

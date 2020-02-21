@@ -85,3 +85,46 @@ small {
     margin: 0px;
 }
 
+#joeee-booking-room-submit {
+    background-color: #2ecc71;
+    color: white;
+    cursor: pointer;
+    &:hover {
+        background: #43A047;
+        transition: background-color 0.3s ease-in-out;
+    }
+}
+
+
+
+.joeee-booking-room-cancel-btn {
+    background-color: #e74c3c;
+    color: white;
+    cursor: pointer;
+    &:hover {
+        background: darkred;
+        transition: background-color 0.3s ease-in-out;
+    }
+}
+
+.joeee-booking-room-success {
+    visibility: hidden;
+    font-size: 14px;
+    font-weight: bold;
+    color: #2ecc71;
+}
+
+.joeee-booking-room-success.success {
+    visibility: visible;
+}
+
+.joeee-booking-room-error {
+    visibility: hidden;
+    font-size: 14px;
+    font-weight: bold;
+    color: #e74c3c;
+}
+
+.joeee-booking-room-error.error {
+    visibility: visible;
+}

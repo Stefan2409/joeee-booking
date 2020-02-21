@@ -45,7 +45,11 @@
                 <input type="checkbox" name="joeee-booking-room-active" id="joeee-booking-room-active">
                 <label for="room-active">Active</label>
             </div>
-            <input type="submit" value="Submit">
+            <input type="submit" value="Save" id="joeee-booking-room-submit">
+            <button class="joeee-booking-room-cancel-btn">Cancel</button>
         </form>
+        <p class="joeee-booking-room-success">Success message</p>
+        <p class="joeee-booking-room-error">Error message</p>
+
     </div>
 </div>
