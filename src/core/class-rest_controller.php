@@ -2,6 +2,7 @@
 
 namespace Joeee_Booking;
 
+use \WP_Error;
 use Joeee_Booking\Room as Room;
 
 
