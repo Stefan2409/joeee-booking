@@ -126,7 +126,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                     'args'      => array(
                         'id'    => array(
                             'validate_callback' => function( $param, $request, $key ) {
-                                return is_null( $param );
+                                return is_numeric( $param );
                             }
                         ),
                         'number' => array(
@@ -158,7 +158,6 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                 array(
                     'methods'   => WP_REST_Server::READABLE,
                     'callback'  => array( $this, 'get_room' ),
-                    'permission_callback' => array( $this, 'check_users_permission' ),
                     'args'      => array(
                         'id'    => array(
                             'validate_callback' => function( $param, $request, $key ) {
@@ -211,7 +210,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
 
         public function get_room( $request ) {
             $room = new Room();
-            $data = $request->get_json_params();
+            $data = $request['id'];
 
             $response = $room->get_room( $data );
 

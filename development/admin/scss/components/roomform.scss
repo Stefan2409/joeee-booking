@@ -95,6 +95,16 @@ small {
     }
 }
 
+#joeee-booking-room-form-submit-modify {
+    background-color: #2ecc71;
+    color: white;
+    cursor: pointer;
+    &:hover {
+        background: #43A047;
+        transition: background-color 0.3s ease-in-out;
+    }
+}
+
 
 
 .joeee-booking-room-cancel-btn {
@@ -116,6 +126,10 @@ small {
         background: darkred;
         transition: background-color 0.3s ease-in-out;
     }
+}
+
+.joeee-booking-room-delete-btn.open {
+    visibility: visible;
 }
 
 .joeee-booking-room-success {

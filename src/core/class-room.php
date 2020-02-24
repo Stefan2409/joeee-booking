@@ -114,27 +114,21 @@ if ( ! class_exists( Room::class ) ) {
 
         public function get_room( $request ) {
             global $wpdb;
-            $validation_result = $this->check_data( $request); 
-            if($validation_result === true ) {
-                $filtered = $this->filter_data( $request );
-                if( empty($filtered['id']) ) {
+            $filtered = $request;
+                if( empty($filtered) ) {
                     return new WP_Error('joeee_booking_room_error', esc_html__( 'A valid ID is required!', 'joeee-booking'), array('status' => 400));
                 }
-                $query = $wpdb->prepare("SELECT id, number, floor, capacity, price, active FROM $this->room_table WHERE id = %d", array( $filtered['id']));
+                $query = $wpdb->prepare("SELECT id, number, floor, capacity, price, active FROM $this->room_table WHERE id = %d", array( $filtered ));
                 $result = $wpdb->get_row($query, ARRAY_A);
                 if ( empty($result)) {
-                    return new WP_Error('joeee_booking_room_error', esc_html__( 'A valid ID is required!', 'joeee-booking'), array('status' => 400));
+                    return $filtered; //new WP_Error('joeee_booking_room_error', esc_html__( 'There is no room with your given ID!', 'joeee-booking'), array('status' => 400));
                 }
                 else {
                     return $result;
                 }               
                
             }
-            else {
-                return $validation_result;
-            }
             
-        }
 
         public function get_rooms() {
             global $wpdb;

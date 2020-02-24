@@ -45,7 +45,7 @@
                 <small>Error message</small>
             </div>
             <div class="joeee-booking-room-form-check">
-                <input type="checkbox" name="joeee-booking-room-active" id="joeee-booking-room-active">
+                <input type="checkbox" name="joeee-booking-room-active" id="joeee-booking-room-active" value="on">
                 <label for="room-active"><?php _e("Active", "joeee-booking") ?></label>
             </div>
             <input type="submit" value="<?php esc_attr_e('Save', 'joeee-booking') ?>" id="joeee-booking-room-submit">
