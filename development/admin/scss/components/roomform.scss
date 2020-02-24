@@ -107,6 +107,17 @@ small {
     }
 }
 
+.joeee-booking-room-delete-btn {
+    visibility: hidden;
+    background-color: #e74c3c;
+    color: white;
+    cursor: pointer;
+    &:hover {
+        background: darkred;
+        transition: background-color 0.3s ease-in-out;
+    }
+}
+
 .joeee-booking-room-success {
     visibility: hidden;
     font-size: 14px;

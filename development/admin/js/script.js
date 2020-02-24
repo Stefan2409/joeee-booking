@@ -52,7 +52,7 @@ const { __, _x, _n, _nx } = wp.i18n;
 jQuery(document).ready(function() {
 
 	function checkRoomFormInputs() {
-		var formout = {id: false};
+		var formout = {id: null};
 
 		const roomform = $('#joeee-roombooking-room-form');
 		const roomnumber = $('#joeee-booking-room-roomnumber');
@@ -69,7 +69,7 @@ jQuery(document).ready(function() {
 		
 
 		if ( roomnumberValue.toString() == NaN || roomnumberValue === '') {
-			setErrorFor(roomnumber, 'The room number must be set as string!');
+			setErrorFor(roomnumber, __('The room number must be set as string!', 'joeee-booking'));
 			return false;
 		}
 		else {
@@ -78,7 +78,7 @@ jQuery(document).ready(function() {
 		}
 
 		if ( parseInt(floornumberValue) == NaN || floornumberValue === '') {
-			setErrorFor(floornumber, 'The floor number must be an integer!');
+			setErrorFor(floornumber, __('The floor number must be an integer!', 'joeee-booking'));
 			return false;
 		}
 		else {
@@ -87,7 +87,7 @@ jQuery(document).ready(function() {
 		}
 
 		if ( parseInt(roomcapacityValue) == NaN || roomcapacityValue === '') {
-			setErrorFor(roomcapacity, 'The capacity must be an integer!');
+			setErrorFor(roomcapacity, __('The capacity must be an integer!', 'joeee-booking'));
 			return false;
 		}
 		else {
@@ -95,7 +95,7 @@ jQuery(document).ready(function() {
 			formout.capacity = parseInt(roomcapacityValue);
 		}
 		if ( parseFloat(roompriceValue) == NaN || roompriceValue === '') {
-			setErrorFor(roomprice, 'The price must be a float number!');
+			setErrorFor(roomprice, __('The price must be a float number!', 'joeee-booking'));
 			return false;
 		}
 		else {
@@ -176,13 +176,14 @@ jQuery(document).ready(function() {
 				field: 'capacity'
 			}
 		],
-		resources: [
-			{ id: 'a', title: 'Auditorium A', capacity: 40 },
-			{ id: 'b', title: 'Auditorium B', capacity: 60 }
-		],
+		resourceOrder: 'title',
+		resources: {
+			url: joeeeRest.restURL + 'joeee-booking/v1/room',
+			method: 'GET'
+		},
 		events: [
-			{id: '1', resourceId: 'a', title: 'Test User', start: '2020-02-04T12:00:00', end: '2020-02-09T12:00:00', color: 'green' },
-			{id: '2', resourceId: 'b', title: 'Test User2', start: '2020-02-04', end: '2020-02-09' }
+			{id: '1', resourceId: '14', title: 'Test User', start: '2020-02-04T12:00:00', end: '2020-02-09T12:00:00', color: 'green' },
+			{id: '2', resourceId: '16', title: 'Test User2', start: '2020-02-04', end: '2020-02-09' }
 		],
 		eventClick: function(info) {
 			alert('Event: ' + info.event.title);
@@ -221,13 +222,14 @@ jQuery(document).ready(function() {
 				type: 'POST',
 				dataType: 'json',
 				contentType: 'application/json',
-				url: joeeeRest.restURL + 'joeee-booking/v1/room/create',
+				url: joeeeRest.restURL + 'joeee-booking/v1/room',
 				success: function (data) {
 					var success = $('.joeee-booking-room-success');
 					success.addClass('success');
 					success.text('Saved changes successfully.');
 					setTimeout(function() {
 						$('.joeee-booking-room-cancel-btn').trigger('click');
+						location.reload();
 					}, 2000);
 
 
@@ -235,6 +237,7 @@ jQuery(document).ready(function() {
 				error: function (data) {
 					var err = data.responseJSON.message;
 					var submitError = $('.joeee-booking-room-error');
+					console.log(joeeeRest.restURL + 'joeee-booking/v1/room');
 					submitError.addClass('error');
 					submitError.text(err);
 				},

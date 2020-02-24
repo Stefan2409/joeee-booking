@@ -136,6 +136,27 @@ if ( ! class_exists( Room::class ) ) {
             
         }
 
+        public function get_rooms() {
+            global $wpdb;
+
+            $resource_data = array();
+            $db_query = "SELECT id, number, capacity, active FROM $this->room_table";
+
+            $query_result = $wpdb->get_results( $db_query );
+
+            foreach( $query_result as $row ) {
+
+
+                $resource_data[] = array(
+                    'id'        => $row->id,
+                    'title'     => $row->number,
+                    'capacity'  => $row->capacity,
+                );
+            }
+
+            return $resource_data;
+        }
+
         public function delete_room( $request ) {
             global $wpdb;
             $validation_result = $this->check_data( $request); 

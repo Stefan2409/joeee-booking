@@ -9,3 +9,4 @@ package-lock.json
 cypress/
 rest_request.http
 room_request.http
+example_rest.php

@@ -3,6 +3,8 @@
 namespace Joeee_Booking;
 
 use \WP_Error;
+use \WP_REST_Controller;
+use \WP_REST_Server;
 use Joeee_Booking\Room as Room;
 
 
@@ -15,7 +17,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
 	/**
 	 * The basic information about this plugin, like its texts (text domain and display name) and file locations.
 	 */
-	class Rest_Controller {
+	class Rest_Controller extends WP_REST_Controller {
 
         public $namespace;
         public $resource_user;
@@ -23,7 +25,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
          * Declares our endpoint names.
          */
         public function __construct() {
-            $this->namespace = 'joeee-booking/v1/';
+            $this->namespace = 'joeee-booking/v1';
             $this->resource_user = 'user'; 
         }
 
@@ -35,7 +37,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             /**
              * Registers users specific routes.
              */
-            register_rest_route( $this->namespace . 'user', '/get', array(
+            register_rest_route( $this->namespace . '/user', '/get', array(
                 array(
                     'methods'   => 'POST',
                     'callback'  => array( $this, 'get_users' ),
@@ -43,7 +45,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                 ),
                 'schema' => array( $this, 'get_users_schema' ),
             ));
-            register_rest_route( $this->namespace . 'user', '/create', array(
+            register_rest_route( $this->namespace . '/user', '/create', array(
                 array(
                     'methods'   => 'POST',
                     'callback'  => array( $this, 'create_user' ),
@@ -51,7 +53,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                 ),
                 'schema' => array( $this, 'get_users_schema' ),
             ));
-            register_rest_route( $this->namespace . 'user', '/update', array(
+            register_rest_route( $this->namespace . '/user', '/update', array(
                 array(
                     'methods'   => 'POST',
                     'callback'  => array( $this, 'update_user' ),
@@ -59,7 +61,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                 ),
                 'schema' => array( $this, 'get_users_schema' ),
             ));
-            register_rest_route( $this->namespace . 'user', '/register', array(
+            register_rest_route( $this->namespace . '/user', '/register', array(
                 array(
                     'methods'   => 'POST',
                     'callback'  => array( $this, 'register_user' ),
@@ -71,41 +73,102 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             /**
              * Registers room specific routes.
              */
-            register_rest_route( $this->namespace . 'room', '/create', array(
+            register_rest_route( $this->namespace, '/room', array(
                 array(
-                    'methods'   => 'POST',
+                    'methods'   => WP_REST_Server::CREATABLE,
                     'callback'  => array( $this, 'create_room' ),
-                    'permission_callback' => array($this, 'check_users_permission'),
+                    'permission_callback' => array($this, 'check_users_permission_admin'),
+                    'args'      => array(
+                        'id'    => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_null( $param );
+                            }
+                        ),
+                        'number' => array(
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ),
+                        'capacity' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_numeric( $param );
+                            }
+                        ),
+                        'floor' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_numeric( $param );
+                            }
+                        ),
+                        'price' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                
+                                return is_numeric( $param );
+                            } 
+                        ),
+                        'active' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_bool( $param );
+                            }
+                        ),
+                    ),
                 ),
                 'schema' => array( $this, 'get_rooms_schema' ),
-            ));
-
-            register_rest_route( $this->namespace . 'room', '/get', array(
+                
                 array(
-                    'methods'   => 'POST',
+                    'methods'   => WP_REST_Server::READABLE,
+                    'callback'  => array ($this, 'get_rooms' ),
+                    'args'      => array(),   
+                )));
+
+            register_rest_route( $this->namespace, '/room/(?P<id>[\d]+)', array(
+                array(
+                    'methods'   => WP_REST_Server::EDITABLE,
+                    'callback'  => array( $this, 'update_room'),
+                    'permission_callback' => array( $this, 'check_users_permission_admin' ),
+                    'args'      => array(
+                        'id'    => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_null( $param );
+                            }
+                        ),
+                        'number' => array(
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ),
+                        'capacity' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_numeric( $param );
+                            }
+                        ),
+                        'floor' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_numeric( $param );
+                            }
+                        ),
+                        'price' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                $param = preg_replace( ',', '.', $param );
+                                return is_numeric( $param );
+                            } 
+                        ),
+                        'active' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_bool( $param );
+                            }
+                        ),
+                    ),
+                ),
+                array(
+                    'methods'   => WP_REST_Server::READABLE,
                     'callback'  => array( $this, 'get_room' ),
-                    'permission_callback' => array($this, 'check_users_permission'),
-                ),
-                'schema' => array( $this, 'get_rooms_schema' ),
-            ));
+                    'permission_callback' => array( $this, 'check_users_permission' ),
+                    'args'      => array(
+                        'id'    => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                is_numeric( $param );
+                            }
+                        )
+                    ),
+                )));
 
-            register_rest_route( $this->namespace . 'room', '/update', array(
-                array(
-                    'methods'   => 'POST',
-                    'callback'  => array( $this, 'update_room' ),
-                    'permission_callback' => array($this, 'check_users_permission'),
-                ),
-                'schema' => array( $this, 'get_rooms_schema' ),
-            ));
 
-            register_rest_route( $this->namespace . 'room', '/delete', array(
-                array(
-                    'methods'   => 'POST',
-                    'callback'  => array( $this, 'delete_room' ),
-                    'permission_callback' => array($this, 'check_users_permission'),
-                ),
-                'schema' => array( $this, 'get_rooms_schema' ),
-            ));
         }
 
         public function get_users( $request ) {
@@ -155,6 +218,14 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             return $response;
         }
 
+        public function get_rooms( $request ) {
+            $room = new Room();
+
+            $response = $room->get_rooms();
+            return $response;
+
+        }
+
         public function delete_room( $request ) {
             $room = new Room();
             $data = $request->get_json_params();
@@ -179,6 +250,13 @@ if ( ! class_exists( Rest_Controller::class ) ) {
          */
         public function check_users_permission() {
             if ( !current_user_can( 'read' ) ) {
+                return new WP_Error( 'rest_forbidden', esc_html__( "You aren't allowed to go this way.", 'joeee-booking' ));
+            }
+            return true;
+        }
+
+        public function check_users_permission_admin() {
+            if ( !current_user_can( 'edit_others_pages' ) ) {
                 return new WP_Error( 'rest_forbidden', esc_html__( "You aren't allowed to go this way.", 'joeee-booking' ));
             }
             return true;
