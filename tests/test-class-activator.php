@@ -26,7 +26,7 @@ class Activator_Test extends WP_UnitTestCase {
         
     }
 
-    public function test_if_db_person_exists() {
+    public function test_if_dbs_exist() {
         $this->class_instance->activate();
         global $wpdb;
         $userid = $this->factory()->user->create([
@@ -40,6 +40,11 @@ class Activator_Test extends WP_UnitTestCase {
 
         $table_person = $wpdb->prefix . "joeee_person";
         $table_address = $wpdb->prefix . "joeee_address";
+        $table_room = $wpdb->prefix . "joeee_room";
+        $table_reservation = $wpdb->prefix . "joeee_reservation"; 
+        $table_booked = $wpdb->prefix . "joeee_room_booked";
+        $table_fellow = $wpdb->prefix . "joeee_fellow_traveler";
+
 
         $address_table_exists = $wpdb->insert(
             $table_address,
@@ -51,7 +56,9 @@ class Activator_Test extends WP_UnitTestCase {
                 'state_id' => 1,    
             )
             );
-        
+
+        $this->assertEquals(1, $address_table_exists);
+
         $exists = $wpdb->insert(
             $table_person,
             array(
@@ -66,6 +73,67 @@ class Activator_Test extends WP_UnitTestCase {
             array('%d', '%s', '%s', '%d', '%d', '%s', '%d')
         );
         $this->assertEquals(1, $exists);
+
+        $room_table_exists = $wpdb->insert(
+            $table_room,
+            array(
+                'number' => 'Room101',
+                'floor' => 2,
+                'capacity' => 4,
+                'price' => 36.4,
+                'active' => true,    
+            )
+            );
+
+        $this->assertEquals(1, $room_table_exists);
+
+        $reservation_table_exists = $wpdb->insert(
+            $table_reservation,
+            array(
+                'person_id' => 1,
+            )
+            );
+
+        $this->assertEquals(1, $reservation_table_exists);
+
+        $booked_table_exists = $wpdb->insert(
+            $table_booked,
+            array(
+                'room_id' => 1,
+                'reservation_id' => 1,
+                'booked_from' => '2020-02-01 12:00:00',
+                'booked_to' => '2020-02-14 12:00:00',
+                'price' => 134.43,
+                'confirmation' => 2,    
+            )
+            );
+
+        $this->assertEquals(1, $booked_table_exists);
+
+        $fellow_exists = $wpdb->insert(
+            $table_person,
+            array(
+                'user_id' => NULL,
+                'first_name' => 'Testuser2',
+                'last_name' => 'Test Last Name',
+                'gender' => 0,
+                'address_id' => 1,
+                'birth' => '1989-03-05',
+                'nationality_id' => 3
+            ),
+            array('%d', '%s', '%s', '%d', '%d', '%s', '%d')
+        );
+
+        $fellow_table_exists = $wpdb->insert(
+            $table_fellow,
+            array(
+                'reservation_id' => 1,
+                'person_id' => 2,    
+            )
+            );
+
+        $this->assertEquals(1, $fellow_table_exists);
+
 
     }
 
