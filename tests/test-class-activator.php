@@ -79,13 +79,36 @@ class Activator_Test extends WP_UnitTestCase {
         $table_reservation = $wpdb->prefix . "joeee_reservation";
         $table_booked = $wpdb->prefix . "joeee_room_booked";
 
+        $person_fk = [];
+        for($i = 1; $i <= 3; $i++) {
+            array_push( $person_fk, $table_person . "_ibfk_" . $i);
+        }
+
+        $fellow_fk = [];
+        for($i = 1; $i <= 2; $i++) {
+            array_push( $fellow_fk, $table_fellow . "_ibfk_" . $i);
+        }
+
+
+        foreach( $person_fk as $pers_fk ) {
+            $wpdb->query("ALTER TABLE $table_person DROP FOREIGN KEY $pers_fk");
+        }
+        foreach( $fellow_fk as $fell_fk ) {
+            $wpdb->query("ALTER TABLE $table_fellow DROP FOREIGN KEY $fell_fk");
+        }
+        $address_fk = $table_address . "_ibfk_1";
+        $reservation_fk = $table_reservation . "_ibfk_1";
+        $booked_fk = $table_booked . "_ibfk_1";
+
+        $wpdb->query("ALTER TABLE $table_address DROP FOREIGN KEY $address_fk");
+        $wpdb->query("ALTER TABLE $table_reservation DROP FOREIGN KEY $reservation_fk");
+        $wpdb->query("ALTER TABLE $table_booked DROP FOREIGN KEY $booked_fk");
+
 
         $tables = [ $table_fellow, $table_reservation, $table_person, $table_booked, $table_address, $table_room, $table_country ];
-        
+
         foreach($tables as $table) {
-            $wpdb->query('SET foreign_key_checks=0');
             $wpdb->query("DROP TABLE IF EXISTS $table");
         }
-        $wpdb->query('SET foreign_key_checks=1');
     } 
 }
