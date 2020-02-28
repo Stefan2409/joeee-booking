@@ -25,8 +25,14 @@
 
 .joeee-booking-room-form-control {
     margin-bottom: 10px;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
     position: relative;
+}
+.joeee-booking-room-form-control label {
+    text-align: right;
+    clear: both;
+    float: left;
+    margin-right: 15px;
 }
 
 .joeee-booking-room-form-control input {
@@ -39,7 +45,7 @@
 .joeee-booking-room-form-control i {
     visibility: hidden;
     position: absolute;
-    top: 7px;
+    top: 23px;
     right: 10px;
 }
 
@@ -86,6 +92,7 @@ small {
 }
 
 #joeee-booking-room-submit {
+    position: absolute;
     background-color: #2ecc71;
     color: white;
     cursor: pointer;
@@ -93,9 +100,14 @@ small {
         background: #43A047;
         transition: background-color 0.3s ease-in-out;
     }
+}
+
+#joeee-booking-room-submit.close {
+    visibility: hidden;
 }
 
 #joeee-booking-room-form-submit-modify {
+    visibility: hidden;
     background-color: #2ecc71;
     color: white;
     cursor: pointer;
@@ -105,6 +117,9 @@ small {
     }
 }
 
+#joeee-booking-room-form-submit-modify.open {
+    visibility: visible;
+} 
 
 
 .joeee-booking-room-cancel-btn {
@@ -134,7 +149,8 @@ small {
 
 .joeee-booking-room-success {
     visibility: hidden;
-    font-size: 14px;
+    margin: 2px;
+    font-size: 12px;
     font-weight: bold;
     color: #2ecc71;
 }
@@ -145,7 +161,8 @@ small {
 
 .joeee-booking-room-error {
     visibility: hidden;
-    font-size: 14px;
+    margin: 2px;
+    font-size: 12px;
     font-weight: bold;
     color: #e74c3c;
 }

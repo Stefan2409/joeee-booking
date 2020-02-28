@@ -27,7 +27,7 @@ if ( ! class_exists( Room::class ) ) {
         public function check_data( $request ) {
             foreach( $this->keys as $key ) {
                 if( !array_key_exists( $key, $request )) {
-                    return new WP_Error( 'rest_forbidden', esc_html__("There are keys missing in your request. Check the room json scheme!", "joeee-booking" ), array('status' => 400));
+                    return new WP_Error( 'rest_forbidden', esc_html__("There are keys missing in your request. ($key) Check the room json scheme!", "joeee-booking" ), array('status' => 400));
                 }
             }
 
@@ -151,33 +151,31 @@ if ( ! class_exists( Room::class ) ) {
             return $resource_data;
         }
 
-        public function delete_room( $request ) {
+        public function delete_room( $id ) {
             global $wpdb;
-            $validation_result = $this->check_data( $request); 
-            if($validation_result === true ) {
-                $filtered = $this->filter_data( $request );
-                if( empty($filtered['id']) ) {
-                    return new WP_Error('joeee_booking_room_error', esc_html__( 'A valid ID is required!', 'joeee-booking'), array('status' => 400));
-                }
-                $delete_room_id = array('id' => $filtered['id']);
-                $result = $wpdb->delete($this->room_table ,$delete_room_id);
-                if ( $result == 0 || $result == false ) {
-                    return new WP_Error('joeee_booking_room_error', esc_html__( 'Error by deleting the room.', 'joeee-booking'), array('status' => 400));
-                }
-                else {
-                    return array("success" => "Room deleted.");
-                }               
-               
+             
+           
+              
+            if( empty($id) ) {
+                return new WP_Error('joeee_booking_room_error', esc_html__( 'A valid ID is required!', 'joeee-booking'), array('status' => 400));
+            }
+            $delete_room_id = array('id' => $id);
+            $result = $wpdb->delete($this->room_table ,$delete_room_id);
+            if ( $result == 0 || $result == false ) {
+                return new WP_Error('joeee_booking_room_error', esc_html__( 'Error by deleting the room.', 'joeee-booking'), array('status' => 400));
             }
             else {
-                return $validation_result;
-            }
+                return array("success" => "Room deleted.");
+            }               
+            
+        
+    
             
         }
 
         public function update_room( $request ) {
             global $wpdb;
-            $validation_result = $this->check_data( $request); 
+            $validation_result = $this->check_data( $request ); 
             if($validation_result === true ) {
                 $filtered = $this->filter_data( $request );
                 if( empty($filtered['id']) ) {

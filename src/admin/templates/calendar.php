@@ -21,24 +21,28 @@
                 <input type="hidden" name="roomID" id="joeee-booking-room-id" value="null">
             </div>
             <div class="joeee-booking-room-form-control">
+                <label for="joeee-booking-room-roomnumber"><?php esc_html_e('Room Number', 'joeee-booking') ?></label>
                 <input type="text" placeholder="<?php esc_attr_e('Room Number', 'joeee-booking') ?>" id="joeee-booking-room-roomnumber">
                 <i class="dashicons dashicons-yes-alt"></i>
                 <i class="dashicons dashicons-warning"></i>
                 <small>Error message</small>
             </div>
             <div class="joeee-booking-room-form-control">
+                <label for="joeee-booking-room-floornumber"><?php esc_html_e('Floor Number', 'joeee-booking') ?></label>
                 <input type="text" placeholder="<?php esc_attr_e('Floor Number', 'joeee-booking') ?>" id="joeee-booking-room-floornumber">
                 <i class="dashicons dashicons-yes-alt"></i>
                 <i class="dashicons dashicons-warning"></i>
                 <small>Error message</small>
             </div>
                 <div class="joeee-booking-room-form-control">
+                <label for="joeee-booking-room-capacity"><?php esc_html_e('Capacity', 'joeee-booking') ?></label>
                 <input type="text" placeholder="<?php esc_attr_e('Capacity', 'joeee-booking') ?>" id="joeee-booking-room-capacity">
                 <i class="dashicons dashicons-yes-alt"></i>
                 <i class="dashicons dashicons-warning"></i>
                 <small>Error message</small>
             </div>
             <div class="joeee-booking-room-form-control">
+                <label for="joeee-booking-room-price"><?php esc_html_e('Price', 'joeee-booking') ?></label>
                 <input type="text" placeholder="<?php esc_attr_e('Price', 'joeee-booking') ?>" id="joeee-booking-room-price">
                 <i class="dashicons dashicons-yes-alt"></i>
                 <i class="dashicons dashicons-warning"></i>
@@ -49,6 +53,7 @@
                 <label for="room-active"><?php _e("Active", "joeee-booking") ?></label>
             </div>
             <input type="submit" value="<?php esc_attr_e('Save', 'joeee-booking') ?>" id="joeee-booking-room-submit">
+            <input type="submit" value="<?php esc_attr_e('Save', 'joeee-booking') ?>" id="joeee-booking-room-form-submit-modify">
             <button class="joeee-booking-room-cancel-btn"><?php _e("Cancel", "joeee-booking") ?></button>
             <button class="joeee-booking-room-delete-btn"><?php _e("Delete room", "joeee-booking") ?></button>
         </form>

@@ -144,7 +144,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                         ),
                         'price' => array(
                             'validate_callback' => function( $param, $request, $key ) {
-                                $param = preg_replace( ',', '.', $param );
+                                //$param = preg_replace( ',', '.', $param );
                                 return is_numeric( $param );
                             } 
                         ),
@@ -165,7 +165,20 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                             }
                         )
                     ),
-                )));
+                ),
+                array(
+                    'methods'   => WP_REST_Server::DELETABLE,
+                    'callback'  => array($this, 'delete_room'),
+                    'permission_callback' => array( $this, 'check_users_permission_admin' ),
+                    'args'      => array(
+                        'id'    => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                is_numeric( $param );
+                            }
+                        ),
+                    ),
+                ),
+            ));
 
 
         }
@@ -227,16 +240,23 @@ if ( ! class_exists( Rest_Controller::class ) ) {
 
         public function delete_room( $request ) {
             $room = new Room();
-            $data = $request->get_json_params();
+            $id = $request['id'];
 
-            $response = $room->delete_room( $data );
+            $response = $room->delete_room( $id );
 
             return $response;
         }
 
         public function update_room( $request ) {
             $room = new Room();
-            $data = $request->get_json_params();
+            $data = array();
+            $data['id'] = (int)$request['id'];
+            $data['number'] = $request['number'];
+            $data['floor'] = $request['floor'];
+            $data['capacity'] = $request['capacity'];
+            $data['price'] = $request['price'];
+            $data['active'] = $request['active'];
+
 
             $response = $room->update_room( $data );
 
