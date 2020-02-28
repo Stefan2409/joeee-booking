@@ -7,10 +7,10 @@ class Room {
 
     cancel() {
     	this.cancelBtn.click(function(ev) {
-		ev.preventDefault();
-		this.roomForm.trigger('reset');
-		this.roomBgModal.css("display", "none");
-		location.reload();
+            ev.preventDefault();
+            this.roomForm.trigger('reset');
+            this.roomBgModal.css("display", "none");
+            location.reload();
 
 
         });

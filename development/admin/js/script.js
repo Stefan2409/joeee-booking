@@ -73,7 +73,7 @@ jQuery(document).ready(function() {
 		
 		
 
-		if ( roomnumberValue.toString() == NaN || roomnumberValue === '') {
+		if ( isNaN( roomnumberValue.toString() ) || roomnumberValue === '') {
 			setErrorFor(ROOMNUMBER, __('The room number must be set as string!', 'joeee-booking'));
 			return false;
 		}
@@ -82,7 +82,7 @@ jQuery(document).ready(function() {
 			formout.number = roomnumberValue.toString();
 		}
 
-		if ( parseInt(floornumberValue) == NaN || floornumberValue === '') {
+		if ( isNaN( parseInt(floornumberValue) ) || floornumberValue === '') {
 			setErrorFor(FLOORNUMBER, __('The floor number must be an integer!', 'joeee-booking'));
 			return false;
 		}
@@ -91,7 +91,7 @@ jQuery(document).ready(function() {
 			formout.floor = parseInt(floornumberValue);
 		}
 
-		if ( parseInt(roomcapacityValue) == NaN || roomcapacityValue === '') {
+		if ( isNaN( parseInt(roomcapacityValue) ) || roomcapacityValue === '') {
 			setErrorFor(ROOMCAPACITY, __('The capacity must be an integer!', 'joeee-booking'));
 			return false;
 		}
@@ -99,7 +99,7 @@ jQuery(document).ready(function() {
 			setSuccessFor(ROOMCAPACITY);
 			formout.capacity = parseInt(roomcapacityValue);
 		}
-		if ( parseFloat(roompriceValue) == NaN || roompriceValue === '') {
+		if ( isNaN( parseFloat(roompriceValue) ) || roompriceValue === '') {
 			setErrorFor(ROOMPRICE, __('The price must be a float number!', 'joeee-booking'));
 			return false;
 		}
@@ -192,17 +192,6 @@ jQuery(document).ready(function() {
 		const formControl = input.parent();
 		formControl.addClass('success');
 	}
-
-
-
-	const roomData = {
-		id: 1,
-		number: "108",
-		floor: 2,
-		capacity: 2,
-		price: 27.2,
-		active: false
-	};
 
 
 	var setLocale = 'en';
@@ -332,7 +321,7 @@ jQuery(document).ready(function() {
 				success: function (data) {
 					let success = $('.joeee-booking-room-success');
 					success.addClass('success');
-					success.text('Saved changes successfully.');
+					success.text( __('Saved changes successfully.', 'joeee-booking') );
 					setTimeout(function() {
 						ROOMCANCELBTN.trigger('click');
 						location.reload();
@@ -391,8 +380,6 @@ jQuery(document).ready(function() {
 			error: function (data) {
 				let err = data.responseJSON.message;
 				let submitError = $('.joeee-booking-room-error');
-				console.log(ROOMID.val());
-				console.log(data);
 				submitError.addClass('error');
 				submitError.text(err);
 			},
@@ -408,7 +395,7 @@ jQuery(document).ready(function() {
 	ROOMDELETEBTN.click( function(ev) {
 		ev.preventDefault();
 
-		if( confirm( __('Are you really sure to delete this room? Every booking in this room will be removed too by doing so!', 'joeee-booking') ) ) {
+		if( confirm( __('You really wanna delete this room? Every booking in this room will be removed too by doing so!', 'joeee-booking') ) ) {
 
 			$.ajax({
 				type: 'DELETE',

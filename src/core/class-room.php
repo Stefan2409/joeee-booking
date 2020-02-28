@@ -1,6 +1,6 @@
 <?php
 
-namespace Joeee_Booking;
+namespace Joeee_Booking\Core;
 use \WP_Error;
 
 
@@ -121,7 +121,7 @@ if ( ! class_exists( Room::class ) ) {
                 $query = $wpdb->prepare("SELECT id, number, floor, capacity, price, active FROM $this->room_table WHERE id = %d", array( $filtered ));
                 $result = $wpdb->get_row($query, ARRAY_A);
                 if ( empty($result)) {
-                    return $filtered; //new WP_Error('joeee_booking_room_error', esc_html__( 'There is no room with your given ID!', 'joeee-booking'), array('status' => 400));
+                    return new WP_Error('joeee_booking_room_error', esc_html__( 'There is no room with your given ID!', 'joeee-booking'), array('status' => 400));
                 }
                 else {
                     return $result;

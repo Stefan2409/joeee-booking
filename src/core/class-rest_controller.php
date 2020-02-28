@@ -5,7 +5,7 @@ namespace Joeee_Booking;
 use \WP_Error;
 use \WP_REST_Controller;
 use \WP_REST_Server;
-use Joeee_Booking\Room as Room;
+use Joeee_Booking\Core\Room as Room;
 
 
 // Abort if this file is called directly.
