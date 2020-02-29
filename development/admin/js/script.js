@@ -55,21 +55,21 @@ jQuery(document).ready(function() {
 
 
 
-	function checkRoomFormInputsModify() {
+	function checkRoomFormInputs( comesfrom ) {
 		let formout = {};
-
-		// if( (ROOMID.val() != "null") && !isNaN(ROOMID.val())) {
-		// 	formout.id = ROOMID.val();
-		// }
-		// else {
-		// 	formout.id = null;
-		// }
-
+		if ( comesfrom === "submit" ) {
+			if( (ROOMID.val() != "null") && !isNaN(ROOMID.val())) {
+				formout.id = ROOMID.val();
+			}
+			else {
+				formout.id = null;
+			}
+		}
 
 		let roomnumberValue = ROOMNUMBER.val().trim();
 		let floornumberValue = FLOORNUMBER.val().trim();
 		let roomcapacityValue = ROOMCAPACITY.val().trim();
-		let roompriceValue = ROOMPRICE.val().trim();
+		let roompriceValue = ROOMPRICE.val().trim().replace(',', '.');
 		
 		
 
@@ -82,7 +82,7 @@ jQuery(document).ready(function() {
 			formout.number = roomnumberValue.toString();
 		}
 
-		if ( isNaN( parseInt(floornumberValue) ) || floornumberValue === '') {
+		if ( isNaN( floornumberValue ) || floornumberValue === '') {
 			setErrorFor(FLOORNUMBER, __('The floor number must be an integer!', 'joeee-booking'));
 			return false;
 		}
@@ -91,7 +91,7 @@ jQuery(document).ready(function() {
 			formout.floor = parseInt(floornumberValue);
 		}
 
-		if ( isNaN( parseInt(roomcapacityValue) ) || roomcapacityValue === '') {
+		if ( isNaN( roomcapacityValue ) || roomcapacityValue === '') {
 			setErrorFor(ROOMCAPACITY, __('The capacity must be an integer!', 'joeee-booking'));
 			return false;
 		}
@@ -99,13 +99,13 @@ jQuery(document).ready(function() {
 			setSuccessFor(ROOMCAPACITY);
 			formout.capacity = parseInt(roomcapacityValue);
 		}
-		if ( isNaN( parseFloat(roompriceValue) ) || roompriceValue === '') {
+		if ( isNaN( roompriceValue ) || roompriceValue === '') {
 			setErrorFor(ROOMPRICE, __('The price must be a float number!', 'joeee-booking'));
 			return false;
 		}
 		else {
 			setSuccessFor(ROOMPRICE);
-			formout.price = parseFloat(roompriceValue.replace(',', '.'));
+			formout.price = parseFloat(roompriceValue);
 		}
 		if ( ROOMACTIVE.is( ":checked" ) ) {
 			formout.active = true;
@@ -118,69 +118,6 @@ jQuery(document).ready(function() {
 			
 	}
 
-	function checkRoomFormInputs() {
-		let formout = {};
-
-		if( (ROOMID.val() != "null") && !isNaN(ROOMID.val())) {
-			formout.id = ROOMID.val();
-		}
-		else {
-			formout.id = null;
-		}
-
-
-		let roomnumberValue = ROOMNUMBER.val().trim();
-		let floornumberValue = FLOORNUMBER.val().trim();
-		let roomcapacityValue = ROOMCAPACITY.val().trim();
-		let roompriceValue = ROOMPRICE.val().trim();
-		
-		
-
-		if ( roomnumberValue.toString() == NaN || roomnumberValue === '') {
-			setErrorFor(ROOMNUMBER, __('The room number must be set as string!', 'joeee-booking'));
-			return false;
-		}
-		else {
-			setSuccessFor(ROOMNUMBER);
-			formout.number = roomnumberValue.toString();
-		}
-
-		if ( parseInt(floornumberValue) == NaN || floornumberValue === '') {
-			setErrorFor(FLOORNUMBER, __('The floor number must be an integer!', 'joeee-booking'));
-			return false;
-		}
-		else {
-			setSuccessFor(FLOORNUMBER);
-			formout.floor = parseInt(floornumberValue);
-		}
-
-		if ( parseInt(roomcapacityValue) == NaN || roomcapacityValue === '') {
-			setErrorFor(ROOMCAPACITY, __('The capacity must be an integer!', 'joeee-booking'));
-			return false;
-		}
-		else {
-			setSuccessFor(ROOMCAPACITY);
-			formout.capacity = parseInt(roomcapacityValue);
-		}
-		if ( parseFloat(roompriceValue) == NaN || roompriceValue === '') {
-			setErrorFor(ROOMPRICE, __('The price must be a float number!', 'joeee-booking'));
-			return false;
-		}
-		else {
-			setSuccessFor(ROOMPRICE);
-			formout.price = parseFloat(roompriceValue.replace(',', '.'));
-		}
-		if ( ROOMACTIVE.is( ":checked" ) ) {
-			formout.active = true;
-		}
-		else {
-			formout.active = false;
-		}
-
-		return formout;
-			
-	}
-	
 	function setErrorFor(input, message) {
 		const formControl = input.parent();
 		const small = formControl.find('small');
@@ -310,7 +247,7 @@ jQuery(document).ready(function() {
 	
 		
 			
-			let checked = checkRoomFormInputs();
+			let checked = checkRoomFormInputs( "submit" );
 			if(checked) {
 
 					$.ajax({
@@ -359,7 +296,7 @@ jQuery(document).ready(function() {
 	
 		
 			
-			let checked = checkRoomFormInputsModify();
+			let checked = checkRoomFormInputs( "update" );
 			if(checked) {
 
 		$.ajax({
@@ -370,7 +307,7 @@ jQuery(document).ready(function() {
 			success: function (data) {
 				let success = $('.joeee-booking-room-success');
 				success.addClass('success');
-				success.text('Saved changes successfully.');
+				success.text( __( 'Saved changes successfully.', 'joeee-booking' ) );
 				setTimeout(function() {
 					$('.joeee-booking-room-cancel-btn').trigger('click');
 				}, 1000);
@@ -405,7 +342,7 @@ jQuery(document).ready(function() {
 				success: function (data) {
 					let success = $('.joeee-booking-room-success');
 					success.addClass('success');
-					success.text('Saved changes successfully.');
+					success.text( __( 'Saved changes successfully.', 'joeee-booking' ) );
 					setTimeout(function() {
 						$('.joeee-booking-room-cancel-btn').trigger('click');
 					}, 1000);
