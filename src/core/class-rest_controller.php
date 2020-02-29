@@ -37,39 +37,51 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             /**
              * Registers users specific routes.
              */
-            register_rest_route( $this->namespace . '/user', '/get', array(
+            register_rest_route( $this->namespace, '/user', array(
                 array(
-                    'methods'   => 'POST',
-                    'callback'  => array( $this, 'get_users' ),
-                    'permission_callback' => array($this, 'check_users_permission'),
-                ),
-                'schema' => array( $this, 'get_users_schema' ),
-            ));
-            register_rest_route( $this->namespace . '/user', '/create', array(
-                array(
-                    'methods'   => 'POST',
+                    'methods'   => WP_REST_Server::CREATABLE,
                     'callback'  => array( $this, 'create_user' ),
-                    'permission_callback' => array($this, 'check_users_permission'),
+                    'permission_callback' => array($this, 'check_users_permission_admin'),
+                    'args'      => array(
+                        'id'    => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_null( $param );
+                            }
+                        ),
+                        'number' => array(
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ),
+                        'capacity' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_numeric( $param );
+                            }
+                        ),
+                        'floor' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_numeric( $param );
+                            }
+                        ),
+                        'price' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                
+                                return is_numeric( $param );
+                            } 
+                        ),
+                        'active' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_bool( $param );
+                            }
+                        ),
+                    ),
                 ),
                 'schema' => array( $this, 'get_users_schema' ),
-            ));
-            register_rest_route( $this->namespace . '/user', '/update', array(
+                
                 array(
-                    'methods'   => 'POST',
-                    'callback'  => array( $this, 'update_user' ),
-                    'permission_callback' => array($this, 'check_users_permission'),
-                ),
-                'schema' => array( $this, 'get_users_schema' ),
-            ));
-            register_rest_route( $this->namespace . '/user', '/register', array(
-                array(
-                    'methods'   => 'POST',
-                    'callback'  => array( $this, 'register_user' ),
-                    'permission_callback' => array($this, 'check_users_permission'),
-                ),
-                'schema' => array( $this, 'get_users_schema' ),
-            ));
-
+                    'methods'   => WP_REST_Server::READABLE,
+                    'callback'  => array ($this, 'get_users' ),
+                    'permission_callback' => 'check_users_permission_admin',
+                    'args'      => array(),   
+                )));
             /**
              * Registers room specific routes.
              */
@@ -324,6 +336,11 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                         'description'  => esc_html__( 'The users birthday.', 'joeee-booking' ),
                         'type'         => 'string',
                         'format'       => 'date',
+                        'context'      => array('view', 'edit'),
+                    ),
+                    'nationality' => array(
+                        'description'  => esc_html__( 'The users nationality.', 'joeee-booking' ),
+                        'type'         => 'integer',
                         'context'      => array('view', 'edit'),
                     ),
                     'address' => array(

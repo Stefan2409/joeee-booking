@@ -24,17 +24,26 @@ if ( ! class_exists( Room::class ) ) {
             $this->room_table = $wpdb->prefix . "joeee_room";
         }
 
-        public function check_data( $request ) {
+        public function check_data( $request, $comesfrom ) {
             foreach( $this->keys as $key ) {
                 if( !array_key_exists( $key, $request )) {
                     return new WP_Error( 'rest_forbidden', esc_html__("There are keys missing in your request. ($key) Check the room json scheme!", "joeee-booking" ), array('status' => 400));
                 }
             }
 
-            if( !(is_int($request['id']) || $request['id'] == null)) {
-                return new WP_Error( 'rest_forbidden', esc_html__("The id isn't an integer. Check the room json scheme!", "joeee-booking" ), array('status' => 400));
+            if( $comesfrom == "create" ) {
+
+                if( !($request['id'] == null) ) {
+                    return new WP_Error( 'rest_forbidden', esc_html__("The id is set wrong. Check the room json scheme!", "joeee-booking" ), array('status' => 400));
+                }
             }
 
+            if( $comesfrom == "update" ) {
+
+                if( !isset( $request['id']) || !is_int( $request['id'] ) ) {
+                    return new WP_Error( 'rest_forbidden', esc_html__("The id isn't an integer. Check the room json scheme!", "joeee-booking" ), array('status' => 400));
+                }
+            }
             if( !(is_string($request['number']) || $request['number'] == null)) {
                 return new WP_Error( 'rest_forbidden', esc_html__("The room number isn't a string. Check the room json scheme!", "joeee-booking" ), array('status' => 400));
             }
@@ -87,12 +96,12 @@ if ( ! class_exists( Room::class ) ) {
 
         public function create_room( $request ) {
             global $wpdb;
-            $validation_result = $this->check_data( $request); 
+            $validation_result = $this->check_data( $request, "create" ); 
             if($validation_result === true ) {
                 $filtered = $this->filter_data( $request );
                 $check_room_number = $wpdb->prepare("SELECT id FROM $this->room_table WHERE number = '%s'", $filtered['number']);
                 $room_number_exists = $wpdb->get_row($check_room_number, ARRAY_A);
-                if($room_number_exists != null) {
+                if( isset($room_number_exists) ) {
                     return new WP_Error('joeee_booking_room_error', esc_html__('The room number already exists!', 'joeee-booking' ));
                 }
                 unset($filtered['id']);
@@ -134,23 +143,26 @@ if ( ! class_exists( Room::class ) ) {
             global $wpdb;
 
             $resource_data = array();
-            $db_query = "SELECT id, number, capacity, active FROM $this->room_table";
+            $db_query = "SELECT * FROM $this->room_table";
 
             $query_result = $wpdb->get_results( $db_query );
 
-            foreach( $query_result as $row ) {
+            if( isset($query_result) ){
+                foreach( $query_result as $row ) {
 
 
-                $resource_data[] = array(
-                    'id'        => $row->id,
-                    'title'     => $row->number,
-                    'capacity'  => $row->capacity,
-                );
+                    $resource_data[] = array(
+                        'id'        => $row->id,
+                        'title'     => $row->number,
+                        'floor'     => $row->floor,
+                        'capacity'  => $row->capacity,
+                        'active'    => $row->active,
+                    );
+                }   
             }
-
             return $resource_data;
+            
         }
-
         public function delete_room( $id ) {
             global $wpdb;
              
@@ -175,7 +187,7 @@ if ( ! class_exists( Room::class ) ) {
 
         public function update_room( $request ) {
             global $wpdb;
-            $validation_result = $this->check_data( $request ); 
+            $validation_result = $this->check_data( $request, "update" ); 
             if($validation_result === true ) {
                 $filtered = $this->filter_data( $request );
                 if( empty($filtered['id']) ) {

@@ -52,18 +52,32 @@ jQuery(document).ready(function() {
 	const ROOMDELETEBTN = $('.joeee-booking-room-delete-btn');
 	const ROOMCANCELBTN = $('.joeee-booking-room-cancel-btn');
 
+	const RESCANCELBTN = $('.joeee-booking-reservation-cancel-btn');
+	const RESBGMODAL = $(".joeee-booking-reservation-bg-modal");
+	const RESROOMID = $('#joeee-booking-reservation-roomid');
+	const RESARRIVAL = $("#joeee-booking-reservation-arrival");
+	const RESDEPARTURE = $("#joeee-booking-reservation-departure");
 
 
+
+
+	function cancel(ev, comesfrom) {
+		ev.preventDefault();
+		if( comesfrom === "room" ) {
+			$('#joeee-roombooking-room-form').trigger('reset');
+			$('.joeee-booking-room-bg-modal').css("display", "none");
+		}
+		if( comesfrom === "reservation" ) {
+			$('#joeee-booking-reservation-form').trigger('reset');
+			$('.joeee-booking-reservation-bg-modal').css("display", "none");
+		}
+		location.reload();
+	}
 
 	function checkRoomFormInputs( comesfrom ) {
 		let formout = {};
 		if ( comesfrom === "submit" ) {
-			if( (ROOMID.val() != "null") && !isNaN(ROOMID.val())) {
-				formout.id = ROOMID.val();
-			}
-			else {
-				formout.id = null;
-			}
+				formout.id = null;			
 		}
 
 		let roomnumberValue = ROOMNUMBER.val().trim();
@@ -131,7 +145,7 @@ jQuery(document).ready(function() {
 	}
 
 
-	var setLocale = 'en';
+	var setLocale = 'de';
 	let calendarEl = document.getElementById('joeeeBookingCalendar');
 	let calendar = new Calendar(calendarEl, {
 		schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
@@ -218,9 +232,18 @@ jQuery(document).ready(function() {
 			{id: '2', resourceId: '16', title: 'Test User2', start: '2020-02-04', end: '2020-02-09' }
 		],
 		eventClick: function(info) {
-			alert('Event: ' + info.event.title);
+
+			console.log('Event: ' + info.event.title);
 		},
 		select: function(arg) {
+			let arrival = arg.start.toISOString().substr(0, 10);
+			let departure = arg.end.toISOString().substr(0, 10);
+
+			RESBGMODAL.css("display", "flex");
+			RESROOMID.val( arg.resource.id );
+			RESARRIVAL.val( arrival );
+			RESDEPARTURE.val( departure );
+
 			console.log(
 				'select callback',
 				arg.startStr,
@@ -229,10 +252,16 @@ jQuery(document).ready(function() {
 			);
 		},
 		dateClick: function(arg) {
+			RESBGMODAL.css("display", "flex");
+			let date = arg.date.substr(0, 10);
+			RESROOMID.val( arg.resource.id );
+			RESARRIVAL.val( date );
 			console.log(
 				'dateClick',
 				arg.date,
-				arg.resource ? arg.resource.id : '(no resource)'
+				arg.resource ? arg.resource.id : '(no resource)',
+				arg.date.toISOString(),
+				date
 			);
 		}
 	});
@@ -240,6 +269,10 @@ jQuery(document).ready(function() {
 
 	$('.joeee-booking-room-close').click(function() {
 		ROOMCANCELBTN.trigger('click');
+	});
+
+	$('.joeee-booking-reservation-close').click(function() {
+		RESCANCELBTN.trigger('click');
 	});
 
 	$('#joeee-booking-room-submit').click(function(ev) {
@@ -269,7 +302,6 @@ jQuery(document).ready(function() {
 				error: function (data) {
 					let err = data.responseJSON.message;
 					let submitError = $('.joeee-booking-room-error');
-					console.log(joeeeRest.restURL + 'joeee-booking/v1/room');
 					submitError.addClass('error');
 					submitError.text(err);
 				},
@@ -282,14 +314,9 @@ jQuery(document).ready(function() {
 		
 	});
 
-	ROOMCANCELBTN.click(function(ev) {
-		ev.preventDefault();
-		$('#joeee-roombooking-room-form').trigger('reset');
-		$('.joeee-booking-room-bg-modal').css("display", "none");
-		location.reload();
+	ROOMCANCELBTN.click(function(ev) {cancel(ev, "room");});
+	RESCANCELBTN.click(function(ev) {cancel(ev, "reservation");});
 
-
-	});
 
 	$('#joeee-booking-room-form-submit-modify').click(function(ev) {
 		ev.preventDefault();
@@ -309,7 +336,7 @@ jQuery(document).ready(function() {
 				success.addClass('success');
 				success.text( __( 'Saved changes successfully.', 'joeee-booking' ) );
 				setTimeout(function() {
-					$('.joeee-booking-room-cancel-btn').trigger('click');
+					ROOMCANCELBTN.trigger('click');
 				}, 1000);
 
 
@@ -363,7 +390,7 @@ jQuery(document).ready(function() {
 			});
 		}
 		else {
-			$('.joeee-booking-room-cancel-btn').trigger('click');
+			ROOMCANCELBTN.trigger('click');
 
 		}
 

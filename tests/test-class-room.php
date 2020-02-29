@@ -93,6 +93,30 @@ class Rooms_Test extends WP_UnitTestCase {
 
     }
 
+    public function test_get_room_empty() {
+        $this->class_instance->activate();
+        $room = new Room();
+        
+
+        $rooms = $room->get_room( 1 );        
+        $this->assertEquals( true, is_wp_error($rooms) );
+
+        $this->assertEquals( 'There is no room with your given ID!', $rooms->get_error_message() );
+
+    }
+
+    public function test_get_room_without_id() {
+        $this->class_instance->activate();
+        $room = new Room();
+        
+
+        $rooms = $room->get_room();        
+        $this->assertEquals( true, is_wp_error($rooms) );
+
+        $this->assertEquals( 'A valid ID is required!', $rooms->get_error_message() );
+
+    }
+
 
 
 
