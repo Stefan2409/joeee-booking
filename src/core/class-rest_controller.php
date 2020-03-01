@@ -124,14 +124,98 @@ if ( ! class_exists( Rest_Controller::class ) ) {
 
                     ),
                 ),
-
-                
                 array(
                     'methods'   => WP_REST_Server::READABLE,
                     'callback'  => array ($this, 'get_users' ),
-                    'permission_callback' => 'check_users_permission_admin',
                     'args'      => array(),   
                 )));
+
+                register_rest_route( $this->namespace, '/user/(?P<id>[\d]+)', array(
+                    array(
+                        'methods'   => WP_REST_Server::EDITABLE,
+                        'callback'  => array( $this, 'update_user' ),
+                        'permission_callback' => array($this, 'check_users_permission'),
+                        'args'      => array(
+                            'email' => array(
+                                'validate_callback' => function( $param, $request, $key ) {
+                                    return is_string( $param );
+                                },
+                                'sanitize_callback' => 'sanitize_email',
+                            ),
+                            'first_name' => array(
+                                'validate_callback' => function( $param, $request, $key ) {
+                                    return is_string( $param );
+                                },
+                                'sanitize_callback' => 'sanitize_text_field',
+                            ),
+                            'last_name' => array(
+                                'validate_callback' => function( $param, $request, $key ) {
+                                    
+                                    return is_string( $param );
+                                },
+                                'sanitize_callback' => 'sanitize_text_field', 
+                            ),
+                            'birthday' => array(
+                                'validate_callback' => function( $param, $request, $key ) {
+                                    return is_string( $param );
+                                }
+                            ),
+                            'nationality' => array(
+                                'validate_callback' => function( $param, $request, $key ) {
+                                    if( !($param != "null") || !is_numeric( $param ) ) {
+                                        return false;
+                                    }
+                                    return true;
+                                }
+                            ),
+                            'tin' => array(
+                                'validate_callback' => function( $param, $request, $key ) {
+                                    return is_string( $param );
+                                },
+                                'sanitize_callback' => 'sanitize_text_field', 
+                            ),
+                            'street' => array(
+                                'validate_callback' => function( $param, $request, $key ) {
+                                    return is_string( $param );
+                                },
+                                'sanitize_callback' => 'sanitize_text_field', 
+                            ),
+                            'zip' => array(
+                                'validate_callback' => function( $param, $request, $key ) {
+                                    return is_string( $param );
+                                },
+                                'sanitize_callback' => 'sanitize_text_field', 
+                            ),
+                            'city' => array(
+                                'validate_callback' => function( $param, $request, $key ) {
+                                    return is_string( $param );
+                                },
+                                'sanitize_callback' => 'sanitize_text_field', 
+                            ),
+                            'country' => array(
+                                'validate_callback' => function( $param, $request, $key ) {
+                                    if( !($param != "null") || !is_numeric( $param ) ) {
+                                        return false;
+                                    }
+                                    return true;
+                                }
+                            ),
+    
+                        ),
+                    ),
+                    array(
+                        'methods'   => WP_REST_Server::READABLE,
+                        'callback'  => array ($this, 'get_user' ),
+                        'args'      => array(
+                            'id'    => array(
+                                'validate_callback' => function( $param, $request, $key ) {
+                                    is_numeric( $param );
+                                }
+                            ),
+                        ),   
+                    )));
+
+            
             /**
              * Registers room specific routes.
              */
@@ -192,6 +276,9 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                             }
                         ),
                         'number' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_string( $param );
+                            },
                             'sanitize_callback' => 'sanitize_text_field',
                         ),
                         'capacity' => array(
@@ -246,8 +333,17 @@ if ( ! class_exists( Rest_Controller::class ) ) {
         }
 
         public function get_users( $request ) {
-            $response = array();
-            array_push($response, $request->get_json_params());
+            $User = new User();
+            $response = $User->get_users();
+            return $response;
+        }
+
+        public function get_user( $request ) {
+            $User = new User();
+            $user_id = $request['id'];
+
+            $response = $User->get_user( $user_id );
+
             return $response;
         }
 
@@ -260,8 +356,13 @@ if ( ! class_exists( Rest_Controller::class ) ) {
         }
 
         public function update_user( $request ) {
-            $response = array();
-            array_push($response, $request->get_json_params() );
+            $User = new User();
+
+            $data = $request->get_json_params();
+            $data['id'] = (int)$request['id'];
+            $response = $User->update_user( $data );
+
+            
             return $response;
         }
         public function register_user( $request ) {
@@ -313,14 +414,8 @@ if ( ! class_exists( Rest_Controller::class ) ) {
 
         public function update_room( $request ) {
             $room = new Room();
-            $data = array();
+            $data = $request->get_json_params();
             $data['id'] = (int)$request['id'];
-            $data['number'] = $request['number'];
-            $data['floor'] = $request['floor'];
-            $data['capacity'] = $request['capacity'];
-            $data['price'] = $request['price'];
-            $data['active'] = $request['active'];
-
 
             $response = $room->update_room( $data );
 
