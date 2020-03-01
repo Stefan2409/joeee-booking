@@ -1,0 +1,18 @@
+POST http://localhost/wp-json/joeee-booking/v1/user HTTP/1.1
+content-type: application/json
+
+{
+    "id": null,
+    "user_id": 1,
+    "email": "maxthehax@example.com",
+    "first_name": "Max",
+    "last_name": "The Hax",
+    "gender": "male",
+    "birthday": "1923-09-09",
+    "nationality": 2,
+    "tin": "ATU234234",
+    "street": "Coronoval Road 123",
+    "zip": "23456",
+    "city": "Vienna",
+    "country": 1
+}

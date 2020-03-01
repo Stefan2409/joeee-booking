@@ -7,7 +7,6 @@ composer.lock
 package-lock.json
 .vscode/
 cypress/
-rest_request.http
 room_request.http
 example_rest.php
 singleroom_request.http
