@@ -6,6 +6,7 @@ use \WP_Error;
 use \WP_REST_Controller;
 use \WP_REST_Server;
 use Joeee_Booking\Core\Room as Room;
+use Joeee_Booking\Core\User as User;
 
 
 // Abort if this file is called directly.
@@ -41,40 +42,89 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                 array(
                     'methods'   => WP_REST_Server::CREATABLE,
                     'callback'  => array( $this, 'create_user' ),
-                    'permission_callback' => array($this, 'check_users_permission_admin'),
+                    'permission_callback' => array($this, 'check_users_permission'),
                     'args'      => array(
                         'id'    => array(
                             'validate_callback' => function( $param, $request, $key ) {
-                                return is_null( $param );
-                            }
+                                return $param == "null";
+                            },
                         ),
-                        'number' => array(
+                        'user_id' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                if( !($param != "null") || !is_numeric( $param ) ) {
+                                    return false;
+                                }
+                                return true;
+                            },
+                        ),
+                        'email' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_string( $param );
+                            },
+                            'sanitize_callback' => 'sanitize_email',
+                        ),
+                        'first_name' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_string( $param );
+                            },
                             'sanitize_callback' => 'sanitize_text_field',
                         ),
-                        'capacity' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_numeric( $param );
-                            }
-                        ),
-                        'floor' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_numeric( $param );
-                            }
-                        ),
-                        'price' => array(
+                        'last_name' => array(
                             'validate_callback' => function( $param, $request, $key ) {
                                 
-                                return is_numeric( $param );
-                            } 
+                                return is_string( $param );
+                            },
+                            'sanitize_callback' => 'sanitize_text_field', 
                         ),
-                        'active' => array(
+                        'birthday' => array(
                             'validate_callback' => function( $param, $request, $key ) {
-                                return is_bool( $param );
+                                return is_string( $param );
                             }
                         ),
+                        'nationality' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                if( !($param != "null") || !is_numeric( $param ) ) {
+                                    return false;
+                                }
+                                return true;
+                            }
+                        ),
+                        'tin' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_string( $param );
+                            },
+                            'sanitize_callback' => 'sanitize_text_field', 
+                        ),
+                        'street' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_string( $param );
+                            },
+                            'sanitize_callback' => 'sanitize_text_field', 
+                        ),
+                        'zip' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_string( $param );
+                            },
+                            'sanitize_callback' => 'sanitize_text_field', 
+                        ),
+                        'city' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                return is_string( $param );
+                            },
+                            'sanitize_callback' => 'sanitize_text_field', 
+                        ),
+                        'country' => array(
+                            'validate_callback' => function( $param, $request, $key ) {
+                                if( !($param != "null") || !is_numeric( $param ) ) {
+                                    return false;
+                                }
+                                return true;
+                            }
+                        ),
+
                     ),
                 ),
-                'schema' => array( $this, 'get_users_schema' ),
+
                 
                 array(
                     'methods'   => WP_REST_Server::READABLE,
@@ -202,8 +252,10 @@ if ( ! class_exists( Rest_Controller::class ) ) {
         }
 
         public function create_user( $request ) {
-            $response = array();
-            array_push($response, $request->get_json_params() );
+            $User = new User();
+            $data = $request->get_json_params();
+            $response = $User->create_user( $data );
+
             return $response;
         }
 
@@ -280,7 +332,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
          * @TODO Set the correct user permissions in build. 
          */
         public function check_users_permission() {
-            if ( !current_user_can( 'read' ) ) {
+            if ( current_user_can( 'read' ) ) {
                 return new WP_Error( 'rest_forbidden', esc_html__( "You aren't allowed to go this way.", 'joeee-booking' ));
             }
             return true;
@@ -343,38 +395,31 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                         'type'         => 'integer',
                         'context'      => array('view', 'edit'),
                     ),
-                    'address' => array(
-                        'description'  => esc_html__( 'The address object for the user.', 'joeee-booking' ),
-                        'type'         => 'object',
-                        'properties'   => array(
-                            'tin' => array(
-                            'description'  => esc_html__( 'The firms tax identification number', 'joeee-booking' ),
-                            'type'         => 'string',
-                            'context'      => array('view', 'edit', 'embed'),
-                            ),
-                            'street'        => array(
-                            'description'       => esc_html__( 'The users street name and number.', 'joeee-booking'),
-                            'type'              => 'string',
-                            'context'           => array('view, edit')
-                            ),
-                            'zip' => array(
-                            'description'  => esc_html__( 'The users zip code.', 'joeee-booking' ),
-                            'type'         => 'integer',
-                            'context'      => array('view', 'edit', 'embed'),
-                            ),
-                            'city' => array(
-                                'description'  => esc_html__( 'The users city.', 'joeee-booking' ),
-                                'type'         => 'string',
-                                'context'      => array('view', 'edit', 'embed'),
-                                ),
-                            'country' => array(
-                                'description'  => esc_html__( 'The users country id.', 'joeee-booking' ),
-                                'type'         => 'integer',
-                                'context'      => array('view', 'edit', 'embed'),
-                            ),
-                        ),
-                        
+                    'tin' => array(
+                    'description'  => esc_html__( 'The firms tax identification number', 'joeee-booking' ),
+                    'type'         => 'string',
+                    'context'      => array('view', 'edit', 'embed'),
                     ),
+                    'street'        => array(
+                    'description'       => esc_html__( 'The users street name and number.', 'joeee-booking'),
+                    'type'              => 'string',
+                    'context'           => array('view, edit')
+                    ),
+                    'zip' => array(
+                    'description'  => esc_html__( 'The users zip code.', 'joeee-booking' ),
+                    'type'         => 'integer',
+                    'context'      => array('view', 'edit', 'embed'),
+                    ),
+                    'city' => array(
+                        'description'  => esc_html__( 'The users city.', 'joeee-booking' ),
+                        'type'         => 'string',
+                        'context'      => array('view', 'edit', 'embed'),
+                        ),
+                    'country' => array(
+                        'description'  => esc_html__( 'The users country id.', 'joeee-booking' ),
+                        'type'         => 'integer',
+                        'context'      => array('view', 'edit', 'embed'),
+                    ),      
                 ),
             );
         

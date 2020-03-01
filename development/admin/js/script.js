@@ -145,7 +145,7 @@ jQuery(document).ready(function() {
 	}
 
 
-	var setLocale = 'de';
+	var setLocale = 'en';
 	let calendarEl = document.getElementById('joeeeBookingCalendar');
 	let calendar = new Calendar(calendarEl, {
 		schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
@@ -156,7 +156,7 @@ jQuery(document).ready(function() {
 		scrollTime: '00:00', // undo default 6am scrollTime
 		locale: setLocale,
 		header: {
-			left: 'addRoom, today, prev, next',
+			left: 'addRoom, addReservation, today, prev, next',
 			center: 'title',
 			right: 'resourceTimelineMonth, resourceTimelineWeek',
 		},
@@ -167,7 +167,13 @@ jQuery(document).ready(function() {
 					$('.joeee-booking-room-bg-modal').css("display", "flex");
 				}
 				
-			}
+			},
+			addReservation: {
+				text: __('Add reservation', 'joeee-booking'),
+				click: function() {
+					RESBGMODAL.css("display", "flex");
+				}
+			},
 		},
 		defaultView: 'resourceTimelineMonth',
 		selectable: true,
@@ -180,9 +186,9 @@ jQuery(document).ready(function() {
 				width: '15px'
 			},
 			{
-				labelText: __( 'Capacity', 'joeee-booking' ),
+				labelText: __( 'Beds', 'joeee-booking' ),
 				field: 'capacity'
-			}
+			},
 		],
 		resourceOrder: 'title',
 		resources: {
@@ -227,9 +233,10 @@ jQuery(document).ready(function() {
 
 			});
 		},
+		timeZone: 'UTC',
 		events: [
-			{id: '1', resourceId: '14', title: 'Test User', start: '2020-02-04T12:00:00', end: '2020-02-09T12:00:00', color: 'green' },
-			{id: '2', resourceId: '16', title: 'Test User2', start: '2020-02-04', end: '2020-02-09' }
+			{id: '1', resourceId: '14', title: 'Test User', start: '2020-03-04T12:00:00', end: '2020-03-09T12:00:00', color: 'green' },
+			{id: '2', resourceId: '16', title: 'Test User2', start: '2020-03-04T12:00:00', end: '2020-03-14T12:00:00' }
 		],
 		eventClick: function(info) {
 
@@ -253,7 +260,7 @@ jQuery(document).ready(function() {
 		},
 		dateClick: function(arg) {
 			RESBGMODAL.css("display", "flex");
-			let date = arg.date.substr(0, 10);
+			let date = arg.date.toISOString().substr(0, 10);
 			RESROOMID.val( arg.resource.id );
 			RESARRIVAL.val( date );
 			console.log(
@@ -261,7 +268,7 @@ jQuery(document).ready(function() {
 				arg.date,
 				arg.resource ? arg.resource.id : '(no resource)',
 				arg.date.toISOString(),
-				date
+				arg.date.toString()
 			);
 		}
 	});

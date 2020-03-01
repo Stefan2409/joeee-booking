@@ -115,7 +115,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             </div>
             <div class="joeee-booking-reservation-form-control">
                 <label for="joeee-booking-reservation-persons"><?php esc_html_e('Persons', 'joeee-booking') ?></label>
-                <input type="number" placeholder="<?php esc_attr_e('Persons', 'joeee-booking') ?>" id="joeee-booking-reservation-persons">
+                <input type="number" min="1" placeholder="<?php esc_attr_e('Persons', 'joeee-booking') ?>" id="joeee-booking-reservation-persons">
                 <i class="dashicons dashicons-yes-alt"></i>
                 <i class="dashicons dashicons-warning"></i>
                 <small>Error message</small>
@@ -145,7 +145,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             <div class="joeee-booking-reservation-form-control">
                 <label for="joeee-booking-reservation-nationality"><?php esc_html_e('Nationality', 'joeee-booking') ?></label>
                 <select name="nationality-select" id="joeee-booking-nationality-select">
-                    <option disabled selected><?php esc_html_e('Please select country')?></option>
+                    <option disabled selected><?php esc_html_e('Please select country', 'joeee-booking')?></option>
                     <?php foreach( $country_data as $country ) {?>
                     <option value="<?php echo $country['id'] ?>"><?php echo $country['en_name'] ?></option>
                     <?php }?>
@@ -158,6 +158,14 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <h2></h2>
                 </div>
                 <div class="joeee-booking-reservation-form-control right">
+                <label for="joeee-booking-reservation-gender"><?php esc_html_e('Gender', 'joeee-booking') ?></label>
+                <select name="gender-select" id="joeee-booking-reservation-gender">
+                <option disabled selected><?php esc_html_e('Please select a gender')?></option>
+                <option value="1"><?php esc_html_e( 'Male', 'joeee-booking' ) ?></option>
+                <option value="2"><?php esc_html_e( 'Female', 'joeee-booking' ) ?></option>
+                </select>
+                </div>
+                <div class="joeee-booking-reservation-form-control">
                     <label for="joeee-booking-reservation-birthday"><?php esc_html_e('Date of birth', 'joeee-booking') ?></label>
                     <input type="date" placeholder="<?php esc_attr_e('Date of birth', 'joeee-booking') ?>" id="joeee-booking-reservation-birthday">
                     <i class="dashicons dashicons-yes-alt"></i>

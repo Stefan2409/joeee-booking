@@ -41,10 +41,6 @@
     position: relative;
 }
 
-.joeee-booking-reservation-form-control.right {
-    margin-top: 52px;
-}
-
 .joeee-booking-reservation-form-control label {
     text-align: right;
     clear: both;
@@ -57,6 +53,10 @@
     border: 2px solid #f0f0f0;
     border-radius: 5px;
     display: float;
+}
+
+.joeee-booking-reservation-form-control.right {
+    margin-top: 72px;
 }
 
 .joeee-booking-reservation-form-control i {
