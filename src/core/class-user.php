@@ -60,22 +60,27 @@ if ( ! class_exists( User::class ) ) {
             else {
                 if ( $email != "") {
                     $username = $email;
-                }
-                else {
-                    $username = str_replace(" ", "", $firstname) + str_replace( " ", "", $lastname );
-                }
-                $password = wp_generate_password( $length = 12 );
+                    $password = wp_generate_password( $length = 12 );
+                    $userdata = array(
+                        'user_pass'     => $password,
+                        'user_login'    => $username,
+                        'user_email'    => $email,
+                        'first_name'    => $firstname,
+                        'last_name'     => $lastname,
+                    );
+    
+                    $user_id = wp_insert_user( $userdata );
 
-                $userdata = array(
-                    'user_pass'     => $password,
-                    'user_login'    => $username,
-                    'user_email'    => $email,
-                    'first_name'    => $firstname,
-                    'last_name'     => $lastname,
-                    'show_admin_bar_front' => 0,
-                );
 
-                $user_id = wp_insert_user( $userdata );
+                }
+
+                if( !$user_id ) {
+                    $user_id = NULL;
+                }
+
+                
+
+
                 $data['user_id'] = $user_id;
 
 
@@ -136,14 +141,14 @@ if ( ! class_exists( User::class ) ) {
             return $result;
         }
 
-        public function get_user( $user_id ) {
+        public function get_user( $person_id ) {
             global $wpdb;
  
             $sql = "SELECT person.user_id, user.user_email, person.first_name, person.last_name, gender, birth, nationality_id, tin, street, zip, city, state_id FROM $this->table_person person
             LEFT JOIN $this->table_users user ON person.user_id = user.ID
             LEFT JOIN $this->table_address address ON person.address_id = address.id
             LEFT JOIN $this->table_country country ON address.state_id = country.id
-            WHERE person.user_id = $user_id";
+            WHERE person.id = $person_id";
             $result = $wpdb->get_results( $sql );
 
             if( empty($result) ) {
