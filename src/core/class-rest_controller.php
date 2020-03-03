@@ -203,6 +203,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
     
                         ),
                     ),
+                    'schema' => array( $this, 'get_users_schema' ),
                     array(
                         'methods'   => WP_REST_Server::READABLE,
                         'callback'  => array ($this, 'get_user' ),
@@ -293,7 +294,6 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                         ),
                         'price' => array(
                             'validate_callback' => function( $param, $request, $key ) {
-                                //$param = preg_replace( ',', '.', $param );
                                 return is_numeric( $param );
                             } 
                         ),
@@ -330,8 +330,58 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             ));
 
 
+                    /**
+         * Registers reservation specific routes
+         */
+        register_rest_route( $this->namespace, '/reservation', array(
+            array(
+                'methods'   => WP_REST_Server::READABLE,
+                'callback'  => array( $this, 'get_reservations' ),
+                'args'      => array(),
+            ),
+            array(
+                'methods'   => WP_REST_Server::CREATABLE,
+                'callback'  => array( $this, 'create_reservation'),
+                'args'      => array(
+                    'person_id'         => array(
+                        'type'  => 'number',
+                        'required'          => true,
+                    ),
+                    'room_id'   => array(
+                        'type'  => 'number',
+                    ),
+                    'booked_from'   => array(
+                        'type'              => 'string',
+                        'format'            => 'date-time',
+                        'required'          => true,
+                    ),
+                    'booked_to'      => array(
+                        'type'              => 'string',
+                        'format'            => 'date-time',
+                        'required'          => true,
+                    ),
+                    'price'         => array(
+                        'type'      => 'number',
+                    ),
+                    'confirmation'  => array(
+                        'type'      => 'number',
+                        'enum'      => array(
+                            1,
+                            2,
+                            3,
+                        ),
+
+                    ),
+
+                ),
+            ),
+        ));
+
         }
 
+        /**
+         * User specific functionality
+         */
         public function get_users( $request ) {
             $User = new User();
             $response = $User->get_users();
@@ -422,6 +472,22 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             return $response;
         }
 
+        /**
+         * Reservation specific functionality
+         */
+
+         public function create_reservation( $request ) {
+            $data = $request->get_json_params();
+
+            return $data;
+         }
+
+         public function get_reservations( $request ) {
+            $data = $request->get_json_params();
+
+            return $data;
+         }
+
         
         /**
          * @TODO Set the correct user permissions in build. 
@@ -454,13 +520,13 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                 // In JSON Schema you can specify object properties in the properties attribute.
                 'properties'           => array(
                     'id' => array(
-                        'description'  => esc_html__( 'Unique identifier for the object.', 'joeee-booking' ),
+                        'description'  => esc_html__( 'Unique identifier for the user.', 'joeee-booking' ),
                         'type'         => 'integer',
                         'context'      => array( 'view', 'edit', 'embed' ),
                         'readonly'     => true,
                     ),
                     'user_id' => array(
-                        'description'  => esc_html__( 'The id of the user object.', 'joeee-booking' ),
+                        'description'  => esc_html__( 'The id of the wp user object.', 'joeee-booking' ),
                         'type'         => 'integer',
                     ),
                     'email' => array(
