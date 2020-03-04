@@ -10,11 +10,12 @@
     z-index: 1000;
     display: none;
 }
-
+.joeee-booking-room-modal-cont {
+    display: flex;
+}
 .joeee-booking-room-modal-form-content {
     width: 500px;
     max-width: 100%;
-    height: 400px;
     background-color: white;
     border-radius: 4px;
     text-align: center;

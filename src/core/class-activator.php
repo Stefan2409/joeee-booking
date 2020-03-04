@@ -38,6 +38,8 @@ if ( ! class_exists( Activator::class ) ) {
 			$table_room = $wpdb->prefix . "joeee_room";
 			$table_reservation = $wpdb->prefix . "joeee_reservation";
 			$table_booked = $wpdb->prefix . "joeee_room_booked";
+			$table_extra = $wpdb->prefix . "joeee_extra";
+			$table_reservation_extra = $wpdb->prefix . "joeee_reservation_extra";
 
 			$sql_person = "CREATE TABLE $table_person (
 				id int(10) NOT NULL AUTO_INCREMENT,
@@ -85,10 +87,12 @@ if ( ! class_exists( Activator::class ) ) {
 			$sql_room = "CREATE TABLE $table_room (
 				id int(10) NOT NULL AUTO_INCREMENT,
 				number varchar(255) NOT NULL,
-  				capacity smallint(5) NOT NULL,
+  				adults smallint(5) NOT NULL,
+				kids smallint(5),
 				floor smallint(5) NOT NULL,
 				price float(10) NOT NULL,
 				active boolean NOT NULL,
+				description varchar(3000),
 				created timestamp,
 				PRIMARY KEY  (id)
 				) $charset_collate;";
@@ -112,15 +116,31 @@ if ( ! class_exists( Activator::class ) ) {
 				FOREIGN KEY  (room_id) REFERENCES $table_room (id)
 				) $charset_collate;";
 
+			$sql_extra = "CREATE TABLE IF NOT EXISTS $table_extra (
+				id int(10) NOT NULL AUTO_INCREMENT,
+				title varchar(255),
+				price float(10),
+				PRIMARY KEY  (id)
+			) $charset_collate;";
+
+			$sql_reservation_extra = "CREATE TABLE IF NOT EXISTS $table_reservation_extra (
+				reservation_id int(10),
+				extra_id int(10),
+				count int(10),
+				CONSTRAINT resextra_foreign PRIMARY KEY  (reservation_id, extra_id),
+				FOREIGN KEY  (extra_id) REFERENCES $table_extra (id),
+				FOREIGN KEY  (reservation_id) REFERENCES $table_reservation (id) 
+				) $charset_collate;";
+
 			
-			$sql = [$sql_country, $sql_room];
+			$sql = [$sql_country, $sql_room, $sql_extra];
 			require_once( ABSPATH . 'wp-admin/includes/upgrade.php');
 			
 			foreach($sql as $query) {
 				dbDelta( $query );
 			}
 
-			$sql_foreign = [$sql_address, $sql_booked, $sql_person, $sql_reservation, $sql_fellow];
+			$sql_foreign = [$sql_address, $sql_booked, $sql_person, $sql_reservation, $sql_fellow, $sql_reservation_extra];
 			
 			foreach($sql_foreign as $query) {
 				$wpdb->query( $query );

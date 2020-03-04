@@ -44,8 +44,10 @@ jQuery(document).ready(function() {
 	const ROOMID = $('#joeee-booking-room-id');
 	const ROOMNUMBER = $('#joeee-booking-room-roomnumber');
 	const FLOORNUMBER = $('#joeee-booking-room-floornumber');
-	const ROOMCAPACITY = $('#joeee-booking-room-capacity');
+	const ROOMADULTS = $('#joeee-booking-room-adults');
+	const ROOMKIDS = $('#joeee-booking-room-kids');
 	const ROOMPRICE = $('#joeee-booking-room-price');
+	const ROOMDESC = $('#joeee-booking-room-desc');
 	const ROOMACTIVE = $('#joeee-booking-room-active');
 	const ROOMSUBMITBTN = $('#joeee-booking-room-submit');
 	const ROOMSUBMITMODIFY = $('#joeee-booking-room-form-submit-modify');
@@ -57,6 +59,21 @@ jQuery(document).ready(function() {
 	const RESROOMID = $('#joeee-booking-reservation-roomid');
 	const RESARRIVAL = $("#joeee-booking-reservation-arrival");
 	const RESDEPARTURE = $("#joeee-booking-reservation-departure");
+	const RESPERSONS = $('#joeee-booking-reservation-persons');
+	const RESEMAIL = $('#joeee-booking-reservation-email');
+	const RESFIRSTNAME = $('#joeee-booking-reservation-firstname');
+	const RESLASTNAME = $('#joeee-booking-reservation-lastname');
+	const RESNATIONALITY = $('#joeee-booking-nationality-select');
+	const RESGENDER = $('#joeee-booking-reservation-gender');
+	const RESBIRTHDAY = $('#joeee-booking-reservation-birthday');
+	const RESSTREET = $('#joeee-booking-reservation-street');
+	const RESZIP = $('#joeee-booking-reservation-zip');
+	const RESCITY = $('#joeee-booking-reservation-city');
+	const RESCOUNTRY = $('#joeee-booking-country-select');
+	const RESSUBMIT = $('#joeee-booking-reservation-submit');
+
+	
+	
 
 
 
@@ -74,16 +91,135 @@ jQuery(document).ready(function() {
 		location.reload();
 	}
 
+
+	function emailIsValid (email) {
+		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+	}
+
+	function checkReservationFormInputs ( comesfrom ) {
+		let formout = {};
+
+		let arrival = RESARRIVAL.val();
+		let departure = RESDEPARTURE.val();
+		let persons = RESPERSONS.val();
+		let email = RESEMAIL.val();
+		let firstName = RESFIRSTNAME.val().trim();
+		let lastName = RESLASTNAME.val().trim();
+		let nationality = RESNATIONALITY.val();
+		let gender = RESGENDER.val();
+		let birthday = RESBIRTHDAY.val();
+		let street = RESSTREET.val().trim();
+		let zip = RESZIP.val().trim();
+		let city = RESCITY.val().trim();
+		let country = RESCOUNTRY.val();
+
+		if( arrival === '' ) {
+			setErrorFor( RESARRIVAL, __( 'The arrival date is required!', 'joeee-booking' ));
+			return false;
+		}
+		else {
+			setSuccessFor( RESARRIVAL );
+			formout.booked_from = RESARRIVAL;
+		}
+
+		if( departure === '' ) {
+			setErrorFor( RESDEPARTURE, __( 'The departure date is required!', 'joeee-booking' ));
+			return false;
+		}
+		else {
+			setSuccessFor( RESDEPARTURE );
+			formout.booked_to = RESDEPARTURE;
+		}
+		
+
+		if( isNaN( persons ) || persons === '' ) {
+			setErrorFor(RESPERSONS, __( 'The persons field is required!', 'joeee-booking' ));
+			return false;
+		}
+		else {
+			setSuccessFor( RESPERSONS );
+			formout.persons = persons;
+		}
+
+		if( email === "" || emailIsValid( email ) ) {
+			formout.email = email;
+			setSuccessFor( RESEMAIL );
+		}
+		else {
+			setErrorFor(RESEMAIL, __( 'The E-Mail has a wrong format.', 'joeee-booking' ));
+			return false;
+		}
+
+		if( typeof firstName === 'string' ) {
+			setSuccessFor( RESFIRSTNAME );
+			if( firstName !== "" ) {
+				formout.first_name = firstName;
+			}
+		}
+		else {
+			setErrorFor( RESFIRSTNAME, __('The first name have to be in string format!', 'joeee-booking' ) );
+			return false;
+		}
+
+		if ( lastName === "" || typeof lastName !== 'string' ) {
+			setErrorFor( RESLASTNAME, __('The last name is required and has to be in string format', 'joeee-booking') );
+			return false;
+		}
+		else {
+			setSuccessFor( RESLASTNAME );
+			formout.last_name = lastName;
+		}
+
+		formout.nationality = nationality;
+
+		formout.gender = gender;
+		
+		if( birthday !== "" ) {
+			setSuccessFor( RESBIRTHDAY );
+			formout.birthday = birthday;
+		}
+
+		if( typeof street === 'string' ) {
+			setSuccessFor( RESSTREET );
+			formout.street = street;
+		}
+		else {
+			setErrorFor( RESSTREET, __('The street has to be a string', 'joeee-booking') );
+			return false;
+		}
+
+		if( typeof zip === 'string' || typeof zip === 'number' ) {
+			setSuccessFor( RESZIP );
+			formout.zip = zip;
+		}
+		else {
+			setErrorFor( RESZIP, __('There is an error with your given zip.', 'joeee-booking' ));
+			return false;
+		}
+
+		if( typeof city === 'string' ) {
+			setSuccessFor( RESCITY );
+			formout.city = city;
+		}
+		else {
+			setErrorFor( RESCITY, __('The city has to be a string.', 'joeee-booking' ));
+			return false;
+		}
+
+		formout.country = country;
+		return formout;
+
+	}
+
 	function checkRoomFormInputs( comesfrom ) {
 		let formout = {};
-		if ( comesfrom === "submit" ) {
-				formout.id = null;			
-		}
 
 		let roomnumberValue = ROOMNUMBER.val().trim();
 		let floornumberValue = FLOORNUMBER.val().trim();
-		let roomcapacityValue = ROOMCAPACITY.val().trim();
+		let roomAdultsValue = ROOMADULTS.val().trim();
+		let roomKidsValue = ROOMKIDS.val().trim();
 		let roompriceValue = ROOMPRICE.val().trim().replace(',', '.');
+		let roomDescription = ROOMDESC.val().trim();
 		
 		
 
@@ -102,16 +238,24 @@ jQuery(document).ready(function() {
 		}
 		else {
 			setSuccessFor(FLOORNUMBER);
-			formout.floor = parseInt(floornumberValue);
+			formout.floor = floornumberValue;
 		}
 
-		if ( isNaN( roomcapacityValue ) || roomcapacityValue === '') {
-			setErrorFor(ROOMCAPACITY, __('The capacity must be an integer!', 'joeee-booking'));
+		if ( isNaN( roomAdultsValue ) || roomAdultsValue === '') {
+			setErrorFor(ROOMADULTS, __('The adults must be an integer!', 'joeee-booking'));
 			return false;
 		}
 		else {
-			setSuccessFor(ROOMCAPACITY);
-			formout.capacity = parseInt(roomcapacityValue);
+			setSuccessFor(ROOMADULTS);
+			formout.adults = parseInt(roomAdultsValue);
+		}
+		if ( isNaN( roomKidsValue ) || roomKidsValue === '') {
+			setErrorFor(ROOMKIDS, __('The kids must be an integer!', 'joeee-booking'));
+			return false;
+		}
+		else {
+			setSuccessFor(ROOMKIDS);
+			formout.kids = parseInt(roomAdultsValue);
 		}
 		if ( isNaN( roompriceValue ) || roompriceValue === '') {
 			setErrorFor(ROOMPRICE, __('The price must be a float number!', 'joeee-booking'));
@@ -120,6 +264,9 @@ jQuery(document).ready(function() {
 		else {
 			setSuccessFor(ROOMPRICE);
 			formout.price = parseFloat(roompriceValue);
+		}
+		if ( typeof ROOMDESC === 'string' ) {
+			formout.description = roomDescription;
 		}
 		if ( ROOMACTIVE.is( ":checked" ) ) {
 			formout.active = true;
@@ -187,7 +334,7 @@ jQuery(document).ready(function() {
 			},
 			{
 				labelText: __( 'Beds', 'joeee-booking' ),
-				field: 'capacity'
+				field: 'adults'
 			},
 		],
 		resourceOrder: 'title',
@@ -206,7 +353,7 @@ jQuery(document).ready(function() {
 					success: function (data) {
 						ROOMID.val(data.id);
 						ROOMNUMBER.val(data.number);
-						ROOMCAPACITY.val(data.capacity);
+						ROOMADULTS.val(data.adults);
 						FLOORNUMBER.val(data.floor);
 						ROOMPRICE.val(data.price);
 						if( data.active == 1) {
@@ -401,6 +548,16 @@ jQuery(document).ready(function() {
 
 		}
 
+	});
+
+	RESSUBMIT.click( function(ev) {
+		ev.preventDefault();
+
+		let checked = checkReservationFormInputs();
+
+		
+
+	
 	});
 	
 });

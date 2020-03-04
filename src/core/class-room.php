@@ -17,7 +17,7 @@ if ( ! class_exists( Room::class ) ) {
 
         protected $room_table;
 
-        protected $keys = ["id", "number", "floor", "capacity", "price", "active"];
+        protected $keys = ["id", "number", "floor", "adults", "kids", "price", "active"];
 
         public function __construct() {
             global $wpdb;
@@ -25,12 +25,13 @@ if ( ! class_exists( Room::class ) ) {
         }
 
         public function check_data( $request, $comesfrom ) {
-            foreach( $this->keys as $key ) {
+            if($comesfrom === 'update') {
+                foreach( $this->keys as $key ) {
                 if( !array_key_exists( $key, $request )) {
-                    return new WP_Error( 'rest_forbidden', esc_html__("There are keys missing in your request. ($key) Check the room json scheme!", "joeee-booking" ), array('status' => 400));
+                        return new WP_Error( 'rest_forbidden', esc_html__("There are keys missing in your request. ($key) Check the room json scheme!", "joeee-booking" ), array('status' => 400));
+                    }
                 }
             }
-
             if( $comesfrom == "create" ) {
 
                 if( !($request['id'] == null) ) {
@@ -49,11 +50,16 @@ if ( ! class_exists( Room::class ) ) {
             }
 
             if( !(is_int($request['floor']) || $request['floor'] == null)) {
-                return new WP_Error( 'rest_forbidden', esc_html__("The floor number isn't an integer. Check the room json scheme!", "joeee-booking", array('status' => 400) ));
+                $floor = $request['floor'];
+                return new WP_Error( 'rest_forbidden', esc_html__("The floor number isn't an integer $floor. Check the room json scheme!", "joeee-booking", array('status' => 400) ));
             }
 
-            if( !(is_int($request['capacity']) || $request['capacity'] == null)) {
-                return new WP_Error( 'rest_forbidden', esc_html__("The capacity isn't an integer. Check the room json scheme!", "joeee-booking", array('status' => 400) ));
+            if( !(is_int($request['adults']) || $request['adults'] == null)) {
+                return new WP_Error( 'rest_forbidden', esc_html__("The number of adults isn't an integer. Check the room json scheme!", "joeee-booking", array('status' => 400) ));
+            }
+
+            if( !(is_int($request['kids']) || !($request['kids'] == null)) ) {
+                return new WP_Error( 'rest_forbidden', esc_html__("The number of kids isn't an integer. Check the room json scheme!", "joeee-booking", array('status' => 400) ));
             }
 
             if( !(is_numeric($request['price']) || $request['price'] == null)) {
@@ -79,7 +85,10 @@ if ( ! class_exists( Room::class ) ) {
                 'floor' => array(
                     'filter' => FILTER_SANITIZE_NUMBER_INT,
                 ),
-                'capacity' => array(
+                'adults' => array(
+                    'filter' => FILTER_SANITIZE_NUMBER_INT,
+                ),
+                'kids' => array(
                     'filter' => FILTER_SANITIZE_NUMBER_INT,
                 ),
                 'price' => array(
@@ -109,7 +118,7 @@ if ( ! class_exists( Room::class ) ) {
                 $id = $wpdb->insert_id;
 
                 if( $id !== false ) {
-                    return true;
+                    return $filtered;
                 }
                 else {
                     return new WP_Error('joeee_booking_room_error', esc_html__( 'Error by creating the new room.', 'joeee-booking' ), array('status' => 400));
@@ -127,7 +136,7 @@ if ( ! class_exists( Room::class ) ) {
                 if( empty($filtered) ) {
                     return new WP_Error('joeee_booking_room_error', esc_html__( 'A valid ID is required!', 'joeee-booking'), array('status' => 400));
                 }
-                $query = $wpdb->prepare("SELECT id, number, floor, capacity, price, active FROM $this->room_table WHERE id = %d", array( $filtered ));
+                $query = $wpdb->prepare("SELECT id, number, floor, adults, kids, price, active FROM $this->room_table WHERE id = %d", array( $filtered ));
                 $result = $wpdb->get_row($query, ARRAY_A);
                 if ( empty($result)) {
                     return new WP_Error('joeee_booking_room_error', esc_html__( 'There is no room with your given ID!', 'joeee-booking'), array('status' => 400));
@@ -155,7 +164,8 @@ if ( ! class_exists( Room::class ) ) {
                         'id'        => $row->id,
                         'title'     => $row->number,
                         'floor'     => $row->floor,
-                        'capacity'  => $row->capacity,
+                        'adults'    => $row->adults,
+                        'kids'      => $row->kids,
                         'active'    => $row->active,
                     );
                 }   

@@ -227,33 +227,34 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                     'permission_callback' => array($this, 'check_users_permission_admin'),
                     'args'      => array(
                         'id'    => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_null( $param );
-                            }
+                            'type'      => 'number',
                         ),
                         'number' => array(
+                            'type'              => 'string',
                             'sanitize_callback' => 'sanitize_text_field',
+                            'required'          => true,
                         ),
-                        'capacity' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_numeric( $param );
-                            }
+                        'adults' => array(
+                            'type'      => 'number',
+                            'required'  => true,
+                        ),
+                        'kids'  => array(
+                            'type'      => 'number',
                         ),
                         'floor' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_numeric( $param );
-                            }
+                            'type'      => 'number',
+                            'required'  => true,
                         ),
                         'price' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                
-                                return is_numeric( $param );
-                            } 
+                            'type'      => 'number',
+                            'required'  => true, 
+                        ),
+                        'description'   => array(
+                            'type'      => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
                         ),
                         'active' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_bool( $param );
-                            }
+                            'type'      => 'boolean',
                         ),
                     ),
                 ),
@@ -272,35 +273,34 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                     'permission_callback' => array( $this, 'check_users_permission_admin' ),
                     'args'      => array(
                         'id'    => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_numeric( $param );
-                            }
+                            'type'      => 'number',
                         ),
                         'number' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_string( $param );
-                            },
+                            'type'              => 'string',
                             'sanitize_callback' => 'sanitize_text_field',
+                            'required'          => true,
                         ),
-                        'capacity' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_numeric( $param );
-                            }
+                        'adults' => array(
+                            'type'      => 'number',
+                            'required'  => true,
+                        ),
+                        'kids'  => array(
+                            'type'      => 'number',
                         ),
                         'floor' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_numeric( $param );
-                            }
+                            'type'      => 'number',
+                            'required'  => true,
                         ),
                         'price' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_numeric( $param );
-                            } 
+                            'type'      => 'number',
+                            'required'  => true, 
+                        ),
+                        'description'   => array(
+                            'type'      => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
                         ),
                         'active' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_bool( $param );
-                            }
+                            'type'      => 'boolean',
                         ),
                     ),
                 ),
@@ -309,9 +309,8 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                     'callback'  => array( $this, 'get_room' ),
                     'args'      => array(
                         'id'    => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                is_numeric( $param );
-                            }
+                                'type'      => 'number',
+                                'required'  => true,
                         )
                     ),
                 ),
@@ -321,9 +320,8 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                     'permission_callback' => array( $this, 'check_users_permission_admin' ),
                     'args'      => array(
                         'id'    => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                is_numeric( $param );
-                            }
+                                'type'      => 'number',
+                                'required'  => true,
                         ),
                     ),
                 ),
@@ -370,7 +368,10 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                             2,
                             3,
                         ),
-
+                    ),
+                    'persons'       => array(
+                        'type'      => 'number',
+                        'required'  => true,
                     ),
 
                 ),
@@ -605,8 +606,13 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                         'type'         => 'string',
                         'context'      => array('view', 'edit'),
                     ),
-                    'capacity' => array(
-                        'description'  => esc_html__( 'The rooms maximum capacity', 'joeee-booking' ),
+                    'adults' => array(
+                        'description'  => esc_html__( 'The rooms adult beds.', 'joeee-booking' ),
+                        'type'         => 'integer',
+                        'context'      => array('view', 'edit', 'embed'),
+                    ),
+                    'kids' => array(
+                        'description'  => esc_html__( 'The rooms kid beds', 'joeee-booking' ),
                         'type'         => 'integer',
                         'context'      => array('view', 'edit', 'embed'),
                     ),
@@ -618,6 +624,11 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                     'price' => array(
                         'description'  => esc_html__( 'The room price.', 'joeee-booking' ),
                         'type'         => 'number',
+                        'context'      => array('view', 'edit', 'embed'),
+                    ),
+                    'description' => array(
+                        'description'  => esc_html__( 'The room description.', 'joeee-booking' ),
+                        'type'         => 'string',
                         'context'      => array('view', 'edit', 'embed'),
                     ),
                     'active' => array(
