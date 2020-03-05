@@ -235,3 +235,19 @@ if ( ! defined( 'ABSPATH' ) ) {
         </div>
     </div>
 </div>
+<div class="joeee-booking-extras-bg-modal">
+    <div class="joeee-booking-extras-content">
+        <div class="joeee-booking-extras-content-window">
+        <form action="" id="joeee-booking-extras-form">
+            <table class="joeeee-booking-extras-table" id="joeee-booking-extras-table-dynamic">
+                <tr>
+                    <td><input type="text" name="name[]" placeholder="<?php esc_attr_e('Enter your extra', 'joeee-booking') ?>" class="joeee-booking-form--extras-control"></td>
+                    <td><input type="text" name="price[]" placeholder="<?php esc_attr_e('Price', 'joeee-booking') ?>" class="joeee-booking-form--extras-control"></td>
+                    <td><button type="button" name="joeee-booking-extras-add" id="joeee-booking-extras-add" class="button-primary"><?php _e("Add extra", "joeee-booking") ?></button></td>
+                </tr>
+            </table>
+            <input type="button" name="joeee-booking-extras-submit" id="joeee-booking-extras-submit" class="joeee-booking-submit-btn" value="<?php esc_attr_e('Save', 'joeee-booking') ?>">
+        </form>
+        </div>
+    </div>
+</div>

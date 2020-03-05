@@ -213,7 +213,7 @@ if ( ! class_exists( Room::class ) ) {
                     return new WP_Error('joeee_booking_room_error', esc_html__( 'Error by updating the room.', 'joeee-booking'), array('status' => 400));
                 }
                 else {
-                    return array("success" => "Room updated.");
+                    return $filtered;
                 }               
                
             }
