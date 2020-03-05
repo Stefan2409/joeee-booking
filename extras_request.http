@@ -1,0 +1,9 @@
+POST http://localhost/develop/wp-json/joeee-booking/v1/extra HTTP/1.1
+content-type: application/json
+
+
+{
+    "title": "Fischerkarte",
+    "price": 22.5,
+    "bookable": 1
+}

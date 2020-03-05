@@ -378,6 +378,35 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             ),
         ));
 
+
+        register_rest_route( $this->namespace, '/extra', array(
+            array(
+                'methods'   => WP_REST_Server::READABLE,
+                'callback'  => array( $this, 'get_extras'),
+                'args'      => array(),
+            ),
+            array(
+                'methods'   => WP_REST_Server::CREATABLE,
+                'callback'  => array( $this, 'create_extras' ),
+                'args'      => array(
+                    'title' => array(
+                        'type'      => 'string',
+                        'required'  => true,
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ),
+                    'price' => array(
+                        'type'      => 'number',
+                        'required'  => true,
+                    ),
+                    'bookable'  => array(
+                        'type'      => 'boolean',
+                        'required'  => true,
+                    ),
+                ),
+            )
+        ));
+
+
         }
 
         /**
@@ -490,6 +519,16 @@ if ( ! class_exists( Rest_Controller::class ) ) {
          }
 
         
+         public function get_extras( $request ) {
+
+         }
+
+         public function create_extras( $request ) {
+            $data = $request->get_json_params();
+            return $data;
+         }
+
+
         /**
          * @TODO Set the correct user permissions in build. 
          */

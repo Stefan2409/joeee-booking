@@ -118,8 +118,9 @@ if ( ! class_exists( Activator::class ) ) {
 
 			$sql_extra = "CREATE TABLE IF NOT EXISTS $table_extra (
 				id int(10) NOT NULL AUTO_INCREMENT,
-				title varchar(255),
-				price float(10),
+				title varchar(255) NOT NULL,
+				price float(10) NOT NULL,
+				bookable boolean NOT NULL,
 				PRIMARY KEY  (id)
 			) $charset_collate;";
 
