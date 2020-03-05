@@ -49,16 +49,16 @@ if ( ! class_exists( Room::class ) ) {
                 return new WP_Error( 'rest_forbidden', esc_html__("The room number isn't a string. Check the room json scheme!", "joeee-booking" ), array('status' => 400));
             }
 
-            if( !(is_int($request['floor']) || $request['floor'] == null)) {
+            if( !(is_numeric($request['floor']) || $request['floor'] == null)) {
                 $floor = $request['floor'];
                 return new WP_Error( 'rest_forbidden', esc_html__("The floor number isn't an integer $floor. Check the room json scheme!", "joeee-booking", array('status' => 400) ));
             }
 
-            if( !(is_int($request['adults']) || $request['adults'] == null)) {
+            if( !(is_numeric($request['adults']) || $request['adults'] == null)) {
                 return new WP_Error( 'rest_forbidden', esc_html__("The number of adults isn't an integer. Check the room json scheme!", "joeee-booking", array('status' => 400) ));
             }
 
-            if( !(is_int($request['kids']) || !($request['kids'] == null)) ) {
+            if( !(is_numeric($request['kids']) || !($request['kids'] == null)) ) {
                 return new WP_Error( 'rest_forbidden', esc_html__("The number of kids isn't an integer. Check the room json scheme!", "joeee-booking", array('status' => 400) ));
             }
 
@@ -94,6 +94,9 @@ if ( ! class_exists( Room::class ) ) {
                 'price' => array(
                     'filter' => FILTER_SANITIZE_NUMBER_FLOAT,
                     'flags' => FILTER_FLAG_ALLOW_FRACTION,
+                ),
+                'description'   => array(
+                    'filter' => FILTER_SANITIZE_STRING,
                 ),
                 'active' => array(
                     'filter' => FILTER_VALIDATE_BOOLEAN,
@@ -136,7 +139,7 @@ if ( ! class_exists( Room::class ) ) {
                 if( empty($filtered) ) {
                     return new WP_Error('joeee_booking_room_error', esc_html__( 'A valid ID is required!', 'joeee-booking'), array('status' => 400));
                 }
-                $query = $wpdb->prepare("SELECT id, number, floor, adults, kids, price, active FROM $this->room_table WHERE id = %d", array( $filtered ));
+                $query = $wpdb->prepare("SELECT id, number, floor, adults, kids, price, description, active FROM $this->room_table WHERE id = %d", array( $filtered ));
                 $result = $wpdb->get_row($query, ARRAY_A);
                 if ( empty($result)) {
                     return new WP_Error('joeee_booking_room_error', esc_html__( 'There is no room with your given ID!', 'joeee-booking'), array('status' => 400));
@@ -166,6 +169,7 @@ if ( ! class_exists( Room::class ) ) {
                         'floor'     => $row->floor,
                         'adults'    => $row->adults,
                         'kids'      => $row->kids,
+                        'description' => $row->description,
                         'active'    => $row->active,
                     );
                 }   

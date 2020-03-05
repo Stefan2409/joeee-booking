@@ -221,8 +221,6 @@ jQuery(document).ready(function() {
 		let roompriceValue = ROOMPRICE.val().trim().replace(',', '.');
 		let roomDescription = ROOMDESC.val().trim();
 		
-		
-
 		if ( isNaN( roomnumberValue.toString() ) || roomnumberValue === '') {
 			setErrorFor(ROOMNUMBER, __('The room number must be set as string!', 'joeee-booking'));
 			return false;
@@ -265,7 +263,7 @@ jQuery(document).ready(function() {
 			setSuccessFor(ROOMPRICE);
 			formout.price = parseFloat(roompriceValue);
 		}
-		if ( typeof ROOMDESC === 'string' ) {
+		if ( typeof roomDescription === 'string' ) {
 			formout.description = roomDescription;
 		}
 		if ( ROOMACTIVE.is( ":checked" ) ) {
@@ -274,7 +272,6 @@ jQuery(document).ready(function() {
 		else {
 			formout.active = false;
 		}
-
 		return formout;
 			
 	}
@@ -354,8 +351,10 @@ jQuery(document).ready(function() {
 						ROOMID.val(data.id);
 						ROOMNUMBER.val(data.number);
 						ROOMADULTS.val(data.adults);
+						ROOMKIDS.val(data.kids);
 						FLOORNUMBER.val(data.floor);
 						ROOMPRICE.val(data.price);
+						ROOMDESC.val(data.description);
 						if( data.active == 1) {
 							ROOMACTIVE.prop('checked', true);
 						}
