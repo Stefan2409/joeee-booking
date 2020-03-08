@@ -94,13 +94,6 @@ small {
 
 #joeee-booking-room-submit {
     position: absolute;
-    background-color: #2ecc71;
-    color: white;
-    cursor: pointer;
-    &:hover {
-        background: #43A047;
-        transition: background-color 0.3s ease-in-out;
-    }
 }
 
 #joeee-booking-room-submit.close {
@@ -109,13 +102,6 @@ small {
 
 #joeee-booking-room-form-submit-modify {
     visibility: hidden;
-    background-color: #2ecc71;
-    color: white;
-    cursor: pointer;
-    &:hover {
-        background: #43A047;
-        transition: background-color 0.3s ease-in-out;
-    }
 }
 
 #joeee-booking-room-form-submit-modify.open {
@@ -123,25 +109,8 @@ small {
 } 
 
 
-.joeee-booking-room-cancel-btn {
-    background-color: #e74c3c;
-    color: white;
-    cursor: pointer;
-    &:hover {
-        background: darkred;
-        transition: background-color 0.3s ease-in-out;
-    }
-}
-
 .joeee-booking-room-delete-btn {
     visibility: hidden;
-    background-color: #e74c3c;
-    color: white;
-    cursor: pointer;
-    &:hover {
-        background: darkred;
-        transition: background-color 0.3s ease-in-out;
-    }
 }
 
 .joeee-booking-room-delete-btn.open {

@@ -80,3 +80,51 @@ p .button {
     box-shadow: inset 0 1px 0 rgba(0,0,0,0.1);
     vertical-align: top;
 }
+
+.button-submit {
+    background-color: #02cc56;
+    border-width: 1px;
+    border-style: solid;
+    height: 28px;
+    box-sizing: border-box;
+    padding: 0 10px 1px;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    &:hover {
+        background: #43A047;
+        transition: background-color 0.3s ease-in-out;
+    }
+}
+
+.button-cancel {
+    background-color: #e74c3c;
+    border-width: 1px;
+    border-style: solid;
+    height: 28px;
+    box-sizing: border-box;
+    padding: 0 10px 1px;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    &:hover {
+        background: #b60000f5;
+        transition: background-color 0.3s ease-in-out;
+    }
+}
+
+.button-delete {
+    background-color: #d41c08;
+    border-width: 1px;
+    border-style: solid;
+    height: 28px;
+    box-sizing: border-box;
+    padding: 0 10px 1px;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    &:hover {
+        background: #b60000f5;
+        transition: background-color 0.3s ease-in-out;
+    }
+}

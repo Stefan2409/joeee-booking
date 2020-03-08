@@ -7,6 +7,7 @@ use \WP_REST_Controller;
 use \WP_REST_Server;
 use Joeee_Booking\Core\Room as Room;
 use Joeee_Booking\Core\User as User;
+use Joeee_Booking\Core\Extras as Extras;
 
 
 // Abort if this file is called directly.
@@ -406,6 +407,29 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             )
         ));
 
+        register_rest_route( $this->namespace, '/extra/(?P<id>[\d]+)', array(
+            array(
+                'methods'   => WP_REST_Server::READABLE,
+                'callback'  => array( $this, 'get_extra' ),
+                'args'      => array(
+                    'id'    => array(
+                        'type'      => 'number',
+                        'required'  => true,
+                    ),
+                ),
+            ),
+            array(
+                'methods'   => WP_REST_Server::DELETABLE,
+                'callback'  => array( $this, 'delete_extra' ),
+                'args'      => array(
+                    'id'    => array(
+                        'type'      => 'number',
+                        'required'  => true,
+                    ),
+                ),
+            ),
+        ));
+
 
         }
 
@@ -518,14 +542,33 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             return $data;
          }
 
-        
+        /**
+         * Extra specific functionality
+         */
          public function get_extras( $request ) {
+            $Extra = new Extras();
+            return $Extra->get_extras();
+         }
 
+         public function get_extra( $request ) {
+            $Extra = new Extras();
+            return $Extra->get_extra( $request['id'] );
          }
 
          public function create_extras( $request ) {
+             $Extra = new Extras();
             $data = $request->get_json_params();
-            return $data;
+            $result = $Extra->create_extra( $data );
+
+            return $result;
+         }
+
+         public function delete_extra( $request ) {
+             $Extra = new Extras();
+
+             $result = $Extra->delete_extra( $request['id'] );
+
+             return $result;
          }
 
 

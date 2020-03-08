@@ -99,10 +99,13 @@ if ( ! class_exists( Init::class ) ) {
 			// Admin menu
 			$this->loader->add_action( 'admin_menu', $settings, 'add_plugin_admin_menu' );
 
-			$calendar = new Admin\Calendar_Menu();
+			$admin_main_menu = new Admin\Admin_Menus();
 
 			// Calendar menu
-			$this->loader->add_action( 'admin_menu', $calendar, 'add_calendar_menu' );
+			$this->loader->add_action( 'admin_menu', $admin_main_menu, 'add_calendar_menu' );
+
+			//Extras menu
+			$this->loader->add_action( 'admin_menu', $admin_main_menu, 'add_extras_submenu' );
 
 		}
 

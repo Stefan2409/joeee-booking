@@ -9,10 +9,10 @@
 @import '../../../node_modules/@fullcalendar/core/main.css';
 @import '../../../node_modules/@fullcalendar/timeline/main.css';
 @import '../../../node_modules/@fullcalendar/resource-timeline/main.css';
-@import './components/buttons.scss';
 @import './components/roomform.scss';
 @import './components/reservationform.scss';
 @import './components/extras.scss';
+@import './components/buttons.scss';
 
 // @TODO This is a red color variable example. Remove for production 
 $color: white;

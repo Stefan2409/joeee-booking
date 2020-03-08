@@ -23,8 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
             );
         }   
     }
-    
-
 ?>
 
 <div class="wrap">
@@ -92,10 +90,10 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <input type="checkbox" name="joeee-booking-room-active" id="joeee-booking-room-active" value="on">
                     <label for="room-active"><?php _e("Active", "joeee-booking") ?></label>
                 </div>
-                <input type="submit" value="<?php esc_attr_e('Save', 'joeee-booking') ?>" id="joeee-booking-room-submit">
-                <input type="submit" value="<?php esc_attr_e('Save', 'joeee-booking') ?>" id="joeee-booking-room-form-submit-modify">
-                <button class="joeee-booking-room-cancel-btn"><?php _e("Cancel", "joeee-booking") ?></button>
-                <button class="joeee-booking-room-delete-btn"><?php _e("Delete room", "joeee-booking") ?></button>
+                <input type="submit" value="<?php esc_attr_e('Save', 'joeee-booking') ?>" id="joeee-booking-room-submit" class="button-submit">
+                <input type="submit" value="<?php esc_attr_e('Save', 'joeee-booking') ?>" id="joeee-booking-room-form-submit-modify" class="button-submit">
+                <button class="joeee-booking-room-cancel-btn button-cancel"><?php _e("Cancel", "joeee-booking") ?></button>
+                <button class="joeee-booking-room-delete-btn button-delete"><?php _e("Delete room", "joeee-booking") ?></button>
             </form>
             <p class="joeee-booking-room-success">Success message</p>
             <p class="joeee-booking-room-error">Error message</p>
@@ -225,29 +223,13 @@ if ( ! defined( 'ABSPATH' ) ) {
                             <?php }?>
                         </select>
                     </div>
-                <input type="submit" value="<?php esc_attr_e('Save', 'joeee-booking') ?>" id="joeee-booking-reservation-submit">
-                <input type="submit" value="<?php esc_attr_e('Save', 'joeee-booking') ?>" id="joeee-booking-reservation-form-submit-modify">
-                <button class="joeee-booking-reservation-cancel-btn"><?php _e("Cancel", "joeee-booking") ?></button>
-                <button class="joeee-booking-reservation-delete-btn"><?php _e("Delete reservation", "joeee-booking") ?></button>
+                <input type="submit" value="<?php esc_attr_e('Save', 'joeee-booking') ?>" id="joeee-booking-reservation-submit" class="button-submit">
+                <input type="submit" value="<?php esc_attr_e('Save', 'joeee-booking') ?>" id="joeee-booking-reservation-form-submit-modify" class="button-submit">
+                <button class="joeee-booking-reservation-cancel-btn button-cancel"><?php _e("Cancel", "joeee-booking") ?></button>
+                <button class="joeee-booking-reservation-delete-btn button-cancel"><?php _e("Delete reservation", "joeee-booking") ?></button>
             </form>
             <p class="joeee-booking-reservation-success">Success message</p>
             <p class="joeee-booking-reservation-error">Error message</p>
-        </div>
-    </div>
-</div>
-<div class="joeee-booking-extras-bg-modal">
-    <div class="joeee-booking-extras-content">
-        <div class="joeee-booking-extras-content-window">
-        <form action="" id="joeee-booking-extras-form">
-            <table class="joeeee-booking-extras-table" id="joeee-booking-extras-table-dynamic">
-                <tr>
-                    <td><input type="text" name="name[]" placeholder="<?php esc_attr_e('Enter your extra', 'joeee-booking') ?>" class="joeee-booking-form--extras-control"></td>
-                    <td><input type="text" name="price[]" placeholder="<?php esc_attr_e('Price', 'joeee-booking') ?>" class="joeee-booking-form--extras-control"></td>
-                    <td><button type="button" name="joeee-booking-extras-add" id="joeee-booking-extras-add" class="button-primary"><?php _e("Add extra", "joeee-booking") ?></button></td>
-                </tr>
-            </table>
-            <input type="button" name="joeee-booking-extras-submit" id="joeee-booking-extras-submit" class="joeee-booking-submit-btn" value="<?php esc_attr_e('Save', 'joeee-booking') ?>">
-        </form>
         </div>
     </div>
 </div>
