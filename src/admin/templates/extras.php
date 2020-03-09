@@ -38,7 +38,7 @@ if( isset( $extra_result ) ) {
                 <td><button type="button" name="joeee-booking-extras-delete" class="button-delete" id="<?php echo 'joeee-booking-delete-id' . $extra->id; ?>">X</button><?php ?></td>
             </tr>
             <?php } ?>
-            <tr>
+            <tr id="joeee-booking-extras-row0">
                 <td><input type="text" name="name[]" placeholder="<?php esc_attr_e('Enter your extra', 'joeee-booking') ?>" class="joeee-booking-form--extras-control"></td>
                 <td><input type="text" name="price[]" placeholder="<?php esc_attr_e('Price', 'joeee-booking') ?>" class="joeee-booking-form--extras-control"></td>
                 <td><input type="checkbox" name="bookingonline" id="joeee-booking-extras-0" value="on"></td>
