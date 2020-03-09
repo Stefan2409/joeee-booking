@@ -85,6 +85,35 @@ export const adminscripts = () => {
         .pipe(dest('src/admin/js'));
 }
 
+export const adminScriptExtras = () => {
+    return src('development/admin/js/extras.js')
+        .pipe(webpack({
+            module: {
+                rules: [
+                    {
+                        test: /\.js$/,
+                        use: {
+                            loader: 'babel-loader',
+                            options: {
+                                presets: []
+                            }
+                        }
+                    }
+                ]
+            },
+            mode: PRODUCTION ? 'production' : 'development',
+            devtool: !PRODUCTION ? 'inline-source-map' : false,
+            output: {
+                filename: 'extras.js'
+            },
+            externals: {
+                jquery: 'jQuery'
+            },
+        }))
+        .pipe(gulpif(PRODUCTION, rename('extras.min.js'))) //renames the file in production mode
+        .pipe(dest('src/admin/js'));
+}
+
 export const frontendscripts = () => {
     return src('development/frontend/js/script.js')
         .pipe(webpack({
@@ -120,10 +149,11 @@ export const frontendscripts = () => {
 export const watchForChanges = () => {
     watch('development/admin/scss/**/*.scss', adminstyles);
     watch('development/frontend/scss/**/*.scss', frontendstyles);
-    watch('development/admin/js/**/*.js', adminscripts);
+    watch('development/admin/js/script.js', adminscripts);
+    watch('development/admin/js/extras.js', adminScriptExtras);
     watch('development/frontend/js/**/*.js', frontendscripts);
 }
 
 export const build = series(parallel(adminstyles, frontendstyles, adminscripts), frontendscripts);
-export const dev = series(parallel(adminstyles, frontendstyles, adminscripts), frontendscripts, watchForChanges);
+export const dev = series(parallel(adminstyles, frontendstyles, adminscripts), adminScriptExtras, frontendscripts, watchForChanges);
 export default dev;

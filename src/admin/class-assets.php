@@ -42,5 +42,18 @@ if ( ! class_exists( Assets::class ) ) {
 				'restNonce' => wp_create_nonce( 'wp_rest' ),
 			) );
 		}
+
+		public function enqueue_scripts_extra(): void {
+			if (defined('WP_DEBUG') && true === WP_DEBUG) {
+				wp_enqueue_script( 'joeee-booking-extras', plugin_dir_url( __FILE__ ) . 'js/extras.js', [ 'jquery',  'wp-i18n' ], Plugin_Data::plugin_version(), false );
+			}
+			else {
+				wp_enqueue_script( 'joeee-booking-extras', plugin_dir_url( __FILE__ ) . 'js/extras.min.js', [ 'jquery', 'wp-i18n' ], Plugin_Data::plugin_version(), false );
+			}
+			wp_localize_script( 'joeee-booking-extras', 'joeeeExtrasRest', array(
+				'restURL' => rest_url(),
+				'restNonce' => wp_create_nonce( 'wp_rest' ),
+			) );
+		}
 	}
 }

@@ -87,9 +87,8 @@ if ( ! class_exists( Init::class ) ) {
 
 			$assets = new Admin\Assets();
 
-			// Enqueue plugin's admin assets
+			// Enqueue plugin's admin styles. The scripts are enqueued for each site extra under admin_menus class.
 			$this->loader->add_action( 'admin_enqueue_scripts', $assets, 'enqueue_styles' );
-			$this->loader->add_action( 'admin_enqueue_scripts', $assets, 'enqueue_scripts' );
 
 			$settings = new Admin\Settings();
 

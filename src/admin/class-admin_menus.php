@@ -1,6 +1,9 @@
 <?php
 
 namespace Joeee_Booking\Admin;
+
+use Joeee_Booking\Admin\Assets as Assets;
+
 if ( ! class_exists( Admin_Menus::class ) ) {
 	/**
 	 * The admin-specific calendar menu.
@@ -26,6 +29,9 @@ if ( ! class_exists( Admin_Menus::class ) ) {
 		public function booking_calendar_page(): void {
 			require_once plugin_dir_path( __FILE__ ) . 'templates/calendar.php';
 
+			$Assets = new Assets();
+			$Assets->enqueue_scripts();
+
 		}
 
 
@@ -48,6 +54,9 @@ if ( ! class_exists( Admin_Menus::class ) ) {
 		 */
 		public function booking_extras_page() {
 			require_once plugin_dir_path( __FILE__ ) . 'templates/extras.php';
+			$Assets = new Assets();
+
+			$Assets->enqueue_scripts_extra();
 		}
 
     }
