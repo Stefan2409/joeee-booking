@@ -31,6 +31,7 @@ import $ from 'jquery';
 import { Calendar } from '@fullcalendar/core';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import calendarInteraction from '@fullcalendar/interaction';
+
 // Constants for internationalization purposes
 const { __, _x, _n, _nx } = wp.i18n;
 
@@ -68,6 +69,7 @@ jQuery(document).ready(function() {
 	const RESCITY = $('#joeee-booking-reservation-city');
 	const RESCOUNTRY = $('#joeee-booking-country-select');
 	const RESSUBMIT = $('#joeee-booking-reservation-submit');
+	const RESFREEROOM = $('#joeee-booking-reservation-free-rooms-table');
 
 	
 	
@@ -554,6 +556,48 @@ jQuery(document).ready(function() {
 		
 
 	
+	});
+
+	RESDEPARTURE.on("keyup change", function() {
+		let data = {};
+		if( typeof RESARRIVAL.val() !== "undefined" ) {
+			let arrival = RESARRIVAL.val();
+			let departure = RESDEPARTURE.val();
+			console.log(typeof departure);
+			data.from = arrival.concat(" 12:01:00");
+			data.to = departure.concat(" 11:59:00");
+
+			$.ajax({
+				type: 'POST',
+				dataType: 'json',
+				contentType: 'application/json',
+				url: joeeeRest.restURL + 'joeee-booking/v1/room/availability',
+				success: function (response) {
+				let freeRooms = response;
+				let j = 0;
+				if( freeRooms.length !== 0 ) {
+					RESFREEROOM.append('<tr id="joeee-booking-reservation-free-room-row"><td>Room Number</td><td>Adults</td><td>Kids</td><td>Book</td></tr>');
+					for( var i=0; i < freeRooms.length; i++) {
+						console.log(freeRooms[i]);
+						RESFREEROOM.append('<tr id="joeee-booking-reservation-free-room-row'+j+'"><td>'+freeRooms[i].number+'</td><td>'+freeRooms[i].adults+'</td><td>'+freeRooms[i].kids+'</td><td><input type="checkbox" id="joeee-booking-reservation-free-room-id'+freeRooms[i].number+'"></td></tr>');
+					}
+				}
+				else {
+					RESFREEROOM.append('<tr><td>'+__('There are no free rooms in the given period!', 'joeee-booking')+'</td></tr>');
+				}
+
+
+
+				},
+				error: function (response) {
+					console.log(response);
+				},
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', joeeeRest.restNonce);
+				},
+				data: JSON.stringify(data),
+			});
+		}
 	});
 
 

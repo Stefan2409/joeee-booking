@@ -130,14 +130,14 @@ if ( ! defined( 'ABSPATH' ) ) {
                 </div>
                 <div class="joeee-booking-reservation-form-control">
                     <label for="joeee-booking-reservation-persons"><?php esc_html_e('Adults', 'joeee-booking') ?></label>
-                    <input type="number" min="1" placeholder="<?php esc_attr_e('Adults', 'joeee-booking') ?>" id="joeee-booking-reservation-persons">
+                    <input type="number" min="1" value="1" placeholder="<?php esc_attr_e('Adults', 'joeee-booking') ?>" id="joeee-booking-reservation-persons">
                     <i class="dashicons dashicons-yes-alt"></i>
                     <i class="dashicons dashicons-warning"></i>
                     <small>Error message</small>
                 </div>
                 <div class="joeee-booking-reservation-form-control">
                     <label for="joeee-booking-reservation-kids"><?php esc_html_e('Kids', 'joeee-booking') ?></label>
-                    <input type="number" min="0" placeholder="<?php esc_attr_e('Kids', 'joeee-booking') ?>" id="joeee-booking-reservation-kids">
+                    <input type="number" min="0" value="0" placeholder="<?php esc_attr_e('Kids', 'joeee-booking') ?>" id="joeee-booking-reservation-kids">
                     <i class="dashicons dashicons-yes-alt"></i>
                     <i class="dashicons dashicons-warning"></i>
                     <small>Error message</small>
@@ -223,6 +223,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                             <?php }?>
                         </select>
                     </div>
+                    <table id="joeee-booking-reservation-free-rooms-table">
+                    
+                    </table>
                 <input type="submit" value="<?php esc_attr_e('Save', 'joeee-booking') ?>" id="joeee-booking-reservation-submit" class="button-submit">
                 <input type="submit" value="<?php esc_attr_e('Save', 'joeee-booking') ?>" id="joeee-booking-reservation-form-submit-modify" class="button-submit">
                 <button class="joeee-booking-reservation-cancel-btn button-cancel"><?php _e("Cancel", "joeee-booking") ?></button>

@@ -46,82 +46,47 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                     'callback'  => array( $this, 'create_user' ),
                     'permission_callback' => array($this, 'check_users_permission'),
                     'args'      => array(
-                        'id'    => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return $param == "null";
-                            },
-                        ),
-                        'user_id' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                if( !($param != "null") || !is_numeric( $param ) ) {
-                                    return false;
-                                }
-                                return true;
-                            },
-                        ),
                         'email' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_string( $param );
-                            },
-                            'sanitize_callback' => 'sanitize_email',
+                            'type'              =>  'string',
+                            'format'            => 'email',
                         ),
                         'first_name' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_string( $param );
-                            },
+                            'type'              => 'string',
                             'sanitize_callback' => 'sanitize_text_field',
                         ),
                         'last_name' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                
-                                return is_string( $param );
-                            },
+                            'type'              => 'string',
                             'sanitize_callback' => 'sanitize_text_field', 
                         ),
+                        'gender' => array(
+                            'type'  => 'number',
+                            'enum'  => array(1, 2, 3),
+                        ),
                         'birthday' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_string( $param );
-                            }
+                            'type'      => 'string',
+                            'format'    => 'date-time',
                         ),
                         'nationality' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                if( !($param != "null") || !is_numeric( $param ) ) {
-                                    return false;
-                                }
-                                return true;
-                            }
+                            'type'  => 'number',
                         ),
                         'tin' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_string( $param );
-                            },
+                            'type'              => 'string',
                             'sanitize_callback' => 'sanitize_text_field', 
                         ),
                         'street' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_string( $param );
-                            },
+                            'type'              => 'string',
                             'sanitize_callback' => 'sanitize_text_field', 
                         ),
                         'zip' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_string( $param );
-                            },
+                            'type'              => 'string',
                             'sanitize_callback' => 'sanitize_text_field', 
                         ),
                         'city' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                return is_string( $param );
-                            },
+                            'type'              => 'string',
                             'sanitize_callback' => 'sanitize_text_field', 
                         ),
                         'country' => array(
-                            'validate_callback' => function( $param, $request, $key ) {
-                                if( !($param != "null") || !is_numeric( $param ) ) {
-                                    return false;
-                                }
-                                return true;
-                            }
+                            'type'  => 'number',
                         ),
 
                     ),
@@ -138,69 +103,51 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                         'callback'  => array( $this, 'update_user' ),
                         'permission_callback' => array($this, 'check_users_permission'),
                         'args'      => array(
+                            'id'    => array(
+                                'type'  => 'number',
+                                'required'  => true,
+                            ),
                             'email' => array(
-                                'validate_callback' => function( $param, $request, $key ) {
-                                    return is_string( $param );
-                                },
-                                'sanitize_callback' => 'sanitize_email',
+                                'type'      => 'string',
+                                'format'    => 'email',
                             ),
                             'first_name' => array(
-                                'validate_callback' => function( $param, $request, $key ) {
-                                    return is_string( $param );
-                                },
+                                'type'              => 'string',
                                 'sanitize_callback' => 'sanitize_text_field',
                             ),
                             'last_name' => array(
-                                'validate_callback' => function( $param, $request, $key ) {
-                                    
-                                    return is_string( $param );
-                                },
+                                'type'              => 'string',
                                 'sanitize_callback' => 'sanitize_text_field', 
                             ),
+                            'gender' => array(
+                                'type'  => 'number',
+                                'enum'  => array(1, 2, 3),
+                            ),
                             'birthday' => array(
-                                'validate_callback' => function( $param, $request, $key ) {
-                                    return is_string( $param );
-                                }
+                                'type'      => 'string',
+                                'format'    => 'date-time',
                             ),
                             'nationality' => array(
-                                'validate_callback' => function( $param, $request, $key ) {
-                                    if( !($param != "null") || !is_numeric( $param ) ) {
-                                        return false;
-                                    }
-                                    return true;
-                                }
+                                'type'  => 'number',
                             ),
                             'tin' => array(
-                                'validate_callback' => function( $param, $request, $key ) {
-                                    return is_string( $param );
-                                },
+                                'type'              => 'string',
                                 'sanitize_callback' => 'sanitize_text_field', 
                             ),
                             'street' => array(
-                                'validate_callback' => function( $param, $request, $key ) {
-                                    return is_string( $param );
-                                },
+                                'type'              => 'string',
                                 'sanitize_callback' => 'sanitize_text_field', 
                             ),
                             'zip' => array(
-                                'validate_callback' => function( $param, $request, $key ) {
-                                    return is_string( $param );
-                                },
+                                'type'              => 'string',
                                 'sanitize_callback' => 'sanitize_text_field', 
                             ),
                             'city' => array(
-                                'validate_callback' => function( $param, $request, $key ) {
-                                    return is_string( $param );
-                                },
+                                'type'              => 'string',
                                 'sanitize_callback' => 'sanitize_text_field', 
                             ),
                             'country' => array(
-                                'validate_callback' => function( $param, $request, $key ) {
-                                    if( !($param != "null") || !is_numeric( $param ) ) {
-                                        return false;
-                                    }
-                                    return true;
-                                }
+                                'type'  => 'number',
                             ),
     
                         ),
@@ -433,7 +380,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
 
         register_rest_route( $this->namespace, '/room/availability', array(
             array(
-                'methods'   => WP_REST_Server::READABLE,
+                'methods'   => 'POST',
                 'callback'  => array( $this, 'get_availability' ),
                 'args'      => array(
                     'from'  => array(
@@ -448,7 +395,6 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                     ),
                     'persons' => array(
                         'type'      => 'number',
-                        'required'  => true,
                     ),
                     'rooms' => array(
                         'type'      => 'number',

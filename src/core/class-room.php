@@ -229,19 +229,22 @@ if ( ! class_exists( Room::class ) ) {
             global $wpdb;
             $booked_from = $data['from'];
             $booked_to = $data['to'];
-            $persons = $data['persons'];
+            if( isset( $data['persons'] )){
+                $persons = $data['persons'];
+            }
             if( !empty($data['rooms']) ) {
                 $rooms = $data['rooms'];
             }
 
-            $sql_query = "SELECT id FROM $this->room_table WHERE id NOT IN 
+            $sql_query = "SELECT id, number, adults, kids, floor, price, description FROM $this->room_table WHERE id NOT IN 
             (SELECT room_id FROM $this->room_booked_table WHERE 
-            (booked_from <= $booked_from AND booked_to >= $booked_from)
-            OR (booked_from < $booked_to AND booked_to >= $booked_to) 
-            OR ($booked_from <= booked_from AND $booked_to >= booked_from)) AND active = 1;";
+            (booked_from <= %s AND booked_to >= %s)
+            OR (booked_from <= %s AND booked_to >= %s) 
+            OR (%s <= booked_from AND %s >= booked_from)) AND active = 1;";
 
+            $sql_query_prepared = $wpdb->prepare($sql_query, array($booked_from, $booked_from, $booked_to, $booked_to, $booked_from, $booked_to) );
     
-            $results = $wpdb->query( $sql_query );
+            $results = $wpdb->get_results( $sql_query_prepared );
 
             return $results;
         }
