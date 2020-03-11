@@ -16,12 +16,14 @@ if ( ! class_exists( Room::class ) ) {
 	class Room {
 
         protected $room_table;
+        protected $room_booked_table;
 
         protected $keys = ["id", "number", "floor", "adults", "kids", "price", "active"];
 
         public function __construct() {
             global $wpdb;
             $this->room_table = $wpdb->prefix . "joeee_room";
+            $this->room_booked_table = $wpdb->prefix . "joeee_room_booked";
         }
 
         public function check_data( $request, $comesfrom ) {
@@ -221,6 +223,27 @@ if ( ! class_exists( Room::class ) ) {
                 return $validation_result;
             }
             
+        }
+
+        public function availability( $data ) {
+            global $wpdb;
+            $booked_from = $data['from'];
+            $booked_to = $data['to'];
+            $persons = $data['persons'];
+            if( !empty($data['rooms']) ) {
+                $rooms = $data['rooms'];
+            }
+
+            $sql_query = "SELECT id FROM $this->room_table WHERE id NOT IN 
+            (SELECT room_id FROM $this->room_booked_table WHERE 
+            (booked_from <= $booked_from AND booked_to >= $booked_from)
+            OR (booked_from < $booked_to AND booked_to >= $booked_to) 
+            OR ($booked_from <= booked_from AND $booked_to >= booked_from)) AND active = 1;";
+
+    
+            $results = $wpdb->query( $sql_query );
+
+            return $results;
         }
 
     }

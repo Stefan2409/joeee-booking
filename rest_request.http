@@ -1,16 +1,14 @@
-OPTIONS http://localhost/wp-json/joeee-booking/v1/user HTTP/1.1
+POST http://localhost/wp-json/joeee-booking/v1/user HTTP/1.1
 content-type: application/json
 
 {
-    "email": "deppthehax@example.com",
-    "first_name": "Depp",
-    "last_name": "The Hax",
-    "gender": "1",
-    "birthday": "1953-09-09",
-    "nationality": 2,
-    "tin": "DE23542354",
-    "street": "Coronoval Road 123",
-    "zip": "23456",
-    "city": "Vienna",
-    "country": 1
+    "email": "sepp@example.com",
+    "first_name": "Sepp",
+    "last_name": "Stuitz",
+    "birthday": "1983-03-02",
+    "nationality": 3,
+    "street": "Kirchenstraße 32",
+    "zip": "2499",
+    "city": "Beijing",
+    "country": 3
 }

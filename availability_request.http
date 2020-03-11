@@ -1,0 +1,9 @@
+GET http://localhost/wp-json/joeee-booking/v1/room/availability HTTP/1.1
+content-type: application/json
+
+{
+    "from": "2020-03-11 12:00:00",
+    "to": "2020-03-19 12:00:00",
+    "persons": 3,
+    "rooms": 2
+}

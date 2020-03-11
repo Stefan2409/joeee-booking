@@ -377,10 +377,10 @@ jQuery(document).ready(function() {
 			});
 		},
 		timeZone: 'UTC',
-		events: [
-			{id: '1', resourceId: '14', title: 'Test User', start: '2020-03-04T12:00:00', end: '2020-03-09T12:00:00', color: 'green' },
-			{id: '2', resourceId: '16', title: 'Test User2', start: '2020-03-04T12:00:00', end: '2020-03-14T12:00:00' }
-		],
+		events: {
+			url: joeeeRest.restURL + 'joeee-booking/v1/reservation',
+			method: 'GET'
+		},
 		eventClick: function(info) {
 
 			console.log('Event: ' + info.event.title);

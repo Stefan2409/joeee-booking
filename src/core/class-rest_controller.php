@@ -8,6 +8,7 @@ use \WP_REST_Server;
 use Joeee_Booking\Core\Room as Room;
 use Joeee_Booking\Core\User as User;
 use Joeee_Booking\Core\Extras as Extras;
+use Joeee_Booking\Core\Reservation as Reservation;
 
 
 // Abort if this file is called directly.
@@ -430,6 +431,32 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             ),
         ));
 
+        register_rest_route( $this->namespace, '/room/availability', array(
+            array(
+                'methods'   => WP_REST_Server::READABLE,
+                'callback'  => array( $this, 'get_availability' ),
+                'args'      => array(
+                    'from'  => array(
+                        'type'      => 'string',
+                        'format'    => 'date-time',
+                        'required'  => true,
+                    ),
+                    'to'    => array(
+                        'type'      => 'string',
+                        'format'    => 'date-time',
+                        'required'  => true,
+                    ),
+                    'persons' => array(
+                        'type'      => 'number',
+                        'required'  => true,
+                    ),
+                    'rooms' => array(
+                        'type'      => 'number',
+                    ),
+                ),
+            ),
+        ));
+
 
         }
 
@@ -536,10 +563,12 @@ if ( ! class_exists( Rest_Controller::class ) ) {
             return $data;
          }
 
-         public function get_reservations( $request ) {
-            $data = $request->get_json_params();
+         public function get_reservations() {
+            $Reservation = new Reservation();
 
-            return $data;
+            $result = $Reservation->get_reservations();
+
+            return $result;
          }
 
         /**
@@ -570,6 +599,18 @@ if ( ! class_exists( Rest_Controller::class ) ) {
 
              return $result;
          }
+
+         /**
+          * Room Availability functionality
+          */
+
+          public function get_availability( $request ) {
+            $Room = new Room();
+            $data = $request->get_json_params();
+
+            $result = $Room->availability( $data );
+            return $result;
+        }
 
 
         /**
