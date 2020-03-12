@@ -252,7 +252,7 @@ jQuery(document).ready(function() {
 		}
 		else {
 			setSuccessFor(ROOMKIDS);
-			formout.kids = parseInt(roomAdultsValue);
+			formout.kids = parseInt(roomKidsValue);
 		}
 		if ( isNaN( roompriceValue ) || roompriceValue === '') {
 			setErrorFor(ROOMPRICE, __('The price must be a float number!', 'joeee-booking'));
