@@ -52,6 +52,7 @@ jQuery(document).ready(function() {
 	const ROOMDELETEBTN = $('.joeee-booking-room-delete-btn');
 	const ROOMCANCELBTN = $('.joeee-booking-room-cancel-btn');
 
+	const RESFORM = $('#joeee-booking-reservation-form');
 	const RESCANCELBTN = $('.joeee-booking-reservation-cancel-btn');
 	const RESBGMODAL = $(".joeee-booking-reservation-bg-modal");
 	const RESROOMID = $('#joeee-booking-reservation-roomid');
@@ -90,6 +91,13 @@ jQuery(document).ready(function() {
 		location.reload();
 	}
 
+	function getSelectedReservationCheckboxes() {
+		var allVals = [];
+		$('.reservationRoomFormCheckbox:checked').each(function() {
+			allVals.push($(this).val());
+		});
+		return allVals;
+	}
 
 	function emailIsValid (email) {
 		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -118,7 +126,6 @@ jQuery(document).ready(function() {
 		}
 		else {
 			setSuccessFor( RESARRIVAL );
-			formout.booked_from = RESARRIVAL;
 		}
 
 		if( departure === '' ) {
@@ -127,21 +134,18 @@ jQuery(document).ready(function() {
 		}
 		else {
 			setSuccessFor( RESDEPARTURE );
-			formout.booked_to = RESDEPARTURE;
 		}
 		
 
 		if( isNaN( persons ) || persons === '' ) {
-			setErrorFor(RESPERSONS, __( 'The persons field is required!', 'joeee-booking' ));
+			setErrorFor(RESPERSONS, __( 'The adults field is required!', 'joeee-booking' ));
 			return false;
 		}
 		else {
 			setSuccessFor( RESPERSONS );
-			formout.persons = persons;
 		}
 
 		if( email === "" || emailIsValid( email ) ) {
-			formout.email = email;
 			setSuccessFor( RESEMAIL );
 		}
 		else {
@@ -152,7 +156,7 @@ jQuery(document).ready(function() {
 		if( typeof firstName === 'string' ) {
 			setSuccessFor( RESFIRSTNAME );
 			if( firstName !== "" ) {
-				formout.first_name = firstName;
+
 			}
 		}
 		else {
@@ -166,21 +170,16 @@ jQuery(document).ready(function() {
 		}
 		else {
 			setSuccessFor( RESLASTNAME );
-			formout.last_name = lastName;
 		}
 
-		formout.nationality = nationality;
 
-		formout.gender = gender;
 		
 		if( birthday !== "" ) {
 			setSuccessFor( RESBIRTHDAY );
-			formout.birthday = birthday;
 		}
 
 		if( typeof street === 'string' ) {
 			setSuccessFor( RESSTREET );
-			formout.street = street;
 		}
 		else {
 			setErrorFor( RESSTREET, __('The street has to be a string', 'joeee-booking') );
@@ -189,7 +188,6 @@ jQuery(document).ready(function() {
 
 		if( typeof zip === 'string' || typeof zip === 'number' ) {
 			setSuccessFor( RESZIP );
-			formout.zip = zip;
 		}
 		else {
 			setErrorFor( RESZIP, __('There is an error with your given zip.', 'joeee-booking' ));
@@ -198,14 +196,26 @@ jQuery(document).ready(function() {
 
 		if( typeof city === 'string' ) {
 			setSuccessFor( RESCITY );
-			formout.city = city;
 		}
 		else {
 			setErrorFor( RESCITY, __('The city has to be a string.', 'joeee-booking' ));
 			return false;
 		}
+		let formDataHelper = {};
+		let resformdata = RESFORM.serializeArray();
+		$.each(resformdata, function(i, field) {
+			formDataHelper[field.name] = field.value;
+		});
+		resRoomIDs = getSelectedReservationCheckboxes();
+		if(resRoomIDs.length > 0 ) {
+			formDataHelper.rooms = resRoomIDs;
+		}
+		else {
+			return 1;
+		}
 
-		formout.country = country;
+		formout = formDataHelper;
+
 		return formout;
 
 	}
@@ -548,17 +558,21 @@ jQuery(document).ready(function() {
 
 	});
 
+
+
 	RESSUBMIT.click( function(ev) {
 		ev.preventDefault();
 
 		let checked = checkReservationFormInputs();
+		console.log(checked);
 
-		
 
 	
 	});
 
+
 	RESDEPARTURE.on("keyup change", function() {
+		RESFREEROOM.empty();
 		let data = {};
 		if( typeof RESARRIVAL.val() !== "undefined" ) {
 			let arrival = RESARRIVAL.val();
@@ -576,10 +590,10 @@ jQuery(document).ready(function() {
 				let freeRooms = response;
 				let j = 0;
 				if( freeRooms.length !== 0 ) {
-					RESFREEROOM.append('<tr id="joeee-booking-reservation-free-room-row"><td>Room Number</td><td>Adults</td><td>Kids</td><td>Book</td></tr>');
+					RESFREEROOM.append('<tr id="joeee-booking-reservation-free-room-row"><th>Room Number</th><th>Adults</th><th>Kids</th><th>Book</th></tr>');
 					for( var i=0; i < freeRooms.length; i++) {
 						console.log(freeRooms[i]);
-						RESFREEROOM.append('<tr id="joeee-booking-reservation-free-room-row'+j+'"><td>'+freeRooms[i].number+'</td><td>'+freeRooms[i].adults+'</td><td>'+freeRooms[i].kids+'</td><td><input type="checkbox" id="joeee-booking-reservation-free-room-id'+freeRooms[i].number+'"></td></tr>');
+						RESFREEROOM.append('<tr id="joeee-booking-reservation-free-room-row'+i+'"><td>'+freeRooms[i].number+'</td><td>'+freeRooms[i].adults+'</td><td>'+freeRooms[i].kids+'</td><td><input name="reservationRoomCheck'+i+'" type="checkbox" id="joeee-booking-reservation-free-room-id'+freeRooms[i].number+'" value="'+freeRooms[i].id+'" class="reservationRoomFormCheckbox"></td></tr>');
 					}
 				}
 				else {

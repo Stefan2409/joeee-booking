@@ -318,11 +318,13 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                             3,
                         ),
                     ),
-                    'persons'       => array(
+                    'adults'       => array(
                         'type'      => 'number',
                         'required'  => true,
                     ),
-
+                    'kids'  => array(
+                        'type'      => 'number',
+                    ),
                 ),
             ),
         ));

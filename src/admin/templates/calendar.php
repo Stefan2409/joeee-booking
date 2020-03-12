@@ -116,49 +116,49 @@ if ( ! defined( 'ABSPATH' ) ) {
                 </div>
                 <div class="joeee-booking-reservation-form-control">
                     <label for="joeee-booking-reservation-arrival"><?php esc_html_e('Arrival', 'joeee-booking') ?></label>
-                    <input type="date" id="joeee-booking-reservation-arrival">
+                    <input type="date" name="reservationArrival" id="joeee-booking-reservation-arrival">
                     <i class="dashicons dashicons-yes-alt"></i>
                     <i class="dashicons dashicons-warning"></i>
                     <small>Error message</small>
                 </div>
                 <div class="joeee-booking-reservation-form-control">
                     <label for="joeee-booking-reservation-departure"><?php esc_html_e('Departure', 'joeee-booking') ?></label>
-                    <input type="date" placeholder="<?php esc_attr_e('Departure', 'joeee-booking') ?>" id="joeee-booking-reservation-departure">
+                    <input type="date" name="reservationDeparture" placeholder="<?php esc_attr_e('Departure', 'joeee-booking') ?>" id="joeee-booking-reservation-departure">
                     <i class="dashicons dashicons-yes-alt"></i>
                     <i class="dashicons dashicons-warning"></i>
                     <small>Error message</small>
                 </div>
                 <div class="joeee-booking-reservation-form-control">
                     <label for="joeee-booking-reservation-persons"><?php esc_html_e('Adults', 'joeee-booking') ?></label>
-                    <input type="number" min="1" value="1" placeholder="<?php esc_attr_e('Adults', 'joeee-booking') ?>" id="joeee-booking-reservation-persons">
+                    <input type="number" name="reservationPersons" min="1" value="1" placeholder="<?php esc_attr_e('Adults', 'joeee-booking') ?>" id="joeee-booking-reservation-persons">
                     <i class="dashicons dashicons-yes-alt"></i>
                     <i class="dashicons dashicons-warning"></i>
                     <small>Error message</small>
                 </div>
                 <div class="joeee-booking-reservation-form-control">
                     <label for="joeee-booking-reservation-kids"><?php esc_html_e('Kids', 'joeee-booking') ?></label>
-                    <input type="number" min="0" value="0" placeholder="<?php esc_attr_e('Kids', 'joeee-booking') ?>" id="joeee-booking-reservation-kids">
+                    <input type="number" name="reservationKids" min="0" value="0" placeholder="<?php esc_attr_e('Kids', 'joeee-booking') ?>" id="joeee-booking-reservation-kids">
                     <i class="dashicons dashicons-yes-alt"></i>
                     <i class="dashicons dashicons-warning"></i>
                     <small>Error message</small>
                 </div>
                 <div class="joeee-booking-reservation-form-control">
                     <label for="joeee-booking-reservation-email"><?php esc_html_e('E-Mail', 'joeee-booking') ?></label>
-                    <input type="email" placeholder="<?php esc_attr_e('E-Mail', 'joeee-booking') ?>" id="joeee-booking-reservation-email">
+                    <input type="email" name="reservationEmail" placeholder="<?php esc_attr_e('E-Mail', 'joeee-booking') ?>" id="joeee-booking-reservation-email">
                     <i class="dashicons dashicons-yes-alt"></i>
                     <i class="dashicons dashicons-warning"></i>
                     <small>Error message</small>
                 </div>
                 <div class="joeee-booking-reservation-form-control">
                     <label for="joeee-booking-reservation-firstname"><?php esc_html_e('First Name', 'joeee-booking') ?></label>
-                    <input type="text" placeholder="<?php esc_attr_e('First Name', 'joeee-booking') ?>" id="joeee-booking-reservation-firstname">
+                    <input type="text" name="reservationFirstName" placeholder="<?php esc_attr_e('First Name', 'joeee-booking') ?>" id="joeee-booking-reservation-firstname">
                     <i class="dashicons dashicons-yes-alt"></i>
                     <i class="dashicons dashicons-warning"></i>
                     <small>Error message</small>
                 </div>
                 <div class="joeee-booking-reservation-form-control">
                     <label for="joeee-booking-reservation-lastname"><?php esc_html_e('Last Name', 'joeee-booking') ?></label>
-                    <input type="text" placeholder="<?php esc_attr_e('Last Name', 'joeee-booking') ?>" id="joeee-booking-reservation-lastname">
+                    <input type="text" name="reservationLastName" placeholder="<?php esc_attr_e('Last Name', 'joeee-booking') ?>" id="joeee-booking-reservation-lastname">
                     <i class="dashicons dashicons-yes-alt"></i>
                     <i class="dashicons dashicons-warning"></i>
                     <small>Error message</small>
@@ -188,28 +188,28 @@ if ( ! defined( 'ABSPATH' ) ) {
                     </div>
                     <div class="joeee-booking-reservation-form-control">
                         <label for="joeee-booking-reservation-birthday"><?php esc_html_e('Date of birth', 'joeee-booking') ?></label>
-                        <input type="date" placeholder="<?php esc_attr_e('Date of birth', 'joeee-booking') ?>" id="joeee-booking-reservation-birthday">
+                        <input type="date" name="reservationBirthday" placeholder="<?php esc_attr_e('Date of birth', 'joeee-booking') ?>" id="joeee-booking-reservation-birthday">
                         <i class="dashicons dashicons-yes-alt"></i>
                         <i class="dashicons dashicons-warning"></i>
                         <small>Error message</small>
                     </div>
                     <div class="joeee-booking-reservation-form-control">
                         <label for="joeee-booking-reservation-street"><?php esc_html_e('Street/House Nr.', 'joeee-booking') ?></label>
-                        <input type="text" placeholder="<?php esc_attr_e('Street/House Nr.', 'joeee-booking') ?>" id="joeee-booking-reservation-street">
+                        <input type="text" name="reservationStreet" placeholder="<?php esc_attr_e('Street/House Nr.', 'joeee-booking') ?>" id="joeee-booking-reservation-street">
                         <i class="dashicons dashicons-yes-alt"></i>
                         <i class="dashicons dashicons-warning"></i>
                         <small>Error message</small>
                     </div>
                     <div class="joeee-booking-reservation-form-control">
                         <label for="joeee-booking-reservation-zip"><?php esc_html_e('ZIP', 'joeee-booking') ?></label>
-                        <input type="text" placeholder="<?php esc_attr_e('ZIP', 'joeee-booking') ?>" id="joeee-booking-reservation-zip">
+                        <input type="text" name="reservationZip" placeholder="<?php esc_attr_e('ZIP', 'joeee-booking') ?>" id="joeee-booking-reservation-zip">
                         <i class="dashicons dashicons-yes-alt"></i>
                         <i class="dashicons dashicons-warning"></i>
                         <small>Error message</small>
                     </div>
                     <div class="joeee-booking-reservation-form-control">
                         <label for="joeee-booking-reservation-city"><?php esc_html_e('City', 'joeee-booking') ?></label>
-                        <input type="text" placeholder="<?php esc_attr_e('City', 'joeee-booking') ?>" id="joeee-booking-reservation-city">
+                        <input type="text" name="reservationCity" placeholder="<?php esc_attr_e('City', 'joeee-booking') ?>" id="joeee-booking-reservation-city">
                         <i class="dashicons dashicons-yes-alt"></i>
                         <i class="dashicons dashicons-warning"></i>
                         <small>Error message</small>
