@@ -23,6 +23,25 @@ if ( ! defined( 'ABSPATH' ) ) {
             );
         }   
     }
+
+    $table_extras = $wpdb->prefix . "joeee_extra";
+
+    $extra_data = array();
+
+    $extra_query = "SELECT id, title FROM $table_extras;";
+
+    $extra_result = $wpdb->get_results( $extra_query );
+
+    if( isset($extra_result) ) {
+        foreach( $extra_result as $extra ) {
+            $extra_data[] = array(
+                'id'    => $extra->id,
+                'title' => $extra->title,
+            );
+        }
+    }
+
+
 ?>
 
 <div class="wrap">
@@ -142,6 +161,15 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <i class="dashicons dashicons-warning"></i>
                     <small>Error message</small>
                 </div>
+                    <?php foreach( $extra_data as $extra ) {
+                        $title = $extra['title'];
+                        $id = $extra['id'];
+                        echo ' <div class="joeee-booking-reservation-form-control">';
+                            echo '<label for="extra-' . $id . '">' . $title . '</label>';
+                            echo '<input type="text" name="' . $title . '" id="extra-id' . $id . '" >';
+                        echo '</div>';
+                    }
+                    ?>
                 <div class="joeee-booking-reservation-form-control">
                     <label for="joeee-booking-reservation-email"><?php esc_html_e('E-Mail', 'joeee-booking') ?></label>
                     <input type="email" name="reservationEmail" placeholder="<?php esc_attr_e('E-Mail', 'joeee-booking') ?>" id="joeee-booking-reservation-email">

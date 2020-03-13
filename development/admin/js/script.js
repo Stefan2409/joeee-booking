@@ -92,13 +92,20 @@ jQuery(document).ready(function() {
 	}
 
 	function getSelectedReservationCheckboxes() {
-		var allVals = [];
+		let allVals = [];
 		$('.reservationRoomFormCheckbox:checked').each(function() {
 			allVals.push($(this).val());
 		});
 		return allVals;
 	}
 
+	function getAllReservationExtras() {
+		let allExtras = {};
+		$('.joeee-booking-extra').each(function() {
+			allExtras[$(obj).attr('id')] = $(this).val();
+		});
+		return allExtras;
+	}
 	function emailIsValid (email) {
 		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 	}
@@ -206,7 +213,7 @@ jQuery(document).ready(function() {
 		$.each(resformdata, function(i, field) {
 			formDataHelper[field.name] = field.value;
 		});
-		resRoomIDs = getSelectedReservationCheckboxes();
+		let resRoomIDs = getSelectedReservationCheckboxes();
 		if(resRoomIDs.length > 0 ) {
 			formDataHelper.rooms = resRoomIDs;
 		}
@@ -564,11 +571,15 @@ jQuery(document).ready(function() {
 		ev.preventDefault();
 
 		let checked = checkReservationFormInputs();
+		let extras = getAllReservationExtras();
 		console.log(checked);
+		console.log(extras);
 
 
 	
 	});
+
+
 
 
 	RESDEPARTURE.on("keyup change", function() {
