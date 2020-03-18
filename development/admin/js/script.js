@@ -101,11 +101,42 @@ jQuery(document).ready(function() {
 
 	function getAllReservationExtras() {
 		let allExtras = {};
-		$('.joeee-booking-extra').each(function() {
-			allExtras[$(obj).attr('id')] = $(this).val();
+		$("[id^=extra-id]").each(function() {
+			allExtras[this.id.replace("extra-id", "")] = this.value;
 		});
 		return allExtras;
 	}
+
+	function createReservation( user_id ) {
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			contentType: 'application/json',
+			url: joeeeRest.restURL + 'joeee-booking/v1/room',
+			success: function (data) {
+				let success = $('.joeee-booking-room-success');
+				success.addClass('success');
+				success.text( __('Saved changes successfully.', 'joeee-booking') );
+				setTimeout(function() {
+					ROOMCANCELBTN.trigger('click');
+					location.reload();
+				}, 2000);
+
+
+			},
+			error: function (data) {
+				let err = data.responseJSON.message;
+				let submitError = $('.joeee-booking-room-error');
+				submitError.addClass('error');
+				submitError.text(err);
+			},
+			beforeSend: function (xhr) {
+				xhr.setRequestHeader('X-WP-Nonce', joeeeRest.restNonce);
+			},
+			data: JSON.stringify(checked),
+		});
+	}
+
 	function emailIsValid (email) {
 		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 	}
@@ -572,8 +603,49 @@ jQuery(document).ready(function() {
 
 		let checked = checkReservationFormInputs();
 		let extras = getAllReservationExtras();
-		console.log(checked);
 		console.log(extras);
+
+		let userdata = {};
+		userdata.email = checked.reservationEmail;
+		userdata.first_name = checked.reservationFirstName;
+		userdata.last_name = checked.reservationLastName;
+		userdata.gender = parseInt( checked.genderselect );
+		userdata.birthday = checked.reservationBirthday + "T12:00:00";
+		userdata.nationality = checked.nationalityselect;
+		userdata.tin = checked.reservationTIN;
+		userdata.street = checked.reservationStreet;
+		userdata.zip = checked.reservationZip;
+		userdata.city = checked.reservationCity;
+		userdata.country = checked.countryselect;
+		console.log(userdata);
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			contentType: 'application/json',
+			url: joeeeRest.restURL + 'joeee-booking/v1/user',
+			success: function (data) {
+				let success = $('.joeee-booking-reservation-success');
+				success.addClass('success');
+				success.text( __('Saved changes successfully.', 'joeee-booking') );
+				console.log(data);
+
+				createReservation( data.id );
+				
+
+
+			},
+			error: function (data) {
+				let err = data.responseJSON.message;
+				let submitError = $('.joeee-booking-reservation-error');
+				submitError.addClass('error');
+				submitError.text(err);
+			},
+			beforeSend: function (xhr) {
+				xhr.setRequestHeader('X-WP-Nonce', joeeeRest.restNonce);
+			},
+			data: JSON.stringify( userdata ),
+		});
 
 
 	

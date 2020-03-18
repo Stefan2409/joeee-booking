@@ -1,4 +1,4 @@
-POST http://localhost/wp-json/joeee-booking/v1/reservation HTTP/1.1
+POST  http://localhost/wp-json/joeee-booking/v1/reservation HTTP/1.1
 content-type: application/json
 
 {
@@ -6,6 +6,9 @@ content-type: application/json
     "room_id": 23,
     "booked_from": "2020-03-03 12:00:00",
     "booked_to": "2020-03-13 12:00:00",
-    "price": 234.3,
-    "confirmation": 2
+    "adults": 2,
+    "kids": 1,
+    "confirmation": 2,
+    "extras": {"1": 1},
+    "rooms": ["1", "2"],
 }

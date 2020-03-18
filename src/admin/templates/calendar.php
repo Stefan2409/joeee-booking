@@ -165,8 +165,8 @@ if ( ! defined( 'ABSPATH' ) ) {
                         $title = $extra['title'];
                         $id = $extra['id'];
                         echo ' <div class="joeee-booking-reservation-form-control">';
-                            echo '<label for="extra-' . $id . '">' . $title . '</label>';
-                            echo '<input type="text" name="' . $title . '" id="extra-id' . $id . '" >';
+                            echo '<label for="extra-id' . $id . '">' . $title . '</label>';
+                            echo '<input type="number" min="0" value="0" name="' . $title . '" id="extra-id' . $id . '" >';
                         echo '</div>';
                     }
                     ?>
@@ -193,7 +193,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 </div>
                 <div class="joeee-booking-reservation-form-control">
                     <label for="joeee-booking-reservation-nationality"><?php esc_html_e('Nationality', 'joeee-booking') ?></label>
-                    <select name="nationality-select" id="joeee-booking-nationality-select">
+                    <select name="nationalityselect" id="joeee-booking-nationality-select">
                         <option disabled selected><?php esc_html_e('Please select country', 'joeee-booking')?></option>
                         <?php foreach( $country_data as $country ) {?>
                         <option value="<?php echo $country['id'] ?>"><?php echo $country['en_name'] ?></option>
@@ -208,7 +208,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     </div>
                     <div class="joeee-booking-reservation-form-control right">
                     <label for="joeee-booking-reservation-gender"><?php esc_html_e('Gender', 'joeee-booking') ?></label>
-                    <select name="gender-select" id="joeee-booking-reservation-gender">
+                    <select name="genderselect" id="joeee-booking-reservation-gender">
                     <option disabled selected><?php esc_html_e('Please select a gender')?></option>
                     <option value="1"><?php esc_html_e( 'Male', 'joeee-booking' ) ?></option>
                     <option value="2"><?php esc_html_e( 'Female', 'joeee-booking' ) ?></option>
@@ -217,6 +217,13 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <div class="joeee-booking-reservation-form-control">
                         <label for="joeee-booking-reservation-birthday"><?php esc_html_e('Date of birth', 'joeee-booking') ?></label>
                         <input type="date" name="reservationBirthday" placeholder="<?php esc_attr_e('Date of birth', 'joeee-booking') ?>" id="joeee-booking-reservation-birthday">
+                        <i class="dashicons dashicons-yes-alt"></i>
+                        <i class="dashicons dashicons-warning"></i>
+                        <small>Error message</small>
+                    </div>
+                    <div class="joeee-booking-reservation-form-control">
+                        <label for="joeee-booking-reservation-tin"><?php esc_html_e('TIN', 'joeee-booking') ?></label>
+                        <input type="text" name="reservationTIN" placeholder="<?php esc_attr_e('TIN', 'joeee-booking') ?>" id="joeee-booking-reservation-tin">
                         <i class="dashicons dashicons-yes-alt"></i>
                         <i class="dashicons dashicons-warning"></i>
                         <small>Error message</small>
@@ -244,7 +251,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     </div>
                     <div class="joeee-booking-reservation-form-control">
                         <label for="joeee-booking-reservation-country"><?php esc_html_e('Country', 'joeee-booking') ?></label>
-                        <select name="country-select" id="joeee-booking-country-select">
+                        <select name="countryselect" id="joeee-booking-country-select">
                             <option disabled selected><?php esc_html_e('Please select country')?></option>
                             <?php foreach( $country_data as $country ) {?>
                             <option value="<?php echo $country['id'] ?>"><?php echo $country['en_name'] ?></option>

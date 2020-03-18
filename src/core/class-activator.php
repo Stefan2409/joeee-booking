@@ -100,6 +100,7 @@ if ( ! class_exists( Activator::class ) ) {
 			$sql_reservation = "CREATE TABLE IF NOT EXISTS $table_reservation (
 				id int(10) NOT NULL AUTO_INCREMENT,
 				person_id int(10) NOT NULL,
+				confirmation tinyint(3),
 				created timestamp,
 				CONSTRAINT reservation_foreign PRIMARY KEY  (id),
 				FOREIGN KEY  (person_id) REFERENCES $table_person (id)
@@ -111,7 +112,6 @@ if ( ! class_exists( Activator::class ) ) {
 				booked_from datetime NOT NULL,
 				booked_to datetime NOT NULL,
 				price float(10) NOT NULL,
-				confirmation tinyint(3),
 				CONSTRAINT booked_foreign PRIMARY KEY  (room_id, reservation_id),
 				FOREIGN KEY  (room_id) REFERENCES $table_room (id)
 				) $charset_collate;";

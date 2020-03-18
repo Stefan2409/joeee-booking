@@ -33,8 +33,8 @@ if ( ! class_exists( Reservation::class ) ) {
             $this->table_person = $wpdb->prefix . "joeee_person";
         }
         
-        public function create_reservation($person_id, $room_id, $booked_from, $booked_to, $persons) {
-            exit;
+        public function create_reservation( $data ) {
+            return $data;
         }
 
 

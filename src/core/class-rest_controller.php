@@ -44,7 +44,6 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                 array(
                     'methods'   => WP_REST_Server::CREATABLE,
                     'callback'  => array( $this, 'create_user' ),
-                    'permission_callback' => array($this, 'check_users_permission'),
                     'args'      => array(
                         'email' => array(
                             'type'              =>  'string',
@@ -294,9 +293,6 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                         'type'  => 'number',
                         'required'          => true,
                     ),
-                    'room_id'   => array(
-                        'type'  => 'number',
-                    ),
                     'booked_from'   => array(
                         'type'              => 'string',
                         'format'            => 'date-time',
@@ -324,6 +320,16 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                     ),
                     'kids'  => array(
                         'type'      => 'number',
+                    ),
+                    'extras' => array(
+                        'type'          => 'object',
+                    ),
+                    'room_id' => array(
+                        'type'      => 'array',
+                        'items'     => array(
+                            'type'      => 'number',
+                        ),
+                        'required'  => true,
                     ),
                 ),
             ),
@@ -506,9 +512,10 @@ if ( ! class_exists( Rest_Controller::class ) ) {
          */
 
          public function create_reservation( $request ) {
+             $Reservation = new Reservation();
             $data = $request->get_json_params();
-
-            return $data;
+            $result = $Reservation->create_reservation( $data );
+            return $result;
          }
 
          public function get_reservations() {
