@@ -207,6 +207,15 @@ if ( ! defined( 'ABSPATH' ) ) {
                         <h2></h2>
                     </div>
                     <div class="joeee-booking-reservation-form-control right">
+                    <label for="joeee-booking-reservation-confirm"><?php esc_html_e('Gender', 'joeee-booking') ?></label>
+                    <select name="genderselect" id="joeee-booking-reservation-confirm">
+                    <option disabled selected><?php esc_html_e('Please select confirmation status')?></option>
+                    <option value="1"><?php esc_html_e( 'Confirmed', 'joeee-booking' ) ?></option>
+                    <option value="2"><?php esc_html_e( 'Pending', 'joeee-booking' ) ?></option>
+                    <option value="3"><?php esc_html_e( 'Reject', 'joeee-booking' ) ?></option>
+                    </select>
+                    </div>
+                    <div class="joeee-booking-reservation-form-control">
                     <label for="joeee-booking-reservation-gender"><?php esc_html_e('Gender', 'joeee-booking') ?></label>
                     <select name="genderselect" id="joeee-booking-reservation-gender">
                     <option disabled selected><?php esc_html_e('Please select a gender')?></option>

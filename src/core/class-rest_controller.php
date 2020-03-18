@@ -290,7 +290,10 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                 'callback'  => array( $this, 'create_reservation'),
                 'args'      => array(
                     'person_id'         => array(
-                        'type'  => 'number',
+                        'type'  => 'array',
+                        'items' => array(
+                            'type'  => 'number',
+                        ),
                         'required'          => true,
                     ),
                     'booked_from'   => array(
