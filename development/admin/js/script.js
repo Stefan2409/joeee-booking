@@ -130,7 +130,7 @@ jQuery(document).ready(function() {
 				success.addClass('success');
 				success.text( __('Saved changes successfully.', 'joeee-booking') );
 				setTimeout(function() {
-					ROOMCANCELBTN.trigger('click');
+					RESCANCELBTN.trigger('click');
 					location.reload();
 				}, 2000);
 
