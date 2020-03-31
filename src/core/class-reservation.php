@@ -28,6 +28,7 @@ if ( ! class_exists( Reservation::class ) ) {
         protected $table_person;
         protected $table_room;
         protected $table_fellow;
+        protected $table_address;
 
         public function __construct() {
             global $wpdb;
@@ -38,6 +39,7 @@ if ( ! class_exists( Reservation::class ) ) {
             $this->table_person = $wpdb->prefix . "joeee_person";
             $this->table_room = $wpdb->prefix . "joeee_room";
             $this->table_fellow = $wpdb->prefix . "joeee_fellow_traveler";
+            $this->table_address = $wpdb->prefix . "joeee_address";
         }
 
             /**
@@ -169,8 +171,16 @@ if ( ! class_exists( Reservation::class ) ) {
 
         }
 
-        public function get_reservation($search_pattern) {
+        public function get_reservation( $id ) {
+            global $wpdb;
+            $sql = "SELECT * FROM $this->table_reservation r
+            JOIN $this->table_room_booked rb on rb.reservation_id = r.id
+            JOIN $this->table_person p on p.id = r.person_id
+            JOIN $this->table_address a on a.id = p.id
+            WHERE r.id = $id";
 
+            $query_result = $wpdb->get_results($sql);
+            return $query_result;
         }
 
         public function get_reservations() {
