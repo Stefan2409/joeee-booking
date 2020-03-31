@@ -107,14 +107,26 @@ jQuery(document).ready(function() {
 		return allExtras;
 	}
 
-	function createReservation( user_id ) {
+	function createReservation( checked, extras ) {
+		let reservationData = {};
+		reservationData.person_id = checked.person_id;
+		reservationData.room_id = checked.rooms;
+		reservationData.booked_from = checked.reservationArrival + "T12:00:00";
+		reservationData.booked_to = checked.reservationDeparture + "T12:00:00";
+		reservationData.adults = checked.reservationPersons;
+		reservationData.kids = checked.reservationKids;
+		reservationData.confirmation = parseInt(checked.confirmationselect);
+		if( !(Object.entries(extras).length === 0) ) {
+			reservationData.extras = extras;
+		}
+
 		$.ajax({
 			type: 'POST',
 			dataType: 'json',
 			contentType: 'application/json',
-			url: joeeeRest.restURL + 'joeee-booking/v1/room',
+			url: joeeeRest.restURL + 'joeee-booking/v1/reservation',
 			success: function (data) {
-				let success = $('.joeee-booking-room-success');
+				let success = $('.joeee-booking-reservation-success');
 				success.addClass('success');
 				success.text( __('Saved changes successfully.', 'joeee-booking') );
 				setTimeout(function() {
@@ -126,14 +138,14 @@ jQuery(document).ready(function() {
 			},
 			error: function (data) {
 				let err = data.responseJSON.message;
-				let submitError = $('.joeee-booking-room-error');
+				let submitError = $('.joeee-booking-reservation-error');
 				submitError.addClass('error');
 				submitError.text(err);
 			},
 			beforeSend: function (xhr) {
 				xhr.setRequestHeader('X-WP-Nonce', joeeeRest.restNonce);
 			},
-			data: JSON.stringify(checked),
+			data: JSON.stringify(reservationData),
 		});
 	}
 
@@ -249,7 +261,10 @@ jQuery(document).ready(function() {
 			formDataHelper.rooms = resRoomIDs;
 		}
 		else {
-			return 1;
+			let submitError = $('.joeee-booking-reservation-error');
+			submitError.addClass('error');
+			submitError.text( __( 'You have to select the rooms you want to be booked!', 'joeee-booking' ) );
+			return false;
 		}
 
 		formout = formDataHelper;
@@ -625,12 +640,11 @@ jQuery(document).ready(function() {
 			contentType: 'application/json',
 			url: joeeeRest.restURL + 'joeee-booking/v1/user',
 			success: function (data) {
-				let success = $('.joeee-booking-reservation-success');
-				success.addClass('success');
-				success.text( __('Saved changes successfully.', 'joeee-booking') );
-				console.log(data);
 
-				createReservation( data.id );
+				
+				checked.person_id = data.id;
+				console.log(checked);
+				createReservation( checked, extras );
 				
 
 

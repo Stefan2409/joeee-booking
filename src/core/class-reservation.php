@@ -76,7 +76,6 @@ if ( ! class_exists( Reservation::class ) ) {
             $wpdb->delete( $this->table_reservation, array( 'id' => $reservation_id ) );
             $wpdb->delete( $this->table_fellow, array( 'reservation_id' => $reservation_id ) );
             $wpdb->delete( $this->table_reservation_extra, array( 'reservation_id' => $reservation_id ) );
-
         }
         
         public function create_reservation( $data ) {
