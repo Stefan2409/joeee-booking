@@ -70,6 +70,14 @@ if ( ! class_exists( Reservation::class ) ) {
             }
             return $person_ids;
         }
+
+        protected function reset_database_after_error( $reservation_id ) {
+            $wpdb->delete( $this->table_room_booked, array( 'reservation_id' => $reservation_id ) );
+            $wpdb->delete( $this->table_reservation, array( 'id' => $reservation_id ) );
+            $wpdb->delete( $this->table_fellow, array( 'reservation_id' => $reservation_id ) );
+            $wpdb->delete( $this->table_reservation_extra, array( 'reservation_id' => $reservation_id ) );
+
+        }
         
         public function create_reservation( $data ) {
             global $wpdb;
@@ -101,7 +109,10 @@ if ( ! class_exists( Reservation::class ) ) {
                 'confirmation' => $data['confirmation'],
             );
 
-            $wpdb->insert( $this->table_reservation, $reservation_data, array('%d', '%d') );
+            $reservation_check = $wpdb->insert( $this->table_reservation, $reservation_data, array('%d', '%d') );
+            if( !$reservation_check ) {
+                return new WP_Error( 'joeee_booking_reservation_error', esc_html__( 'There occured an error by saving the reservation.', 'joeee-booking' ), array( 'status' => 400 ) );
+            }
             $reservation_id = $wpdb->insert_id;
             $booked_from = $data['booked_from'];
             $booked_to = $data['booked_to'];
@@ -119,7 +130,8 @@ if ( ! class_exists( Reservation::class ) ) {
                 $room_booked_check = $wpdb->insert( $this->table_room_booked, $room_booked_data, array('%d', '%d', '%s', '%s', '%f') );
 
                 if( !$room_booked_check ) {
-                    return new WP_Error( 'joeee_booking_reservation_error', esc_html__( 'There occured an error by saving the reserved room.', 'joeee-booking'), array('status' => 400));
+                    reset_database_after_error( $reservation_id );
+                    return new WP_Error( 'joeee_booking_reservation_error', esc_html__( 'There occured an error by saving the reserved room. Please try again!', 'joeee-booking'), array('status' => 400));
                 }
 
             }
@@ -127,7 +139,8 @@ if ( ! class_exists( Reservation::class ) ) {
                 foreach( $person_ids as $fellow ) {
                     $fellow_check = $wpdb->insert( $this->table_fellow, array('reservation_id' => $reservation_id, 'person_id' => $fellow), array( '%d', '%d' ));
                     if( !$fellow_check ) {
-                        return new WP_Error( 'joeee_booking_reservation_error', esc_html__( 'There occured errors by creating the fellow travelers reservations!', 'joeee-booking'), array('status' => 400));
+                        reset_database_after_error( $reservation_id );
+                        return new WP_Error( 'joeee_booking_reservation_error', esc_html__( 'There occured errors by creating the fellow travelers reservations. Please try again!', 'joeee-booking'), array('status' => 400));
                     }
                 }
             }
@@ -136,7 +149,8 @@ if ( ! class_exists( Reservation::class ) ) {
             foreach( $extra_keys as $key ) {
                 $extra_check = $wpdb->insert( $this->table_reservation_extra, array('reservation_id' => $reservation_id, 'extra_id' => $key, 'count' => $extras[$key]), array('%d', '%d', '%d') );
                 if( !$extra_check ) {
-                    return new WP_Error( 'joeee_booking_reservation_error', esc_html__( 'There occured errors by creating the reservation extras!', 'joeee-booking'), array('status' => 400));
+                    reset_database_after_error( $reservation_id );
+                    return new WP_Error( 'joeee_booking_reservation_error', esc_html__( 'There occured errors by creating the reservation extras! Please try again!', 'joeee-booking'), array('status' => 400));
                 }
             }
             
