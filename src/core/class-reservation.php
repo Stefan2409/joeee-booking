@@ -29,6 +29,7 @@ if ( ! class_exists( Reservation::class ) ) {
         protected $table_room;
         protected $table_fellow;
         protected $table_address;
+        protected $table_users;
 
         public function __construct() {
             global $wpdb;
@@ -40,6 +41,7 @@ if ( ! class_exists( Reservation::class ) ) {
             $this->table_room = $wpdb->prefix . "joeee_room";
             $this->table_fellow = $wpdb->prefix . "joeee_fellow_traveler";
             $this->table_address = $wpdb->prefix . "joeee_address";
+            $this->table_users = $wpdb->prefix . "users";
         }
 
             /**
@@ -106,11 +108,13 @@ if ( ! class_exists( Reservation::class ) ) {
                 
 
             $reservation_data = array(
-                'person_id' => $booker_id,
-                'confirmation' => $data['confirmation'],
+                'person_id'     => $booker_id,
+                'confirmation'  => $data['confirmation'],
+                'adults'        => $data['adults'],
+                'kids'          => $data['kids'],
             );
 
-            $reservation_check = $wpdb->insert( $this->table_reservation, $reservation_data, array('%d', '%d') );
+            $reservation_check = $wpdb->insert( $this->table_reservation, $reservation_data, array('%d', '%d', '%d', '%d') );
             if( !$reservation_check ) {
                 return new WP_Error( 'joeee_booking_reservation_error', esc_html__( 'There occured an error by saving the reservation.', 'joeee-booking' ), array( 'status' => 400 ) );
             }
@@ -171,12 +175,30 @@ if ( ! class_exists( Reservation::class ) ) {
 
         }
 
-        public function get_reservation( $id ) {
+        public function get_room_reservation( $reservation_id, $room_id ) {
             global $wpdb;
-            $sql = "SELECT * FROM $this->table_reservation r
+            $sql = "SELECT p.id, u.user_email, p.first_name, p.last_name, p.gender, p.birth, p.nationality_id, a.tin, a.street, a.zip, a.city, a.state_id, rb.room_id, rb.reservation_id, rb.booked_from, rb.booked_to, r.confirmation FROM $this->table_reservation r
             JOIN $this->table_room_booked rb on rb.reservation_id = r.id
             JOIN $this->table_person p on p.id = r.person_id
             JOIN $this->table_address a on a.id = p.id
+            JOIN $this->table_users u on u.ID = p.user_id
+            WHERE r.id = $reservation_id AND rb.room_id = $room_id";
+
+            $query_result = $wpdb->get_results($sql);
+            if( !$query_result ) {
+                return new WP_Error( 'joeee_booking_reservation_error', esc_html__( 'There is no room or reservation with the given ids! Please try again!', 'joeee-booking' ));
+            }
+
+            return $query_result;
+        }
+
+        public function get_reservation( $id ) {
+            global $wpdb;
+            $sql = "SELECT p.id, u.user_email, p.first_name, p.last_name, p.gender, p.birth, p.nationality_id, a.tin, a.street, a.zip, a.city, a.state_id, rb.room_id, rb.reservation_id, rb.booked_from, rb.booked_to FROM $this->table_reservation r
+            JOIN $this->table_room_booked rb on rb.reservation_id = r.id
+            JOIN $this->table_person p on p.id = r.person_id
+            JOIN $this->table_address a on a.id = p.id
+            JOIN $this->table_users u on u.ID = p.user_id
             WHERE r.id = $id";
 
             $query_result = $wpdb->get_results($sql);

@@ -55,6 +55,7 @@ jQuery(document).ready(function() {
 	const RESFORM = $('#joeee-booking-reservation-form');
 	const RESCANCELBTN = $('.joeee-booking-reservation-cancel-btn');
 	const RESBGMODAL = $(".joeee-booking-reservation-bg-modal");
+	const RESID = $(".joeee-booking-reservation-id");
 	const RESROOMID = $('#joeee-booking-reservation-roomid');
 	const RESARRIVAL = $("#joeee-booking-reservation-arrival");
 	const RESDEPARTURE = $("#joeee-booking-reservation-departure");
@@ -63,8 +64,10 @@ jQuery(document).ready(function() {
 	const RESFIRSTNAME = $('#joeee-booking-reservation-firstname');
 	const RESLASTNAME = $('#joeee-booking-reservation-lastname');
 	const RESNATIONALITY = $('#joeee-booking-nationality-select');
+	const RESCONFIRMATION = $('#joeee-booking-reservation-confirm');
 	const RESGENDER = $('#joeee-booking-reservation-gender');
 	const RESBIRTHDAY = $('#joeee-booking-reservation-birthday');
+	const RESTIN = $("#joeee-booking-reservation-tin");
 	const RESSTREET = $('#joeee-booking-reservation-street');
 	const RESZIP = $('#joeee-booking-reservation-zip');
 	const RESCITY = $('#joeee-booking-reservation-city');
@@ -448,7 +451,49 @@ jQuery(document).ready(function() {
 		},
 		eventClick: function(info) {
 
-			console.log('Event: ' + info.event.title);
+			console.log('Event: ' + info.event.title + ' ' + info.event.id + ' ' + info.event.getResources().map(function(self) {return self.id}));
+			let event = {};
+			event.id = info.event.id;
+			event.room_id = info.event.getResources().map(function(self) {return self.id});
+			console.log(event);
+			$.ajax({
+				type: 'POST',
+				dataType: 'json',
+				contentType: 'application/json',
+				url: joeeeRest.restURL + 'joeee-booking/v1/reservation/room',
+				success: function (data) {
+					console.log(data);
+					RESBGMODAL.css("display", "flex");
+					RESID.val(data[0].reservation_id);
+					RESROOMID.val(data[0].room_id);
+					RESARRIVAL.val(data[0].booked_from.replace(" 12:00:00", ""));
+					RESDEPARTURE.val(data[0].booked_to.replace(" 12:00:00", ""));
+
+					RESEMAIL.val(data[0].user_email);
+					RESFIRSTNAME.val(data[0].first_name);
+					RESLASTNAME.val(data[0].last_name);
+					RESNATIONALITY.val(data[0].nationality_id);
+					RESCONFIRMATION.val(data[0].confirmation);
+					RESGENDER.val(data[0].gender);
+					RESBIRTHDAY.val(data[0].birth);
+					RESTIN.val(data[0].tin);
+					RESSTREET.val(data[0].street);
+					RESZIP.val(data[0].zip);
+					RESCITY.val(data[0].city);
+					RESCOUNTRY.val(data[0].state_id);
+
+
+
+				},
+				error: function (data) {
+					let err = data.responseJSON.message;
+					console.log(err);
+				},
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', joeeeRest.restNonce);
+				},
+				data: JSON.stringify(event),
+			});
 		},
 		select: function(arg) {
 			let arrival = arg.start.toISOString().substr(0, 10);

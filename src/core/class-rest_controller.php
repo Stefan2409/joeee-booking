@@ -352,6 +352,26 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                 ),
         ));
 
+        register_rest_route( $this->namespace, '/reservation/room', array(
+            array(
+                'methods'   => 'POST',
+                'callback'  => array( $this, 'get_room_reservation' ),
+                'args'      => array(
+                    'id'        => array(
+                        'type'      => 'number',
+                        'required'  => true,
+                    ),
+                    'room_id'   => array(
+                        'type'      => 'array',
+                        'items'     => array(
+                            'type'  => 'number',
+                        ),
+                        'required'  => true,
+                    ),
+                ),
+            ),
+        ));
+
         register_rest_route( $this->namespace, '/extra', array(
             array(
                 'methods'   => WP_REST_Server::READABLE,
@@ -548,6 +568,14 @@ if ( ! class_exists( Rest_Controller::class ) ) {
              $result = $Reservation->get_reservation( $request['id'] );
              return $result;
          } 
+
+         public function get_room_reservation( $request ) {
+             $Reservation = new Reservation();
+
+             $result = $Reservation->get_room_reservation( $request['id'], $request['room_id'][0]);
+
+             return $result;
+         }
 
         /**
          * Extra specific functionality
