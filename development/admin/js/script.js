@@ -57,9 +57,11 @@ jQuery(document).ready(function() {
 	const RESBGMODAL = $(".joeee-booking-reservation-bg-modal");
 	const RESID = $(".joeee-booking-reservation-id");
 	const RESROOMID = $('#joeee-booking-reservation-roomid');
+	const RESUSERID = $('#joeee-booking-reservation-userid');
 	const RESARRIVAL = $("#joeee-booking-reservation-arrival");
 	const RESDEPARTURE = $("#joeee-booking-reservation-departure");
 	const RESPERSONS = $('#joeee-booking-reservation-persons');
+	const RESKIDS = $('#joeee-booking-reservation-kids');
 	const RESEMAIL = $('#joeee-booking-reservation-email');
 	const RESFIRSTNAME = $('#joeee-booking-reservation-firstname');
 	const RESLASTNAME = $('#joeee-booking-reservation-lastname');
@@ -73,6 +75,8 @@ jQuery(document).ready(function() {
 	const RESCITY = $('#joeee-booking-reservation-city');
 	const RESCOUNTRY = $('#joeee-booking-country-select');
 	const RESSUBMIT = $('#joeee-booking-reservation-submit');
+	const RESMODIFY = $('#joeee-booking-reservation-form-submit-modify');
+	const RESDELETE = $('.joeee-booking-reservation-delete-btn');
 	const RESFREEROOM = $('#joeee-booking-reservation-free-rooms-table');
 
 	
@@ -260,20 +264,51 @@ jQuery(document).ready(function() {
 			formDataHelper[field.name] = field.value;
 		});
 		let resRoomIDs = getSelectedReservationCheckboxes();
-		if(resRoomIDs.length > 0 ) {
-			formDataHelper.rooms = resRoomIDs;
+		if( comesfrom === "submit" ) {
+			try {
+				if(resRoomIDs.length > 0 ) {
+					formDataHelper.rooms = resRoomIDs;
+				}
+				else {
+					throw __('You have to select the rooms you want to be booked!', 'joeee-booking' );
+				}
+			}
+			catch(err) { 
+				let submitError = $('.joeee-booking-reservation-error');
+				submitError.addClass('error');
+				submitError.text( err );
+				return false;
+			}
 		}
-		else {
-			let submitError = $('.joeee-booking-reservation-error');
-			submitError.addClass('error');
-			submitError.text( __( 'You have to select the rooms you want to be booked!', 'joeee-booking' ) );
-			return false;
+
+		if( comesfrom === "modify" ) {
+			formDataHelper.rooms = RESROOMID.val();
+			formDataHelper.reservationID = RESID.val();
 		}
 
 		formout = formDataHelper;
 
 		return formout;
 
+	}
+
+	function create_userdata( checked, comesfrom ) {
+		let userdata = {};
+		userdata.email = checked.reservationEmail;
+		userdata.first_name = checked.reservationFirstName;
+		userdata.last_name = checked.reservationLastName;
+		userdata.gender = parseInt( checked.genderselect );
+		userdata.birthday = checked.reservationBirthday + "T12:00:00";
+		userdata.nationality = checked.nationalityselect;
+		userdata.tin = checked.reservationTIN;
+		userdata.street = checked.reservationStreet;
+		userdata.zip = checked.reservationZip;
+		userdata.city = checked.reservationCity;
+		userdata.country = checked.countryselect;
+		if( comesfrom === "modify" ) {
+			userdata.id = checked.reservationUserID;
+		}
+		return userdata;
 	}
 
 	function checkRoomFormInputs( comesfrom ) {
@@ -464,11 +499,20 @@ jQuery(document).ready(function() {
 				success: function (data) {
 					console.log(data);
 					RESBGMODAL.css("display", "flex");
+					RESSUBMIT.css("visibility", "hidden");
+					RESMODIFY.addClass("open");
+					RESDELETE.addClass("open");
+
+					$("label[for='joeee-booking-reservation-persons']").text( __("Total number of adults for this reservation.", "joeee-booking") );
+					$("label[for='joeee-booking-reservation-kids']").text( __("Total number of kids for this reservation.", "joeee-booking") );
+
 					RESID.val(data[0].reservation_id);
 					RESROOMID.val(data[0].room_id);
+					RESUSERID.val(data[0].id);
 					RESARRIVAL.val(data[0].booked_from.replace(" 12:00:00", ""));
 					RESDEPARTURE.val(data[0].booked_to.replace(" 12:00:00", ""));
-
+					RESPERSONS.val(data[0].adults);
+					RESKIDS.val(data[0].kids);
 					RESEMAIL.val(data[0].user_email);
 					RESFIRSTNAME.val(data[0].first_name);
 					RESLASTNAME.val(data[0].last_name);
@@ -487,7 +531,7 @@ jQuery(document).ready(function() {
 				},
 				error: function (data) {
 					let err = data.responseJSON.message;
-					console.log(err);
+					alert(err);
 				},
 				beforeSend: function (xhr) {
 					xhr.setRequestHeader('X-WP-Nonce', joeeeRest.restNonce);
@@ -657,26 +701,35 @@ jQuery(document).ready(function() {
 	});
 
 
+	RESMODIFY.click( function(ev) {
+		ev.preventDefault();
+
+		let checked = checkReservationFormInputs( "modify" );
+		if(checked === false) {
+			return false;
+		}
+
+		let userdata = create_userdata( checked, "modify" );
+
+		console.log(checked);
+		console.log(userdata);
+
+		
+	});
 
 	RESSUBMIT.click( function(ev) {
 		ev.preventDefault();
 
-		let checked = checkReservationFormInputs();
+		let checked = checkReservationFormInputs( "submit" );
+		if( checked === false ) {
+			return false;
+		}
+
 		let extras = getAllReservationExtras();
 		console.log(extras);
 
-		let userdata = {};
-		userdata.email = checked.reservationEmail;
-		userdata.first_name = checked.reservationFirstName;
-		userdata.last_name = checked.reservationLastName;
-		userdata.gender = parseInt( checked.genderselect );
-		userdata.birthday = checked.reservationBirthday + "T12:00:00";
-		userdata.nationality = checked.nationalityselect;
-		userdata.tin = checked.reservationTIN;
-		userdata.street = checked.reservationStreet;
-		userdata.zip = checked.reservationZip;
-		userdata.city = checked.reservationCity;
-		userdata.country = checked.countryselect;
+		let userdata = create_userdata(checked, "submit");
+
 		console.log(userdata);
 
 		$.ajax({

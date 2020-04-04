@@ -177,7 +177,7 @@ if ( ! class_exists( Reservation::class ) ) {
 
         public function get_room_reservation( $reservation_id, $room_id ) {
             global $wpdb;
-            $sql = "SELECT p.id, u.user_email, p.first_name, p.last_name, p.gender, p.birth, p.nationality_id, a.tin, a.street, a.zip, a.city, a.state_id, rb.room_id, rb.reservation_id, rb.booked_from, rb.booked_to, r.confirmation FROM $this->table_reservation r
+            $sql = "SELECT p.id, u.user_email, p.first_name, p.last_name, p.gender, p.birth, p.nationality_id, a.tin, a.street, a.zip, a.city, a.state_id, rb.room_id, rb.reservation_id, rb.booked_from, rb.booked_to, r.confirmation, r.adults, r.kids FROM $this->table_reservation r
             JOIN $this->table_room_booked rb on rb.reservation_id = r.id
             JOIN $this->table_person p on p.id = r.person_id
             JOIN $this->table_address a on a.id = p.id

@@ -133,6 +133,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <div class="joeee-booking-reservation-roomid">
                     <input type="hidden" name="reservationRoomID" id="joeee-booking-reservation-roomid" value="null">
                 </div>
+                <div class="joeee-booking-reservation-userid">
+                    <input type="hidden" name="reservationUserID" id="joeee-booking-reservation-userid" value="null">
+                </div>
                 <div class="joeee-booking-reservation-form-control">
                     <label for="joeee-booking-reservation-arrival"><?php esc_html_e('Arrival', 'joeee-booking') ?></label>
                     <input type="date" name="reservationArrival" id="joeee-booking-reservation-arrival">

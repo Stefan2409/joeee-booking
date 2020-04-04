@@ -200,17 +200,17 @@ if ( ! class_exists( User::class ) ) {
             
             $address_return = $wpdb->update( $this->table_address, $update_address, $user_id, $address_fields, array('%d') );
             if( $address_return === false ) {
-                return new WP_Error('joeee-booking-user-error', esc_html__( "Error on updating the address for user ID: $u_id.", 'joeee-booking' ));
+                return new WP_Error('joeee-booking-user-error', esc_html__( "Error on updating the address for user ID: $u_id.", 'joeee-booking' ), array('status' => 400));
             }
 
             $user_return = wp_update_user( $update_user );
             if( is_wp_error( $user_return ) ) {
-                return $user_return;
+                return new WP_Error('joeeee-booking-user-error', $user_return, array('status' => 400) );
             }
 
             $person_return = $wpdb->update( $this->table_person, $update_person, $user_id, $person_fields, array('%d'));
             if( $person_return === false ) {
-                return new WP_Error('joeee-booking-user-error', esc_html__( "Error on updating person data for user ID: $u_id.", 'joeee-booking' ));
+                return new WP_Error('joeee-booking-user-error', esc_html__( "Error on updating person data for user ID: $u_id.", 'joeee-booking' ), array('status' => 400));
             }
             return $data;
 
