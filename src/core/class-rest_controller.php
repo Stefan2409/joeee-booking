@@ -350,6 +350,60 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                         ),
                     ),
                 ),
+                array(
+                    'methods'   => WP_REST_Server::EDITABLE,
+                    'callback'  => array( $this, 'modify_reservation'),
+                    'args'      => array(
+                        'id'        => array(
+                            'type'      => 'number',
+                            'required'  => true,
+                        ),
+                        'person_id'         => array(
+                            'type'  => 'array',
+                            'items' => array(
+                                'type'  => 'number',
+                            ),
+                        ),
+                        'booked_from'   => array(
+                            'type'              => 'string',
+                            'format'            => 'date-time',
+                            'required'          => true,
+                        ),
+                        'booked_to'      => array(
+                            'type'              => 'string',
+                            'format'            => 'date-time',
+                            'required'          => true,
+                        ),
+                        'price'         => array(
+                            'type'      => 'number',
+                        ),
+                        'confirmation'  => array(
+                            'type'      => 'number',
+                            'enum'      => array(
+                                1,
+                                2,
+                                3,
+                            ),
+                        ),
+                        'adults'       => array(
+                            'type'      => 'number',
+                            'required'  => true,
+                        ),
+                        'kids'  => array(
+                            'type'      => 'number',
+                        ),
+                        'extras' => array(
+                            'type'          => 'object',
+                        ),
+                        'room_id' => array(
+                            'type'      => 'number',
+                            'required'  => true,
+                        ),
+                        'new_room_id' => array(
+                            'type'      => 'number',
+                        ),
+                    ),
+                ),
         ));
 
         register_rest_route( $this->namespace, '/reservation/room', array(
@@ -548,10 +602,18 @@ if ( ! class_exists( Rest_Controller::class ) ) {
          */
 
          public function create_reservation( $request ) {
-             $Reservation = new Reservation();
+            $Reservation = new Reservation();
             $data = $request->get_json_params();
             $result = $Reservation->create_reservation( $data );
             return $result;
+         }
+
+         public function modify_reservation( $request ) {
+             $Reservation = new Reservation();
+
+             $result = $Reservation->modify_reservation( $request );
+
+             return $result;
          }
 
          public function get_reservations() {
@@ -576,6 +638,7 @@ if ( ! class_exists( Rest_Controller::class ) ) {
 
              return $result;
          }
+
 
         /**
          * Extra specific functionality
@@ -623,8 +686,8 @@ if ( ! class_exists( Rest_Controller::class ) ) {
          * @TODO Set the correct user permissions in build. 
          */
         public function check_users_permission() {
-            if ( current_user_can( 'read' ) ) {
-                return new WP_Error( 'rest_forbidden', esc_html__( "You aren't allowed to go this way.", 'joeee-booking' ));
+            if ( !current_user_can( 'read' ) ) {
+                return new WP_Error( 'rest_forbidden', esc_html__( "You aren't allowed to go this way (read).", 'joeee-booking' ));
             }
             return true;
         }

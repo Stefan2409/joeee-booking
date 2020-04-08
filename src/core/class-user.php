@@ -35,7 +35,26 @@ if ( ! class_exists( User::class ) ) {
 
               
 
-        
+        public function create_wp_user( $data ) {
+            $username = "";
+            $firstname = $data['first_name'];
+            $lastname = $data['last_name'];
+            $email = $data['email'];
+            $username = $email;
+            $password = wp_generate_password( $length = 12 );
+            $userdata = array(
+                'user_pass'     => $password,
+                'user_login'    => $username,
+                'user_email'    => $email,
+                'first_name'    => $firstname,
+                'last_name'     => $lastname,
+            );
+
+            $user_id = wp_insert_user( $userdata );
+            return $user_id;
+
+        }
+
         public function create_user( $data ) {
             global $wpdb;
 
@@ -59,19 +78,7 @@ if ( ! class_exists( User::class ) ) {
             }
             else {
                 if ( $email != "") {
-                    $username = $email;
-                    $password = wp_generate_password( $length = 12 );
-                    $userdata = array(
-                        'user_pass'     => $password,
-                        'user_login'    => $username,
-                        'user_email'    => $email,
-                        'first_name'    => $firstname,
-                        'last_name'     => $lastname,
-                    );
-    
-                    $user_id = wp_insert_user( $userdata );
-
-
+                   $user_id = $this->create_wp_user( $data );
                 }
 
                 if( !$user_id ) {
@@ -163,14 +170,68 @@ if ( ! class_exists( User::class ) ) {
         public function update_user( $data ) {
             global $wpdb;
             if( empty( $data['id'] ) ) {
-                return new WP_Error('joeee-booking-user-error', esc_html__( "You have to send an user id to update the user profile!", 'joeee-booking' ) );
+                return new WP_Error('joeee-booking-user-error', esc_html__( "You have to send an user id to update the user profile!", 'joeee-booking' ), array('status' => 400) );
             }
-            $u_id = $data['id'];
+            $person_id = $data['id'];
+            $user_id = $wpdb->get_var("SELECT user_id FROM $this->table_person WHERE id = $person_id");
 
+            $address_id = $wpdb->get_var("SELECT address_id FROM $this->table_person WHERE id = $person_id");
 
-            $user_id = array(
-                'user_id' => $data['id'],
+            $current_email = $wpdb->get_var("SELECT user_email FROM $this->table_users WHERE id = $user_id");
+            $address = array(
+                'id'    => $address_id,
             );
+
+            $p_id = array(
+                'id' => $person_id,
+            );
+            if( isset($user_id) ) {
+                $u_id = array(
+                    'ID'    => $user_id,
+                );
+
+                $update_user = array(
+                    'ID'            => $user_id,
+                    'first_name'    => $data['first_name'],
+                    'last_name'     => $data['last_name'],
+                    'user_email'    => $data['email'],
+                );
+
+                $update_login = array(
+                    'user_login'    => $data['email'],
+                );
+
+                $user_return = wp_update_user( $update_user );
+                if( is_wp_error( $user_return ) ) {
+                    return new WP_Error('joeeee-booking-user-error', $user_return, array('status' => 400) );
+                }
+
+                 $login_check = $wpdb->update( $this->table_users, $update_login, $u_id );
+
+                 if( $login_check === false ) {
+                     return new WP_Error('joeee-booking-user-error', esc_html__( "Error by updating the user login name.", 'joeee-booking' ), array('status' => 400 ) );
+                 }
+            }
+
+            if( !isset($current_email) && $data['email'] != "") {
+                $user_id = $this->create_wp_user( $data );
+                if(is_wp_error( $user_id )) {
+                    return $user_id;
+                }
+                $u_id = array(
+                    'user_id' => $user_id,
+                );
+
+                $wpdb->update( $this->table_person, $u_id, $p_id );
+                $wpdb->update( $this->table_address, $u_id, $address );
+
+
+
+            }
+
+         
+
+
             $update_address = array(
                 "tin"           => $data['tin'],
                 "street"        => $data['street'],
@@ -180,12 +241,7 @@ if ( ! class_exists( User::class ) ) {
             );
             $address_fields = array('%s', '%s', '%s', '%s', '%d');
 
-            $update_user = array(
-                'ID'            => $u_id,
-                'user_email'    => $data['email'],
-                'first_name'    => $data['first_name'],
-                'last_name'     => $data['last_name'],
-            );
+
 
             $update_person = array(
                 "first_name"    => $data['first_name'],
@@ -198,19 +254,16 @@ if ( ! class_exists( User::class ) ) {
             $person_fields = array('%s', '%s', '%d', '%s', '%d');
             
             
-            $address_return = $wpdb->update( $this->table_address, $update_address, $user_id, $address_fields, array('%d') );
+            $address_return = $wpdb->update( $this->table_address, $update_address, $address, $address_fields, array('%d') );
             if( $address_return === false ) {
-                return new WP_Error('joeee-booking-user-error', esc_html__( "Error on updating the address for user ID: $u_id.", 'joeee-booking' ), array('status' => 400));
+                return new WP_Error('joeee-booking-user-error', esc_html__( "Error on updating the address for user ID: $p_id.", 'joeee-booking' ), array('status' => 400));
             }
 
-            $user_return = wp_update_user( $update_user );
-            if( is_wp_error( $user_return ) ) {
-                return new WP_Error('joeeee-booking-user-error', $user_return, array('status' => 400) );
-            }
 
-            $person_return = $wpdb->update( $this->table_person, $update_person, $user_id, $person_fields, array('%d'));
+
+            $person_return = $wpdb->update( $this->table_person, $update_person, $p_id, $person_fields, array('%d'));
             if( $person_return === false ) {
-                return new WP_Error('joeee-booking-user-error', esc_html__( "Error on updating person data for user ID: $u_id.", 'joeee-booking' ), array('status' => 400));
+                return new WP_Error('joeee-booking-user-error', esc_html__( "Error on updating person data for user ID: $p_id.", 'joeee-booking' ), array('status' => 400));
             }
             return $data;
 
