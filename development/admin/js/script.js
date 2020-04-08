@@ -510,8 +510,35 @@ jQuery(document).ready(function() {
 			method: 'GET'
 		},
 		eventDrop: function(event) {
-			let oldResource = event.oldResource;
-			let newResource = event.newResource;
+			let newResource = 0;
+			let oldResource = 0;
+
+			if( event.newResource === null ) {
+				newResource = event.event._def.resourceIds[0];
+				oldResource = event.event._def.resourceIds[0];
+			}
+			else {
+				newResource = event.newResource.id;
+				oldResource = event.oldResource.id;
+			}
+			
+			 
+			let newEventStart = event.event.start;
+			let newEventEnd = event.event.end;
+			let eventDrop = {};
+			if (oldResource !== newResource) {
+				eventDrop.room_id = oldResource;
+				eventDrop.room_id_new = newResource;
+			}
+			else {
+				eventDrop.room_id = oldResource;
+			}
+	
+			eventDrop.booked_from = newEventStart;
+			eventDrop.booked_to = newEventEnd;
+
+			console.log(eventDrop);
+
 			
 		},
 		eventClick: function(info) {
@@ -556,7 +583,7 @@ jQuery(document).ready(function() {
 					RESCITY.val(data[0].city);
 					RESCOUNTRY.val(data[0].state_id);
 
-					
+					// Loads the extras counts in the reservation modifying form.
 					if( ("extras" in data) ) {
 						let extras_entries = Object.entries(data.extras);
 
