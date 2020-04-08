@@ -509,6 +509,11 @@ jQuery(document).ready(function() {
 			url: joeeeRest.restURL + 'joeee-booking/v1/reservation',
 			method: 'GET'
 		},
+		eventDrop: function(event) {
+			let oldResource = event.oldResource;
+			let newResource = event.newResource;
+			
+		},
 		eventClick: function(info) {
 
 			console.log('Event: ' + info.event.title + ' ' + info.event.id + ' ' + info.event.getResources().map(function(self) {return self.id}));
