@@ -81,6 +81,26 @@ if ( ! class_exists( Reservation::class ) ) {
             $wpdb->delete( $this->table_fellow, array( 'reservation_id' => $reservation_id ) );
             $wpdb->delete( $this->table_reservation_extra, array( 'reservation_id' => $reservation_id ) );
         }
+
+        protected function create_extras( $extras, $reservation_id ) {
+            global $wpdb;
+            $extra_keys = array_keys($extras);
+            foreach( $extra_keys as $key ) {
+                $extras_key_exists = $wpdb->get_var("SELECT count FROM $this->table_reservation_extra WHERE reservation_id = $reservation_id AND extra_id = $key");
+                if( $extras_key_exists === NULL ) {
+                    $extra_check = $wpdb->insert( $this->table_reservation_extra, array('reservation_id' => $reservation_id, 'extra_id' => $key, 'count' => $extras[$key]), array('%d', '%d', '%d') );
+                    if( !$extra_check ) {
+                        return new WP_Error( 'joeee_booking_reservation_error', esc_html__( 'There occured errors by creating the reservation extras! Please try again!', 'joeee-booking'), array('status' => 400));
+                    }
+                }
+                else {
+                    $extra_check = $wpdb->update( $this->table_reservation_extra, array('count' => $extras[$key]), array('reservation_id' => $reservation_id, 'extra_id' => $key));
+                    if( $extra_check === false ) {
+                        return new WP_Error( 'joeee_booking_reservation_error', esc_html__( 'There occured errors by modifying the reservation extras! Please try again!', 'joeee-booking'), array('status' => 400 ));
+                    }
+                }
+            }
+        }
         
         public function create_reservation( $data ) {
             global $wpdb;
@@ -150,12 +170,13 @@ if ( ! class_exists( Reservation::class ) ) {
                 }
             }
             $extras = $data['extras'];
-            $extra_keys = array_keys($data['extras']);
-            foreach( $extra_keys as $key ) {
-                $extra_check = $wpdb->insert( $this->table_reservation_extra, array('reservation_id' => $reservation_id, 'extra_id' => $key, 'count' => $extras[$key]), array('%d', '%d', '%d') );
-                if( !$extra_check ) {
-                    reset_database_after_error( $reservation_id );
-                    return new WP_Error( 'joeee_booking_reservation_error', esc_html__( 'There occured errors by creating the reservation extras! Please try again!', 'joeee-booking'), array('status' => 400));
+
+            if( isset($extras) ) {
+                $extras_check = $this->create_extras( $extras, $reservation_id );
+
+                if( is_wp_error( $extras_check) ) {
+                    $this->reset_database_after_error($reservation_id);
+                    return $extras_check;
                 }
             }
             
@@ -292,8 +313,14 @@ if ( ! class_exists( Reservation::class ) ) {
                 return new WP_Error('joeee-booking-reservation', __('An error occured during the room booked table modification.', 'joeee-booking'), array('status' => 400, ));
             }
             
+            if( isset($extras) ) {
+                $extras_check = $this->create_extras( $extras, $reservation_id );
+                if( is_wp_error($extras_check) ) {
+                    return $extras_check;
+                }
+            }
 
-            return $old_reservation_sql->kids;
+            return $data;
 
         }
 
@@ -301,7 +328,17 @@ if ( ! class_exists( Reservation::class ) ) {
 
         }
 
-        public function confirm_reservation($reservation_id) {
+        protected function get_reservation_extras( $reservation_id ) {
+            global $wpdb;
+            $extras = array();
+            $sql = "SELECT extra_id, count FROM $this->table_reservation_extra WHERE reservation_id = $reservation_id";
+            $query_result = $wpdb->get_results( $sql, ARRAY_A );
+
+            foreach($query_result as $extra) {
+                $extras[$extra['extra_id']] = $extra['count'];
+            }
+
+            return $extras;
 
         }
 
@@ -314,11 +351,15 @@ if ( ! class_exists( Reservation::class ) ) {
             JOIN $this->table_users u on u.ID = p.user_id
             WHERE r.id = $reservation_id AND rb.room_id = $room_id";
 
-            $query_result = $wpdb->get_results($sql);
+            $query_result = $wpdb->get_results($sql, ARRAY_A);
             if( !$query_result ) {
                 return new WP_Error( 'joeee_booking_reservation_error', esc_html__( 'There is no room or reservation with the given ids! Please try again!', 'joeee-booking' ));
             }
+            $extras = $this->get_reservation_extras( $reservation_id );
 
+            if( isset($extras)) {
+                $query_result['extras'] = $extras;
+            }
             return $query_result;
         }
 

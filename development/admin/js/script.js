@@ -556,6 +556,19 @@ jQuery(document).ready(function() {
 					RESCITY.val(data[0].city);
 					RESCOUNTRY.val(data[0].state_id);
 
+					
+					if( ("extras" in data) ) {
+						let extras_entries = Object.entries(data.extras);
+
+						for( const [extra, count] of extras_entries) {
+							$('#extra-id' + extra).val(count);
+						}
+					}
+					
+
+
+
+
 
 
 				},
