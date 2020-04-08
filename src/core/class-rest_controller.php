@@ -387,7 +387,6 @@ if ( ! class_exists( Rest_Controller::class ) ) {
                         ),
                         'adults'       => array(
                             'type'      => 'number',
-                            'required'  => true,
                         ),
                         'kids'  => array(
                             'type'      => 'number',

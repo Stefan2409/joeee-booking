@@ -523,12 +523,15 @@ jQuery(document).ready(function() {
 			}
 			
 			 
-			let newEventStart = event.event.start;
-			let newEventEnd = event.event.end;
+			let newEventStart = event.event.start.toISOString().substr(0, 10) + " 12:00:00";
+			let newEventEnd = event.event.end.toISOString().substr(0, 10) + " 12:00:00";
+			console.log(newEventEnd);
+			let eventId = event.event.id;
+			console.log(eventId);
 			let eventDrop = {};
 			if (oldResource !== newResource) {
 				eventDrop.room_id = oldResource;
-				eventDrop.room_id_new = newResource;
+				eventDrop.new_room_id = newResource;
 			}
 			else {
 				eventDrop.room_id = oldResource;
@@ -538,6 +541,25 @@ jQuery(document).ready(function() {
 			eventDrop.booked_to = newEventEnd;
 
 			console.log(eventDrop);
+
+			$.ajax({
+				type: 'PUT',
+				dataType: 'json',
+				contentType: 'application/json',
+				url: joeeeRest.restURL + 'joeee-booking/v1/reservation/' + eventId,
+				success: function(data) {
+					console.log(data);
+
+				},
+				error: function(data) {
+					console.log(data);
+					event.revert();
+				},
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', joeeeRest.restNonce);
+				},
+				data: JSON.stringify(eventDrop),
+			});
 
 			
 		},

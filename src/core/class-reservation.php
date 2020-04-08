@@ -204,88 +204,101 @@ if ( ! class_exists( Reservation::class ) ) {
             $reservation_id = $data['id'];
             $booked_from = $data['booked_from'];
             $booked_to = $data['booked_to'];
-            $adults = $data['adults'];
-            $kids = $data['kids'];
-            $room_id = $data['room_id'];
-            $confirmation = $data['confirmation'];
-            $extras = $data['extras'];
-            $person_id = $data['person_id'][0];
- 
-
-            $old_reservation_sql = $this->get_room_reservation( $reservation_id, $room_id )[0];
-
-            $persons = $adults + $kids;
-
-            $kids_old = $old_reservation_sql->kids;
-            $adults_old = $old_reservation_sql->adults;
-
-            $persons_old = $kids_old + $adults_old;
-
-            // This if clause creates the new guests if the # of persons is raised.
-            if( $persons > $persons_old ) {
-
-                $User = new User();
-
-                $booker_object = $User->get_user($person_id)[0];
-
-       
-
-                $booker = array();
-                $booker['last_name'] = $booker_object->last_name;
-                $booker['nationality_id'] = $booker_object->nationality_id;
-                
-
-                $fellow_persons_new = $persons - $persons_old;
-
-                $fellow_result = $this->create_fellows($fellow_persons_new + 1, $booker);
-
-                if( is_wp_error( $fellow_result ) ) {
-                    return $fellow_result;
-                }
-                foreach($fellow_result as $fellow ) {
-                $fellow_check = $wpdb->insert( $this->table_fellow, array('reservation_id' => $reservation_id, 'person_id' => $fellow), array( '%d', '%d' ));
-                    if( !$fellow_check ) {
-                        return new WP_Error( 'joeee_booking_reservation_error', esc_html__( 'There occured errors by creating the new fellow travelers reservations. Please try again!', 'joeee-booking'), array('status' => 400));
-                    } 
-                }
+            if(isset($data['adults'])) {
+                $adults = $data['adults'];
             }
+            if(isset($data['kids'])) {
+                $kids = $data['kids'];
+            }
+            $room_id = $data['room_id'];
+            if(isset($data['confirmation'])) {
+                $confirmation = $data['confirmation'];
+            }
+            if(isset($data['extras'])) {
 
-            // This if clause deletes the reservation of persons if the person number is lowered.
-            if( $persons < $persons_old ) {
-                $fellow_remove = $persons_old - $persons;
+                $extras = $data['extras'];
+            }
+            if(isset($data['person_id'])) {
+                $person_id = $data['person_id'][0];
+            }
+ 
+            if( isset($adults) ) {
 
-                $fellow_ids = $this->get_fellow_ids( $reservation_id );
+                $old_reservation_sql = $this->get_room_reservation( $reservation_id, $room_id )[0];
 
-                for($i = 0; $i < $fellow_remove; $i++ ) {
-                    $remove_data = array(
-                        'reservation_id'    => $reservation_id,
-                        'person_id'         => $fellow_ids[$i],
-                    );
-                    $fellow_remove_result = $wpdb->delete($this->table_fellow, $remove_data, array('%d', '%d'));
+                $persons = $adults + $kids;
 
-                    if( $fellow_remove_result === false ) {
-                        return new WP_Error('joeee-booking-reservation', __('There occured errors during the fellow deletion.', 'joeee-booking'), array('status' => 400) );
+                $kids_old = $old_reservation_sql->kids;
+                $adults_old = $old_reservation_sql->adults;
+
+                $persons_old = $kids_old + $adults_old;
+
+                // This if clause creates the new guests if the # of persons is raised.
+                if( $persons > $persons_old ) {
+
+                    $User = new User();
+
+                    $booker_object = $User->get_user($person_id)[0];
+
+        
+
+                    $booker = array();
+                    $booker['last_name'] = $booker_object->last_name;
+                    $booker['nationality_id'] = $booker_object->nationality_id;
+                    
+
+                    $fellow_persons_new = $persons - $persons_old;
+
+                    $fellow_result = $this->create_fellows($fellow_persons_new + 1, $booker);
+
+                    if( is_wp_error( $fellow_result ) ) {
+                        return $fellow_result;
+                    }
+                    foreach($fellow_result as $fellow ) {
+                    $fellow_check = $wpdb->insert( $this->table_fellow, array('reservation_id' => $reservation_id, 'person_id' => $fellow), array( '%d', '%d' ));
+                        if( !$fellow_check ) {
+                            return new WP_Error( 'joeee_booking_reservation_error', esc_html__( 'There occured errors by creating the new fellow travelers reservations. Please try again!', 'joeee-booking'), array('status' => 400));
+                        } 
                     }
                 }
 
+                // This if clause deletes the reservation of persons if the person number is lowered.
+                if( $persons < $persons_old ) {
+                    $fellow_remove = $persons_old - $persons;
 
-            }
-            
-            $res_id = array(
-                'id'    => $reservation_id,
-            );
+                    $fellow_ids = $this->get_fellow_ids( $reservation_id );
 
-            $reservation_modify = array(
-                'confirmation'  => $confirmation,
-                'adults'        => $adults,
-                'kids'          => $kids,
-            );
+                    for($i = 0; $i < $fellow_remove; $i++ ) {
+                        $remove_data = array(
+                            'reservation_id'    => $reservation_id,
+                            'person_id'         => $fellow_ids[$i],
+                        );
+                        $fellow_remove_result = $wpdb->delete($this->table_fellow, $remove_data, array('%d', '%d'));
+
+                        if( $fellow_remove_result === false ) {
+                            return new WP_Error('joeee-booking-reservation', __('There occured errors during the fellow deletion.', 'joeee-booking'), array('status' => 400) );
+                        }
+                    }
 
 
-            $reservation_modify_result = $wpdb->update($this->table_reservation, $reservation_modify, $res_id, array('%d', '%d', '%d' ));
+                }
+                
+                $res_id = array(
+                    'id'    => $reservation_id,
+                );
 
-            if( $reservation_modify_result === false ) {
-                return new WP_Error('joeee-booking-reservation', __('An error occured during the reservation table modification.', 'joeee-booking'), array('status' => 400));
+                $reservation_modify = array(
+                    'confirmation'  => $confirmation,
+                    'adults'        => $adults,
+                    'kids'          => $kids,
+                );
+
+
+                $reservation_modify_result = $wpdb->update($this->table_reservation, $reservation_modify, $res_id, array('%d', '%d', '%d' ));
+
+                if( $reservation_modify_result === false ) {
+                    return new WP_Error('joeee-booking-reservation', __('An error occured during the reservation table modification.', 'joeee-booking'), array('status' => 400));
+                }
             }
 
             $room_booked_modify = array(
@@ -293,7 +306,6 @@ if ( ! class_exists( Reservation::class ) ) {
                 'booked_to'     => $booked_to,
             );
 
-            $room_booked_modify_format = array('%s', '%s');
 
             $room_booked_modify_where = array(
                 'reservation_id'        => $reservation_id,
@@ -304,10 +316,10 @@ if ( ! class_exists( Reservation::class ) ) {
                 $new_room_id = $data['new_room_id'];
                 $room_booked_modify['room_id'] = $new_room_id;
 
-                array_push($room_booked_modify_format, '%d');
+   
             }
 
-            $room_booked_modify_result = $wpdb->update($this->table_room_booked, $room_booked_modify, $room_booked_modify_where, $room_booked_modify_format, array('%d', '%d'));
+            $room_booked_modify_result = $wpdb->update($this->table_room_booked, $room_booked_modify, $room_booked_modify_where);
 
             if( $room_booked_modify_result === false ) {
                 return new WP_Error('joeee-booking-reservation', __('An error occured during the room booked table modification.', 'joeee-booking'), array('status' => 400, ));
