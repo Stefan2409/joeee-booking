@@ -2,7 +2,7 @@
 
 namespace Joeee_Booking\Common;
 
-use Joeee_Booking\Plugin_Data as Plugin_Data;
+use Joeee_Booking\PluginData as PluginData;
 
 // Abort if this file is called directly.
 if (!defined('ABSPATH')) {
@@ -27,9 +27,9 @@ if (!class_exists(Common::class)) {
          *
          * @return string
          */
-        public function required_capability(): string
+        public function requiredCapability(): string
         {
-            return apply_filters(Plugin_Data::plugin_text_domain_underscores() . '_required_capability', 'customize');
+            return apply_filters(PluginData::pluginTextDomainUnderscores() . '_required_capability', 'customize');
         }
 
         /**
@@ -39,9 +39,9 @@ if (!class_exists(Common::class)) {
          *
          * @return string
          */
-        public function get_wrapper_class(): string
+        public function getWrapperClass(): string
         {
-            $class = Plugin_Data::plugin_text_domain_underscores() . '-wrapper';
+            $class = PluginData::pluginTextDomainUnderscores() . '-wrapper';
 
             return esc_attr($class);
         }

@@ -60,7 +60,7 @@ if (!class_exists(Bootstrap::class)) {
         {
             $plugin = new self();
 
-            if ($plugin->is_ready()) {
+            if ($plugin->isReady()) {
                 $core = new Core\Init();
                 $core->run();
 
@@ -84,7 +84,7 @@ if (!class_exists(Bootstrap::class)) {
          *
          * This function is hooked into `tgmpa_register`, which is fired on the WP `init` action on priority 10.
          */
-        public function tgmpa_register_required_plugins(): void
+        public function tgmpaRegisterRequiredPlugins(): void
         {
             /*
              * Array of configuration settings. Amend each line as needed.
@@ -101,23 +101,23 @@ if (!class_exists(Bootstrap::class)) {
                 'strings' => [
                     'notice_can_install_required' => _n_noop(
                         // translators: 1: plugin name(s).
-                        Plugin_Data::get_plugin_display_name() . ' requires the following plugin: %1$s.',
-                        Plugin_Data::get_plugin_display_name() . ' requires the following plugins: %1$s.',
+                        PluginData::getPluginDisplayName() . ' requires the following plugin: %1$s.',
+                        PluginData::getPluginDisplayName() . ' requires the following plugins: %1$s.',
                         'joeee-booking'
                     ),
                     'notice_can_install_recommended' => _n_noop(
                         // translators: 1: plugin name(s).
-                        Plugin_Data::get_plugin_display_name() . ' recommends the following plugin: %1$s.',
-                        Plugin_Data::get_plugin_display_name() . ' recommends the following plugins: %1$s.',
+                        PluginData::getPluginDisplayName() . ' recommends the following plugin: %1$s.',
+                        PluginData::getPluginDisplayName() . ' recommends the following plugins: %1$s.',
                         'joeee-booking'
                     ),
                     'notice_ask_to_update' => _n_noop(
                         // translators: 1: plugin name(s).
-                        'The following plugin needs to be updated to its latest version to ensure maximum compatibility with ' . Plugin_Data::get_plugin_display_name() . ': %1$s.',
-                        'The following plugins need to be updated to their latest version to ensure maximum compatibility with ' . Plugin_Data::get_plugin_display_name() . ': %1$s.',
+                        'The following plugin needs to be updated to its latest version to ensure maximum compatibility with ' . PluginData::getPluginDisplayName() . ': %1$s.',
+                        'The following plugins need to be updated to their latest version to ensure maximum compatibility with ' . PluginData::getPluginDisplayName() . ': %1$s.',
                         'joeee-booking'
                     ),
-                    'plugin_needs_higher_version' => __('Plugin not activated. A higher version of %s is needed for ' . Plugin_Data::get_plugin_display_name() . '. Please update the plugin.', 'joeee-booking'),
+                    'plugin_needs_higher_version' => __('Plugin not activated. A higher version of %s is needed for ' . PluginData::getPluginDisplayName() . '. Please update the plugin.', 'joeee-booking'),
                     // translators: 1: dashboard link.
                     'nag_type' => 'error', // Determines admin notice type - can only be one of the typical WP notice classes, such as 'updated', 'update-nag', 'notice-warning', 'notice-info' or 'error'. Some of which may not work as expected in older WP versions.
                 ],
@@ -129,19 +129,19 @@ if (!class_exists(Bootstrap::class)) {
         /**
          * Output a message about unsatisfactory version of PHP.
          */
-        public function notice_old_php_version(): void
+        public function noticeOldPHPVersion(): void
         {
             $help_link = sprintf('<a href="%1$s" target="_blank">%1$s</a>', 'https://wordpress.org/about/requirements/');
 
             $message = sprintf(
                 __('%1$s requires at least PHP version %2$s in order to work. You have version %3$s. Please see %4$s for more information.', 'joeee-booking'),
-                '<strong>' . Plugin_Data::get_plugin_display_name() . '</strong>',
-                '<strong>' . Plugin_Data::required_min_php_version() . '</strong>',
+                '<strong>' . PluginData::getPluginDisplayName() . '</strong>',
+                '<strong>' . PluginData::requiredMinPHPVersion() . '</strong>',
                 '<strong>' . PHP_VERSION . '</strong>',
                 $help_link
             );
 
-            $this->do_admin_notice($message);
+            $this->doAdminNotice($message);
         }
 
         /**
@@ -150,7 +150,7 @@ if (!class_exists(Bootstrap::class)) {
          * @param string $message
          * @param string $type
          */
-        public function do_admin_notice(string $message, string $type = 'error'): void
+        public function doAdminNotice(string $message, string $type = 'error'): void
         {
             $class = sprintf('%s %s', $type, sanitize_html_class('joeee-booking'));
 
@@ -160,7 +160,7 @@ if (!class_exists(Bootstrap::class)) {
         /**
          * Output a message about the required theme missing, and link to Themes page.
          */
-        public function notice_missing_required_theme(): void
+        public function noticeMissingRequiredTheme(): void
         {
             $admin_link = '';
 
@@ -210,13 +210,13 @@ if (!class_exists(Bootstrap::class)) {
 
             $message = sprintf(
                 __('The %1$s plugin requires the %2$s parent theme%3$sin order to work.%4$s', 'joeee-booking'),
-                '<strong>' . Plugin_Data::get_plugin_display_name() . '</strong>',
+                '<strong>' . PluginData::getPluginDisplayName() . '</strong>',
                 '<strong>' . $parent_name . '</strong>',
                 $child_message,
                 $admin_link
             );
 
-            $this->do_admin_notice($message);
+            $this->doAdminNotice($message);
         }
 
         /**
@@ -224,22 +224,22 @@ if (!class_exists(Bootstrap::class)) {
          *
          * @return bool
          */
-        public function is_ready(): bool
+        public function isReady(): bool
         {
             $success = true;
 
-            if (version_compare(PHP_VERSION, Plugin_Data::required_min_php_version(), '<')) {
+            if (version_compare(PHP_VERSION, PluginData::requiredMinPHPVersion(), '<')) {
                 add_action('admin_notices', [$this, 'notice_old_php_version']);
                 $success = false;
             }
 
             if ($success) {
-                $success = $this->required_plugins_are_active();
+                $success = $this->requiredPluginsAreActive();
             }
 
             // Plugins check passed so now check theme
             if ($success) {
-                $success = $this->required_theme_is_active();
+                $success = $this->requiredThemeIsActive();
 
                 if (!$success) {
                     // Admin notices for required plugins will be handled via TGM Plugin Activation, but not for the theme
@@ -248,12 +248,12 @@ if (!class_exists(Bootstrap::class)) {
                     require_once ABSPATH . 'wp-includes/pluggable.php';
 
                     if (current_user_can('switch_themes')) {
-                        add_action('admin_notices', [$this, 'notice_missing_required_theme']);
+                        add_action('admin_notices', [$this, 'noticeMissingRequiredTheme']);
                     }
                 }
             }
 
-            add_action('tgmpa_register', [$this, 'tgmpa_register_required_plugins']);
+            add_action('tgmpa_register', [$this, 'tgmpaRegisterRequiredPlugins']);
 
             return $success;
         }
@@ -268,7 +268,7 @@ if (!class_exists(Bootstrap::class)) {
          * @return bool
          * @return string Either file path for plugin if installed, or just the plugin slug.
          */
-        private function required_plugins_are_active(): bool
+        private function requiredPluginsAreActive(): bool
         {
             // The file in which is_plugin_active() is located.
             require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -286,7 +286,7 @@ if (!class_exists(Bootstrap::class)) {
                 }
 
                 // Check if active
-                $basename = $this->get_plugin_basename_from_slug($required_plugin['slug']);
+                $basename = $this->getPluginBasenameFromSlug($required_plugin['slug']);
 
                 $active = is_plugin_active($basename);
 
@@ -300,7 +300,7 @@ if (!class_exists(Bootstrap::class)) {
                     continue;
                 }
 
-                $plugin_data = get_plugin_data(Plugin_Data::all_plugins_dir() . $basename);
+                $plugin_data = get_plugin_data(PluginData::allPluginsDir() . $basename);
 
                 if (empty($plugin_data['Version'])
                     || version_compare($required_plugin['version'], $plugin_data['Version'], '>')) {
@@ -320,7 +320,7 @@ if (!class_exists(Bootstrap::class)) {
          *
          * @return string Either file path for plugin directory, or just the plugin file slug.
          */
-        private function get_plugin_basename_from_slug(string $slug): string
+        private function getPluginBasenameFromSlug(string $slug): string
         {
             $keys = array_keys(get_plugins());
 
@@ -338,7 +338,7 @@ if (!class_exists(Bootstrap::class)) {
          *
          * @return bool True if no requirements set or they are met. False if requirements exist and are not met.
          */
-        private function required_theme_is_active(): bool
+        private function requiredThemeIsActive(): bool
         {
             $current_theme = wp_get_theme();
 

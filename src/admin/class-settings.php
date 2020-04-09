@@ -2,8 +2,8 @@
 
 namespace Joeee_Booking\Admin;
 
-use Joeee_Booking\Common\Settings as Common_Settings;
-use Joeee_Booking\Plugin_Data as Plugin_Data;
+use Joeee_Booking\Common\Settings as CommonSettings;
+use Joeee_Booking\PluginData as PluginData;
 
 // Abort if this file is called directly.
 if (!defined('ABSPATH')) {
@@ -20,7 +20,7 @@ if (!class_exists(Settings::class)) {
         /**
          * Get the Settings instance from Common.
          *
-         * @var Common_Settings
+         * @var CommonSettings
          */
         private $settings;
 
@@ -29,7 +29,7 @@ if (!class_exists(Settings::class)) {
          */
         public function __construct()
         {
-            $this->settings = new Common_Settings();
+            $this->settings = new CommonSettings();
         }
 
         /**
@@ -39,10 +39,10 @@ if (!class_exists(Settings::class)) {
          *
          * @return array
          */
-        public function add_action_links(array $links): array
+        public function addActionLinks(array $links): array
         {
             $mylinks = [
-                '<a href="' . esc_url($this->settings->get_main_settings_page_url()) . '">' . $this->settings->get_settings_word() . '</a>',
+                '<a href="' . esc_url($this->settings->getMainSettingsPageUrl()) . '">' . $this->settings->getSettingsWord() . '</a>',
             ];
 
             return array_merge($mylinks, $links);
@@ -51,29 +51,29 @@ if (!class_exists(Settings::class)) {
         /**
          * Add the Settings page to the wp-admin menu.
          */
-        public function add_plugin_admin_menu(): void
+        public function addPluginAdminMenu(): void
         {
             add_options_page(
-                Plugin_Data::get_plugin_display_name(),
-                Plugin_Data::get_plugin_display_name(),
-                $this->settings->common->required_capability(),
-                $this->settings->get_settings_page_slug(),
-                [$this, 'settings_page']
+                PluginData::getPluginDisplayName(),
+                PluginData::getPluginDisplayName(),
+                $this->settings->common->requiredCapability(),
+                $this->settings->getSettingsPageSlug(),
+                [$this, 'settingsPage']
             );
         }
 
         /**
          * Outputs HTML for the plugin's Settings page.
          */
-        public function settings_page(): void
+        public function settingsPage(): void
         {
-            if (!current_user_can($this->settings->common->required_capability())) {
+            if (!current_user_can($this->settings->common->requiredCapability())) {
                 wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'joeee-booking'));
             }
 
             ?>
 			<div class="wrap">
-				<h1><?php echo Plugin_Data::get_plugin_display_name() . ' ' . $this->settings->get_settings_word(); ?>
+				<h1><?php echo PluginData::getPluginDisplayName() . ' ' . $this->settings->getSettingsWord(); ?>
 				</h1>
 			</div>
 			<?php

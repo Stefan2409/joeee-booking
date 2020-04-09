@@ -28,7 +28,7 @@ if (!class_exists(Numbers::class)) {
          *
          * @return float|int
          */
-        public function round_up($value, int $places = 0)
+        public function roundUp($value, int $places = 0)
         {
             $value = (float) $value;
 
@@ -55,7 +55,7 @@ if (!class_exists(Numbers::class)) {
          *
          * @return int
          */
-        public function round_up_to_next($value = 0, int $interval = 0): int
+        public function roundUpToNext($value = 0, int $interval = 0): int
         {
             if (empty($value) || !is_numeric($value) || !is_int($interval) || 0 >= $interval) {
                 return 0;
@@ -65,6 +65,5 @@ if (!class_exists(Numbers::class)) {
 
             return round($result);
         }
-
     }
 }

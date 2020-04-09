@@ -28,18 +28,11 @@ if (!class_exists(Posts::class)) {
          *
          * @return int|false
          */
-        public function post_id_helper($post = null)
+        public function postIdHelper($post = null)
         {
-            if (
-                !is_null($post)
-                && is_numeric($post)
-                && absint($post) > 0
-            ) {
+            if (!is_null($post) && is_numeric($post) && absint($post) > 0) {
                 return (int) $post;
-            } elseif (
-                is_object($post)
-                && !empty($post->ID)
-            ) {
+            } elseif (is_object($post) && !empty($post->ID)) {
                 return (int) $post->ID;
             } else {
                 if (!empty($GLOBALS['post']) && $GLOBALS['post'] instanceof WP_Post) {
@@ -56,7 +49,7 @@ if (!class_exists(Posts::class)) {
          * @return false|WP_Post[]|int[] False if user is not logged-in. Array of post objects or post IDs
          *                               (or empty array) if user is logged-in.
          */
-        public function get_all_current_author_post_ids()
+        public function getAllCurrentAuthorPostIds()
         {
             $current_user = wp_get_current_user();
 
@@ -80,7 +73,7 @@ if (!class_exists(Posts::class)) {
          *
          * @return WP_Post[]|int[] Array of post objects or post IDs (or empty array).
          */
-        public function get_all_post_ids(): array
+        public function getAllPostIds(): array
         {
             $args = [
                 'fields' => 'ids',
@@ -98,7 +91,7 @@ if (!class_exists(Posts::class)) {
          *
          * @return array
          */
-        public function get_public_post_types(): array
+        public function getPublicPostTypes(): array
         {
             $result = get_post_types(['public' => true], 'object');
 

@@ -16,7 +16,7 @@ if (!class_exists(Country::class)) {
     class Country
     {
 
-        public function get_en_countries()
+        public function getEnCountries()
         {
             $countries = [];
 
@@ -52,7 +52,7 @@ if (!class_exists(Country::class)) {
             return $countries;
         }
 
-        public function get_de_countries()
+        public function getDeCountries()
         {
             $countries = [];
 

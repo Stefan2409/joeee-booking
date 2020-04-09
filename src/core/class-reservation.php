@@ -53,7 +53,7 @@ if (!class_exists(Reservation::class)) {
          *
          * @return array or wp_error
          */
-        public function create_fellows($number_persons, $booker)
+        public function createFellows($number_persons, $booker)
         {
             $person_ids = array();
             $new_user_data['first_name'] = "Guest";
@@ -69,7 +69,7 @@ if (!class_exists(Reservation::class)) {
             $new_user_data['email'] = "";
             $User = new User();
             for ($i = 0; $i < $number_persons - 1; $i++) {
-                $user = $User->create_user($new_user_data);
+                $user = $User->createUser($new_user_data);
                 if (is_wp_error($user)) {
                     return $user;
                 }
@@ -78,7 +78,7 @@ if (!class_exists(Reservation::class)) {
             return $person_ids;
         }
 
-        protected function reset_database_after_error($reservation_id)
+        protected function resetDatabaseAfterError($reservation_id)
         {
             $wpdb->delete($this->table_room_booked, array('reservation_id' => $reservation_id));
             $wpdb->delete($this->table_reservation, array('id' => $reservation_id));
@@ -86,7 +86,7 @@ if (!class_exists(Reservation::class)) {
             $wpdb->delete($this->table_reservation_extra, array('reservation_id' => $reservation_id));
         }
 
-        protected function create_extras($extras, $reservation_id)
+        protected function createExtras($extras, $reservation_id)
         {
             global $wpdb;
             $extra_keys = array_keys($extras);
@@ -106,7 +106,7 @@ if (!class_exists(Reservation::class)) {
             }
         }
 
-        public function create_reservation($data)
+        public function createReservation($data)
         {
             global $wpdb;
 
@@ -123,7 +123,7 @@ if (!class_exists(Reservation::class)) {
             $person_ids = $data['person_id'];
             unset($person_ids[0]);
             if (count($data['person_id']) == 1 && $number_persons > 1) {
-                $person_ids = $this->create_fellows($number_persons, $booker);
+                $person_ids = $this->createFellows($number_persons, $booker);
 
                 if (is_wp_error($person_ids)) {
                     return $person_ids;
@@ -158,7 +158,7 @@ if (!class_exists(Reservation::class)) {
                 $room_booked_check = $wpdb->insert($this->table_room_booked, $room_booked_data, array('%d', '%d', '%s', '%s', '%f'));
 
                 if (!$room_booked_check) {
-                    reset_database_after_error($reservation_id);
+                    $this->resetDatabaseAfterError($reservation_id);
                     return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured an error by saving the reserved room. Please try again!', 'joeee-booking'), array('status' => 400));
                 }
             }
@@ -167,7 +167,7 @@ if (!class_exists(Reservation::class)) {
                 foreach ($person_ids as $fellow) {
                     $fellow_check = $wpdb->insert($this->table_fellow, array('reservation_id' => $reservation_id, 'person_id' => $fellow), array('%d', '%d'));
                     if (!$fellow_check) {
-                        reset_database_after_error($reservation_id);
+                        $this->resetDatabaseAfterError($reservation_id);
                         return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured errors by creating the fellow travelers reservations. Please try again!', 'joeee-booking'), array('status' => 400));
                     }
                 }
@@ -175,10 +175,10 @@ if (!class_exists(Reservation::class)) {
             $extras = $data['extras'];
 
             if (isset($extras)) {
-                $extras_check = $this->create_extras($extras, $reservation_id);
+                $extras_check = $this->createExtras($extras, $reservation_id);
 
                 if (is_wp_error($extras_check)) {
-                    $this->reset_database_after_error($reservation_id);
+                    $this->resetDatabaseAfterError($reservation_id);
                     return $extras_check;
                 }
             }
@@ -186,7 +186,7 @@ if (!class_exists(Reservation::class)) {
             return $data;
         }
 
-        public function get_fellow_ids($reservation_id)
+        public function getFellowIds($reservation_id)
         {
             global $wpdb;
 
@@ -201,7 +201,7 @@ if (!class_exists(Reservation::class)) {
             return $result;
         }
 
-        public function modify_reservation($data)
+        public function modifyReservation($data)
         {
             global $wpdb;
 
@@ -228,7 +228,7 @@ if (!class_exists(Reservation::class)) {
 
             if (isset($adults)) {
 
-                $old_reservation_sql = $this->get_room_reservation($reservation_id, $room_id)[0];
+                $old_reservation_sql = $this->getRoomReservation($reservation_id, $room_id)[0];
 
                 $persons = $adults + $kids;
 
@@ -242,7 +242,7 @@ if (!class_exists(Reservation::class)) {
 
                     $User = new User();
 
-                    $booker_object = $User->get_user($person_id)[0];
+                    $booker_object = $User->getUser($person_id)[0];
 
                     $booker = array();
                     $booker['last_name'] = $booker_object->last_name;
@@ -250,7 +250,7 @@ if (!class_exists(Reservation::class)) {
 
                     $fellow_persons_new = $persons - $persons_old;
 
-                    $fellow_result = $this->create_fellows($fellow_persons_new + 1, $booker);
+                    $fellow_result = $this->createFellows($fellow_persons_new + 1, $booker);
 
                     if (is_wp_error($fellow_result)) {
                         return $fellow_result;
@@ -267,7 +267,7 @@ if (!class_exists(Reservation::class)) {
                 if ($persons < $persons_old) {
                     $fellow_remove = $persons_old - $persons;
 
-                    $fellow_ids = $this->get_fellow_ids($reservation_id);
+                    $fellow_ids = $this->getFellowIds($reservation_id);
 
                     for ($i = 0; $i < $fellow_remove; $i++) {
                         $remove_data = array(
@@ -321,7 +321,7 @@ if (!class_exists(Reservation::class)) {
             }
 
             if (isset($extras)) {
-                $extras_check = $this->create_extras($extras, $reservation_id);
+                $extras_check = $this->createExtras($extras, $reservation_id);
                 if (is_wp_error($extras_check)) {
                     return $extras_check;
                 }
@@ -330,12 +330,12 @@ if (!class_exists(Reservation::class)) {
             return $data;
         }
 
-        public function delete_reservation($reservation_id)
+        public function deleteReservation($reservation_id)
         {
 
         }
 
-        protected function get_reservation_extras($reservation_id)
+        protected function getReservationExtras($reservation_id)
         {
             global $wpdb;
             $extras = array();
@@ -349,7 +349,7 @@ if (!class_exists(Reservation::class)) {
             return $extras;
         }
 
-        public function get_room_reservation($reservation_id, $room_id)
+        public function getRoomReservation($reservation_id, $room_id)
         {
             global $wpdb;
             $sql = "SELECT p.id, u.user_email, p.first_name, p.last_name, p.gender, p.birth, p.nationality_id, a.tin, a.street, a.zip, a.city, a.state_id, rb.room_id, rb.reservation_id, rb.booked_from, rb.booked_to, r.confirmation, r.adults, r.kids FROM $this->table_reservation r
@@ -363,7 +363,7 @@ if (!class_exists(Reservation::class)) {
             if (!$query_result) {
                 return new WP_Error('joeee_booking_reservation_error', esc_html__('There is no room or reservation with the given ids! Please try again!', 'joeee-booking'));
             }
-            $extras = $this->get_reservation_extras($reservation_id);
+            $extras = $this->getReservationExtras($reservation_id);
 
             if (isset($extras)) {
                 $query_result['extras'] = $extras;
@@ -371,7 +371,7 @@ if (!class_exists(Reservation::class)) {
             return $query_result;
         }
 
-        public function get_reservation($id)
+        public function getReservation($id)
         {
             global $wpdb;
             $sql = "SELECT p.id, u.user_email, p.first_name, p.last_name, p.gender, p.birth, p.nationality_id, a.tin, a.street, a.zip, a.city, a.state_id, rb.room_id, rb.reservation_id, rb.booked_from, rb.booked_to FROM $this->table_reservation r
@@ -385,7 +385,7 @@ if (!class_exists(Reservation::class)) {
             return $query_result;
         }
 
-        public function get_reservations()
+        public function getReservations()
         {
             global $wpdb;
 

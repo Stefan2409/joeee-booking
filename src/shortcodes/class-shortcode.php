@@ -41,7 +41,7 @@ abstract class Shortcode
     {
         $shortcode = new static();
 
-        add_shortcode($this->get_tag(), [$shortcode, 'init_shortcode']);
+        add_shortcode($this->getTag(), [$shortcode, 'init_shortcode']);
     }
 
     /**
@@ -54,12 +54,12 @@ abstract class Shortcode
      *
      * @return string
      */
-    public function get_tag(): string
+    public function getTag(): string
     {
         if (!empty($this->tag) && is_string($this->tag)) {
             $tag = $this->tag;
         } else {
-            $tag = $this->build_tag_from_class_name();
+            $tag = $this->buildTagFromClassName();
         }
 
         $tag = apply_filters(static::class . '::' . __FUNCTION__, $tag);
@@ -74,7 +74,7 @@ abstract class Shortcode
      *
      * @return string
      */
-    private function build_tag_from_class_name(): string
+    private function buildTagFromClassName(): string
     {
         $tag = str_replace(__NAMESPACE__, '', static::class);
         $tag = str_replace('\\', '', $tag);
@@ -89,10 +89,10 @@ abstract class Shortcode
      *
      * @return string
      */
-    public function get_error_message(string $cause = '', string $fallback = ''): string
+    public function getErrorMessage(string $cause = '', string $fallback = ''): string
     {
         if (current_user_can($this->required_capability())) {
-            $message = $this->get_error_message_to_user_with_cap($cause);
+            $message = $this->getErrorMessageToUserWithCap($cause);
         } else {
             $message = $fallback;
         }
@@ -107,9 +107,9 @@ abstract class Shortcode
      *
      * @link https://developer.wordpress.org/themes/customize-api/advanced-usage/
      */
-    public function required_capability(): string
+    public function requiredCapability(): string
     {
-        return apply_filters($this->get_tag() . '_required_capability', $this->common->required_capability());
+        return apply_filters($this->get_tag() . '_required_capability', $this->common->requiredCapability());
     }
 
     /**
@@ -119,7 +119,7 @@ abstract class Shortcode
      *
      * @return string
      */
-    public function get_error_message_to_user_with_cap(string $cause): string
+    public function getErrorMessageToUserWithCap(string $cause): string
     {
         if (!is_string($cause) || '' === $cause) {
             $cause = esc_html_x('Unspecified', 'Shortcode error cause default text', 'joeee-booking');
@@ -131,12 +131,12 @@ abstract class Shortcode
                 'Shortcode error message',
                 'joeee-booking'
             ),
-            $this->get_tag(),
+            $this->getTag(),
             $cause,
-            $this->required_capability()
+            $this->requiredCapability()
         );
 
-        $message = sprintf('<p class="%s-shortcode-error shortcode-%s">%s</p>', esc_attr('joeee-booking'), esc_attr($this->get_tag()), $message);
+        $message = sprintf('<p class="%s-shortcode-error shortcode-%s">%s</p>', esc_attr('joeee-booking'), esc_attr($this->getTag()), $message);
 
         return $message;
     }
@@ -147,33 +147,33 @@ abstract class Shortcode
      * @param array  $atts    The raw attributes from the shortcode.
      * @param string $content The raw value from using an enclosing (not self-closing) shortcode.
      */
-    public function init_shortcode(array $atts = [], string $content = '')
+    public function initShortcode(array $atts = [], string $content = '')
     {
-        return $this->process_shortcode($this->get_atts($atts), $content);
+        return $this->processShortcode($this->getAtts($atts), $content);
     }
 
     /**
      * Logic for the shortcode.
      *
-     * @see shortcode_atts()
+     * @see shortcodeAtts()
      *
      * @param array  $atts    The processed shortcode attributes after merging with defaults via `shortcode_atts()`.
      * @param string $content The raw value from using an enclosing (not self-closing) shortcode.
      */
-    abstract public function process_shortcode(array $atts = [], string $content = '');
+    abstract public function processShortcode(array $atts = [], string $content = '');
 
     /**
      * Get and process the attributes.
      *
-     * @see shortcode_atts()
+     * @see shortcodeAtts()
      *
      * @param array $atts
      *
      * @return array
      */
-    public function get_atts(array $atts = []): array
+    public function getAtts(array $atts = []): array
     {
-        return shortcode_atts($this->get_defaults(), $atts, $this->get_tag());
+        return shortcodeStts($this->getDefaults(), $atts, $this->getTag());
     }
 
     /**
@@ -181,5 +181,5 @@ abstract class Shortcode
      *
      * @return array
      */
-    abstract public function get_defaults(): array;
+    abstract public function getDefaults(): array;
 }

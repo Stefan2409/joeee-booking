@@ -7,11 +7,11 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!class_exists(Manage_Shortcodes::class)) {
+if (!class_exists(ManageShortcodes::class)) {
     /**
      * Handle all the shortcodes.
      */
-    class Manage_Shortcodes
+    class ManageShortcodes
     {
         /**
          * Shortcodes to register.
@@ -19,7 +19,7 @@ if (!class_exists(Manage_Shortcodes::class)) {
          * Enter the name of each class (without namespace) from within the `Joeee_Booking\Shortcodes` namespace.
          */
         public $shortcode_classes = [
-            'TK_Request',
+            'TKRequest',
         ];
 
         /**
@@ -27,7 +27,7 @@ if (!class_exists(Manage_Shortcodes::class)) {
          *
          * @see \Joeee_Booking\Shortcodes\Shortcode::register()
          */
-        public function register_all_shortcodes(): void
+        public function registerAllShortcodes(): void
         {
             foreach ($this->shortcode_classes as $shortcode_class) {
                 $shortcode_class = __NAMESPACE__ . '\\' . $shortcode_class;

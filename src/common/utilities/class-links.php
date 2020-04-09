@@ -19,7 +19,7 @@ if (!class_exists(Links::class)) {
          *
          * @return string
          */
-        public function get_current_url(): string
+        public function getCurrentUrl(): string
         {
             global $wp;
 

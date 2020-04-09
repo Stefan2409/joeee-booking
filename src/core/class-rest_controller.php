@@ -15,11 +15,11 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!class_exists(Rest_Controller::class)) {
+if (!class_exists(RestController::class)) {
     /**
      * The basic information about this plugin, like its texts (text domain and display name) and file locations.
      */
-    class Rest_Controller extends WP_REST_Controller
+    class RestController extends WP_REST_Controller
     {
 
         public $namespace;
@@ -36,7 +36,7 @@ if (!class_exists(Rest_Controller::class)) {
         /**
          * Registers our REST endpoints.
          */
-        public function register_routes()
+        public function registerRoutes()
         {
             /**
              * Registers users specific routes.
@@ -44,7 +44,7 @@ if (!class_exists(Rest_Controller::class)) {
             register_rest_route($this->namespace, '/user', array(
                 array(
                     'methods' => WP_REST_Server::CREATABLE,
-                    'callback' => array($this, 'create_user'),
+                    'callback' => array($this, 'createUser'),
                     'args' => array(
                         'email' => array(
                             'type' => 'string',
@@ -93,15 +93,15 @@ if (!class_exists(Rest_Controller::class)) {
                 ),
                 array(
                     'methods' => WP_REST_Server::READABLE,
-                    'callback' => array($this, 'get_users'),
+                    'callback' => array($this, 'getUsers'),
                     'args' => array(),
                 )));
 
             register_rest_route($this->namespace, '/user/(?P<id>[\d]+)', array(
                 array(
                     'methods' => WP_REST_Server::EDITABLE,
-                    'callback' => array($this, 'update_user'),
-                    'permission_callback' => array($this, 'check_users_permission'),
+                    'callback' => array($this, 'updateUser'),
+                    'permission_callback' => array($this, 'checkUsersPermission'),
                     'args' => array(
                         'id' => array(
                             'type' => 'number',
@@ -152,10 +152,10 @@ if (!class_exists(Rest_Controller::class)) {
 
                     ),
                 ),
-                'schema' => array($this, 'get_users_schema'),
+                'schema' => array($this, 'getUsersSchema'),
                 array(
                     'methods' => WP_REST_Server::READABLE,
-                    'callback' => array($this, 'get_user'),
+                    'callback' => array($this, 'getUser'),
                     'args' => array(
                         'id' => array(
                             'validate_callback' => function ($param, $request, $key) {
@@ -171,8 +171,8 @@ if (!class_exists(Rest_Controller::class)) {
             register_rest_route($this->namespace, '/room', array(
                 array(
                     'methods' => WP_REST_Server::CREATABLE,
-                    'callback' => array($this, 'create_room'),
-                    'permission_callback' => array($this, 'check_users_permission_admin'),
+                    'callback' => array($this, 'createRoom'),
+                    'permission_callback' => array($this, 'checkUsersPermissionAdmin'),
                     'args' => array(
                         'id' => array(
                             'type' => 'number',
@@ -206,19 +206,19 @@ if (!class_exists(Rest_Controller::class)) {
                         ),
                     ),
                 ),
-                'schema' => array($this, 'get_rooms_schema'),
+                'schema' => array($this, 'getRoomsSchema'),
 
                 array(
                     'methods' => WP_REST_Server::READABLE,
-                    'callback' => array($this, 'get_rooms'),
+                    'callback' => array($this, 'getRooms'),
                     'args' => array(),
                 )));
 
             register_rest_route($this->namespace, '/room/(?P<id>[\d]+)', array(
                 array(
                     'methods' => WP_REST_Server::EDITABLE,
-                    'callback' => array($this, 'update_room'),
-                    'permission_callback' => array($this, 'check_users_permission_admin'),
+                    'callback' => array($this, 'updateRoom'),
+                    'permission_callback' => array($this, 'checkUsersPermissionAdmin'),
                     'args' => array(
                         'id' => array(
                             'type' => 'number',
@@ -254,7 +254,7 @@ if (!class_exists(Rest_Controller::class)) {
                 ),
                 array(
                     'methods' => WP_REST_Server::READABLE,
-                    'callback' => array($this, 'get_room'),
+                    'callback' => array($this, 'getRoom'),
                     'args' => array(
                         'id' => array(
                             'type' => 'number',
@@ -264,8 +264,8 @@ if (!class_exists(Rest_Controller::class)) {
                 ),
                 array(
                     'methods' => WP_REST_Server::DELETABLE,
-                    'callback' => array($this, 'delete_room'),
-                    'permission_callback' => array($this, 'check_users_permission_admin'),
+                    'callback' => array($this, 'deleteRoom'),
+                    'permission_callback' => array($this, 'checkUsersPermissionAdmin'),
                     'args' => array(
                         'id' => array(
                             'type' => 'number',
@@ -281,12 +281,12 @@ if (!class_exists(Rest_Controller::class)) {
             register_rest_route($this->namespace, '/reservation', array(
                 array(
                     'methods' => WP_REST_Server::READABLE,
-                    'callback' => array($this, 'get_reservations'),
+                    'callback' => array($this, 'getReservations'),
                     'args' => array(),
                 ),
                 array(
                     'methods' => WP_REST_Server::CREATABLE,
-                    'callback' => array($this, 'create_reservation'),
+                    'callback' => array($this, 'createReservation'),
                     'args' => array(
                         'person_id' => array(
                             'type' => 'array',
@@ -340,7 +340,7 @@ if (!class_exists(Rest_Controller::class)) {
             register_rest_route($this->namespace, '/reservation/(?P<id>[\d]+)', array(
                 array(
                     'methods' => WP_REST_Server::READABLE,
-                    'callback' => array($this, 'get_reservation'),
+                    'callback' => array($this, 'getReservation'),
                     'args' => array(
                         'id' => array(
                             'type' => 'number',
@@ -350,7 +350,7 @@ if (!class_exists(Rest_Controller::class)) {
                 ),
                 array(
                     'methods' => WP_REST_Server::EDITABLE,
-                    'callback' => array($this, 'modify_reservation'),
+                    'callback' => array($this, 'modifyReservation'),
                     'args' => array(
                         'id' => array(
                             'type' => 'number',
@@ -406,7 +406,7 @@ if (!class_exists(Rest_Controller::class)) {
             register_rest_route($this->namespace, '/reservation/room', array(
                 array(
                     'methods' => 'POST',
-                    'callback' => array($this, 'get_room_reservation'),
+                    'callback' => array($this, 'getRoomReservation'),
                     'args' => array(
                         'id' => array(
                             'type' => 'number',
@@ -426,12 +426,12 @@ if (!class_exists(Rest_Controller::class)) {
             register_rest_route($this->namespace, '/extra', array(
                 array(
                     'methods' => WP_REST_Server::READABLE,
-                    'callback' => array($this, 'get_extras'),
+                    'callback' => array($this, 'getExtras'),
                     'args' => array(),
                 ),
                 array(
                     'methods' => WP_REST_Server::CREATABLE,
-                    'callback' => array($this, 'create_extras'),
+                    'callback' => array($this, 'createExtras'),
                     'args' => array(
                         'title' => array(
                             'type' => 'string',
@@ -453,7 +453,7 @@ if (!class_exists(Rest_Controller::class)) {
             register_rest_route($this->namespace, '/extra/(?P<id>[\d]+)', array(
                 array(
                     'methods' => WP_REST_Server::READABLE,
-                    'callback' => array($this, 'get_extra'),
+                    'callback' => array($this, 'getExtra'),
                     'args' => array(
                         'id' => array(
                             'type' => 'number',
@@ -463,7 +463,7 @@ if (!class_exists(Rest_Controller::class)) {
                 ),
                 array(
                     'methods' => WP_REST_Server::DELETABLE,
-                    'callback' => array($this, 'delete_extra'),
+                    'callback' => array($this, 'deleteExtra'),
                     'args' => array(
                         'id' => array(
                             'type' => 'number',
@@ -476,7 +476,7 @@ if (!class_exists(Rest_Controller::class)) {
             register_rest_route($this->namespace, '/room/availability', array(
                 array(
                     'methods' => 'POST',
-                    'callback' => array($this, 'get_availability'),
+                    'callback' => array($this, 'getAvailability'),
                     'args' => array(
                         'from' => array(
                             'type' => 'string',
@@ -503,43 +503,43 @@ if (!class_exists(Rest_Controller::class)) {
         /**
          * User specific functionality
          */
-        public function get_users($request)
+        public function getUsers($request)
         {
             $User = new User();
-            $response = $User->get_users();
+            $response = $User->getUsers();
             return $response;
         }
 
-        public function get_user($request)
+        public function getUser($request)
         {
             $User = new User();
             $user_id = $request['id'];
 
-            $response = $User->get_user($user_id);
+            $response = $User->getUser($user_id);
 
             return $response;
         }
 
-        public function create_user($request)
+        public function createUser($request)
         {
             $User = new User();
             $data = $request->get_json_params();
-            $response = $User->create_user($data);
+            $response = $User->createUser($data);
 
             return $response;
         }
 
-        public function update_user($request)
+        public function updateUser($request)
         {
             $User = new User();
 
             $data = $request->get_json_params();
             $data['id'] = (int) $request['id'];
-            $response = $User->update_user($data);
+            $response = $User->updateUser($data);
 
             return $response;
         }
-        public function register_user($request)
+        public function registerUser($request)
         {
             $response = array();
             array_push($response, $request->get_json_params());
@@ -549,52 +549,52 @@ if (!class_exists(Rest_Controller::class)) {
         /**
          * Room specific functionality.
          */
-        public function create_room($request)
+        public function createRoom($request)
         {
             $room = new Room();
             $data = $request->get_json_params();
 
-            $response = $room->create_room($data);
+            $response = $room->createRoom($data);
 
             return $response;
         }
 
-        public function get_room($request)
+        public function getRoom($request)
         {
             $room = new Room();
             $data = $request['id'];
 
-            $response = $room->get_room($data);
+            $response = $room->getRoom($data);
 
             return $response;
         }
 
-        public function get_rooms($request)
+        public function getRooms($request)
         {
             $room = new Room();
 
-            $response = $room->get_rooms();
+            $response = $room->getRooms();
             return $response;
 
         }
 
-        public function delete_room($request)
+        public function deleteRoom($request)
         {
             $room = new Room();
             $id = $request['id'];
 
-            $response = $room->delete_room($id);
+            $response = $room->deleteRoom($id);
 
             return $response;
         }
 
-        public function update_room($request)
+        public function updateRoom($request)
         {
             $room = new Room();
             $data = $request->get_json_params();
             $data['id'] = (int) $request['id'];
 
-            $response = $room->update_room($data);
+            $response = $room->updateRoom($data);
 
             return $response;
         }
@@ -603,45 +603,45 @@ if (!class_exists(Rest_Controller::class)) {
          * Reservation specific functionality
          */
 
-        public function create_reservation($request)
+        public function createReservation($request)
         {
             $Reservation = new Reservation();
             $data = $request->get_json_params();
-            $result = $Reservation->create_reservation($data);
+            $result = $Reservation->createReservation($data);
             return $result;
         }
 
-        public function modify_reservation($request)
+        public function modifyReservation($request)
         {
             $Reservation = new Reservation();
 
-            $result = $Reservation->modify_reservation($request);
-
-            return $result;
-        }
-
-        public function get_reservations()
-        {
-            $Reservation = new Reservation();
-
-            $result = $Reservation->get_reservations();
+            $result = $Reservation->modifyReservation($request);
 
             return $result;
         }
 
-        public function get_reservation($request)
+        public function getReservations()
         {
             $Reservation = new Reservation();
 
-            $result = $Reservation->get_reservation($request['id']);
+            $result = $Reservation->getReservations();
+
             return $result;
         }
 
-        public function get_room_reservation($request)
+        public function getReservation($request)
         {
             $Reservation = new Reservation();
 
-            $result = $Reservation->get_room_reservation($request['id'], $request['room_id'][0]);
+            $result = $Reservation->getReservation($request['id']);
+            return $result;
+        }
+
+        public function getRoomReservation($request)
+        {
+            $Reservation = new Reservation();
+
+            $result = $Reservation->getRoomReservation($request['id'], $request['room_id'][0]);
 
             return $result;
         }
@@ -649,32 +649,32 @@ if (!class_exists(Rest_Controller::class)) {
         /**
          * Extra specific functionality
          */
-        public function get_extras($request)
+        public function getExtras($request)
         {
             $Extra = new Extras();
-            return $Extra->get_extras();
+            return $Extra->getExtras();
         }
 
-        public function get_extra($request)
+        public function getExtra($request)
         {
             $Extra = new Extras();
-            return $Extra->get_extra($request['id']);
+            return $Extra->getExtra($request['id']);
         }
 
-        public function create_extras($request)
+        public function createExtras($request)
         {
             $Extra = new Extras();
             $data = $request->get_json_params();
-            $result = $Extra->create_extra($data);
+            $result = $Extra->createExtra($data);
 
             return $result;
         }
 
-        public function delete_extra($request)
+        public function deleteExtra($request)
         {
             $Extra = new Extras();
 
-            $result = $Extra->delete_extra($request['id']);
+            $result = $Extra->deleteExtra($request['id']);
 
             return $result;
         }
@@ -683,7 +683,7 @@ if (!class_exists(Rest_Controller::class)) {
          * Room Availability functionality
          */
 
-        public function get_availability($request)
+        public function getAvailability($request)
         {
             $Room = new Room();
             $data = $request->get_json_params();
@@ -695,7 +695,7 @@ if (!class_exists(Rest_Controller::class)) {
         /**
          * @TODO Set the correct user permissions in build.
          */
-        public function check_users_permission()
+        public function checkUsersPermission()
         {
             if (!current_user_can('read')) {
                 return new WP_Error('rest_forbidden', esc_html__("You aren't allowed to go this way (read).", 'joeee-booking'));
@@ -703,7 +703,7 @@ if (!class_exists(Rest_Controller::class)) {
             return true;
         }
 
-        public function check_users_permission_admin()
+        public function checkUsersPermissionAdmin()
         {
             if (!current_user_can('edit_others_pages')) {
                 return new WP_Error('rest_forbidden', esc_html__("You aren't allowed to go this way.", 'joeee-booking'));
@@ -714,7 +714,7 @@ if (!class_exists(Rest_Controller::class)) {
         /**
          * Get our schema for users.
          */
-        public function get_users_schema()
+        public function getUsersSchema()
         {
             $schema = array(
                 // This tells the spec of JSON Schema we are using which is draft 4.
@@ -792,7 +792,7 @@ if (!class_exists(Rest_Controller::class)) {
             return $schema;
         }
 
-        public function get_rooms_schema()
+        public function getRoomsSchema()
         {
             $schema = array(
                 // This tells the spec of JSON Schema we are using which is draft 4.

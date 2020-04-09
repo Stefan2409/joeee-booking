@@ -27,7 +27,7 @@ if (!class_exists(Arrays::class)) {
          *
          * @return array
          */
-        public function flatten_array(array $array): array
+        public function flattenArray(array $array): array
         {
             $result = [];
 
@@ -37,7 +37,7 @@ if (!class_exists(Arrays::class)) {
 
             foreach ($array as $key => $value) {
                 if (is_array($value)) {
-                    $result = array_merge($result, $this->flatten_array($value));
+                    $result = array_merge($result, $this->flattenArray($value));
                 } else {
                     $result = array_merge($result, [$key => $value]);
                 }

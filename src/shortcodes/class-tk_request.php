@@ -7,20 +7,20 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!class_exists(TK_Request::class)) {
+if (!class_exists(TKRequest::class)) {
     /**
      * The functionality shared between the admin and public-facing areas of the plugin.
      *
      * Useful for things like utilities or hooking into something that affects both back-end and front-end.
      */
-    final class TK_Request extends Shortcode
+    final class TKRequest extends Shortcode
     {
         /**
          * An array of all the shortcode's possible attributes and their default values.
          *
          * @return array
          */
-        public function get_defaults(): array
+        public function getDefaults(): array
         {
             return [
                 'parameter' => '', // Required
@@ -42,9 +42,9 @@ if (!class_exists(TK_Request::class)) {
          *
          * @return mixed The value of the query parameter, if any.
          */
-        public function process_shortcode(array $atts = [], string $content = '')
+        public function processShortcode(array $atts = [], string $content = '')
         {
-            $atts = $this->get_atts($atts);
+            $atts = $this->getAtts($atts);
 
             $atts['parameter'] = urlencode($atts['parameter']);
 
@@ -52,7 +52,7 @@ if (!class_exists(TK_Request::class)) {
 
             // bad request
             if ('' === $param) {
-                return $this->get_error_message('Missing required "parameter" argument');
+                return $this->getErrorMessage('Missing required "parameter" argument');
             }
 
             // If a GET request, ignore POST.

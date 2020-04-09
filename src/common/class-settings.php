@@ -3,7 +3,7 @@
 namespace Joeee_Booking\Common;
 
 use Joeee_Booking\Common\Common as Common;
-use Joeee_Booking\Plugin_Data as Plugin_Data;
+use Joeee_Booking\PluginData as PluginData;
 
 // Abort if this file is called directly.
 if (!defined('ABSPATH')) {
@@ -37,9 +37,9 @@ if (!class_exists(Settings::class)) {
          *
          * @return string
          */
-        public function get_main_settings_page_url(): string
+        public function getMainSettingsPageUrl(): string
         {
-            $url = 'options-general.php?page=' . $this->get_settings_page_slug();
+            $url = 'options-general.php?page=' . $this->getSettingsPageSlug();
 
             return admin_url($url);
         }
@@ -49,7 +49,7 @@ if (!class_exists(Settings::class)) {
          *
          * @return string
          */
-        public function get_settings_page_slug(): string
+        public function getSettingsPageSlug(): string
         {
             return 'joeee-booking' . '-settings';
         }
@@ -59,7 +59,7 @@ if (!class_exists(Settings::class)) {
          *
          * @return string
          */
-        public function get_settings_word(): string
+        public function getSettingsWord(): string
         {
             return esc_html__('Settings', 'joeee-booking');
         }
@@ -72,9 +72,9 @@ if (!class_exists(Settings::class)) {
          *
          * @return string
          */
-        public function get_option_as_string(string $key, string $default = ''): string
+        public function getOptionAsString(string $key, string $default = ''): string
         {
-            $result = $this->get_option($key, $default);
+            $result = $this->getOption($key, $default);
 
             return $result;
         }
@@ -87,9 +87,9 @@ if (!class_exists(Settings::class)) {
          *
          * @return mixed
          */
-        public function get_option(string $key, $default = '')
+        public function getOption(string $key, $default = '')
         {
-            $all_options = $this->get_all_options();
+            $all_options = $this->getAllOptions();
 
             // Cannot use empty() because an unchecked checkbox is boolean false, for example.
             if (isset($all_options[$key])) {
@@ -104,9 +104,9 @@ if (!class_exists(Settings::class)) {
          *
          * @return array
          */
-        public function get_all_options(): array
+        public function getAllOptions(): array
         {
-            $plugin_options = get_option(Plugin_Data::plugin_text_domain_underscores());
+            $plugin_options = getOption(PluginData::pluginTextDomainUnderscores());
 
             if (!empty($plugin_options)) {
                 return (array) $plugin_options;
@@ -125,9 +125,9 @@ if (!class_exists(Settings::class)) {
          *
          * @return array
          */
-        public function get_option_as_array(string $key, $default = ''): array
+        public function getOptionAsArray(string $key, $default = ''): array
         {
-            $result = $this->get_option($key, $default);
+            $result = $this->getOption($key, $default);
 
             if (is_string($result)) {
                 $result = json_decode($result, true);
@@ -147,9 +147,9 @@ if (!class_exists(Settings::class)) {
          *
          * @return bool
          */
-        public function delete_all_options(): bool
+        public function deleteAllOptions(): bool
         {
-            return delete_option(Plugin_Data::plugin_text_domain_underscores());
+            return delete_option(PluginData::pluginTextDomainUnderscores());
         }
 
     }

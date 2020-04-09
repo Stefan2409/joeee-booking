@@ -32,7 +32,7 @@ if (!class_exists(Timing::class)) {
          *
          * @return string
          */
-        public function get_php_time_zone_string_from_wp(string $fallback = 'America/Chicago'): string
+        public function getPhpTimeZoneStringFromWp(string $fallback = 'America/Chicago'): string
         {
             $time_zone = get_option('timezone_string'); // could return NULL
 
@@ -50,9 +50,9 @@ if (!class_exists(Timing::class)) {
          *
          * @return DateTimeImmutable|false
          */
-        public function get_current_time_wp_tz_date_object(): string
+        public function getCurrentTimeWpTzDateObject(): string
         {
-            $time_zone = $this->get_php_time_zone_string_from_wp();
+            $time_zone = $this->getPhpTimeZoneStringFromWp();
 
             try {
                 $now = new DateTimeImmutable('now', new DateTimeZone($time_zone));
@@ -75,7 +75,7 @@ if (!class_exists(Timing::class)) {
          *
          * @return DateTimeImmutable|string|bool
          */
-        public function get_datetime_from_utc_timestamp(int $utc_timestamp, string $format = '')
+        public function getDatetimeFromUtcTimestamp(int $utc_timestamp, string $format = '')
         {
             if (empty($utc_timestamp) || !is_int($utc_timestamp)) {
                 return '';
@@ -87,7 +87,7 @@ if (!class_exists(Timing::class)) {
                 return '';
             }
 
-            $result = $utc_datetime->setTimezone(new DateTimeZone($this->get_php_time_zone_string_from_wp()));
+            $result = $utc_datetime->setTimezone(new DateTimeZone($this->getPhpTimeZoneStringFromWp()));
 
             if (!empty($format)) {
                 $result = $result->format($format); // could return false
@@ -103,10 +103,10 @@ if (!class_exists(Timing::class)) {
          *
          * @return DateTimeImmutable|bool
          */
-        public function get_current_datetime_wp_tz()
+        public function getCurrentDatetimeWpTz()
         {
             try {
-                return new DateTimeImmutable('now', new DateTimeZone($this->get_php_time_zone_string_from_wp()));
+                return new DateTimeImmutable('now', new DateTimeZone($this->getPhpTimeZoneStringFromWp()));
             } catch (Exception $e) {
                 return false;
             }
@@ -121,7 +121,7 @@ if (!class_exists(Timing::class)) {
          *
          * @return bool|DateTimeImmutable|string
          */
-        public function get_start_end_of_day_from_datetime(DateTimeImmutable $datetime, bool $start = true, bool $format = false)
+        public function getStartEndOfDayFromDatetime(DateTimeImmutable $datetime, bool $start = true, bool $format = false)
         {
             if (!$datetime instanceof DateTimeImmutable) {
                 return false;
@@ -156,7 +156,7 @@ if (!class_exists(Timing::class)) {
          *
          * @return false|float|int Number of minutes (int|float). False if both are not DateTimeImmutable or if End is before Start.
          */
-        public function get_minutes_diff_between_two_datetimes(DateTimeImmutable $start_datetime, DateTimeImmutable $end_datetime)
+        public function getMinutesDiffBetweenTwoDatetimes(DateTimeImmutable $start_datetime, DateTimeImmutable $end_datetime)
         {
             if (
                 !$start_datetime instanceof DateTimeImmutable
@@ -189,16 +189,16 @@ if (!class_exists(Timing::class)) {
          *
          * @return false|float|int Numeric amount. False if not valid 24 hour time format (##:##) or End is before Start.
          */
-        public function get_minutes_diff_between_two_times_same_day(string $start_24_format, string $end_24_format)
+        public function getMinutesDiffBetweenTwoTimesSameDay(string $start_24_format, string $end_24_format)
         {
             if (
-                false === $this->is_valid_24_hour_format_time_string($start_24_format)
-                || false === $this->is_valid_24_hour_format_time_string($end_24_format)
+                false === $this->isValid24HourFormatTimeString($start_24_format)
+                || false === $this->isValid24HourFormatTimeString($end_24_format)
             ) {
                 return false;
             }
 
-            $time_zone = $this->get_php_time_zone_string_from_wp();
+            $time_zone = $this->getPhpTimeZoneStringFromWp();
             $shared = 'January 1, 1970 ';
 
             $start = $shared . $start_24_format;
@@ -216,7 +216,7 @@ if (!class_exists(Timing::class)) {
                 return false;
             }
 
-            $total_minutes = $this->get_minutes_diff_between_two_datetimes($start_datetime, $end_datetime);
+            $total_minutes = $this->getMinutesDiffBetweenTwoDatetimes($start_datetime, $end_datetime);
 
             if (empty($total_minutes)) {
                 return false;
@@ -236,7 +236,7 @@ if (!class_exists(Timing::class)) {
          *
          * @return bool
          */
-        public function is_valid_24_hour_format_time_string(string $time_string, bool $allow_seconds = false): bool
+        public function isValid24HourFormatTimeString(string $time_string, bool $allow_seconds = false): bool
         {
             if (!is_string($time_string)) {
                 return false;

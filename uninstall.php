@@ -23,6 +23,9 @@
  */
 
 // If uninstall not called from WordPress, then exit.
+
+namespace Joeee_Booking;
+
 if (!defined('WP_UNINSTALL_PLUGIN')) {
     exit;
 }

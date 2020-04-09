@@ -2,8 +2,6 @@
 
 namespace Joeee_Booking\Common\Utilities;
 
-use Joeee_Booking\Plugin_Data as Plugin_Data;
-
 // Abort if this file is called directly.
 if (!defined('ABSPATH')) {
     exit;
@@ -30,7 +28,7 @@ if (!class_exists(Debug::class)) {
          * @param string              $email Either a single email address, a comma-separated list of email addresses,
          *                                   or 'admin' to send to the admin email address.
          */
-        public function output_to_log($log = '', string $email = ''): void
+        public function outputToLog($log = '', string $email = ''): void
         {
             if (
                 is_array($log)
@@ -55,7 +53,7 @@ if (!class_exists(Debug::class)) {
 
             $message = sprintf(
                 esc_html__('%1$s - Message from %2$s():%3$s%4$s%5$s', 'joeee-booking'),
-                Plugin_Data::get_plugin_display_name(),
+                PluginData::getPluginDisplayName(),
                 __FUNCTION__,
                 PHP_EOL,
                 $who_called_me,
@@ -84,6 +82,5 @@ if (!class_exists(Debug::class)) {
 
             error_log($message);
         }
-
     }
 }

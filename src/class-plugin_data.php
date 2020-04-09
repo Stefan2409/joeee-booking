@@ -7,11 +7,11 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!class_exists(Plugin_Data::class)) {
+if (!class_exists(PluginData::class)) {
     /**
      * The basic information about this plugin, like its texts (text domain and display name) and file locations.
      */
-    class Plugin_Data
+    class PluginData
     {
 
         /**
@@ -21,7 +21,7 @@ if (!class_exists(Plugin_Data::class)) {
          *
          * @return string
          */
-        public static function plugin_version(): string
+        public static function pluginVersion(): string
         {
             return '1.0.0';
         }
@@ -33,7 +33,7 @@ if (!class_exists(Plugin_Data::class)) {
          *
          * @return string
          */
-        public static function plugin_db_version(): string
+        public static function pluginDbVersion(): string
         {
             return '1.0.0';
         }
@@ -48,7 +48,7 @@ if (!class_exists(Plugin_Data::class)) {
          *
          * @return string
          */
-        public static function required_min_php_version(): string
+        public static function requiredMinPHPVersion(): string
         {
             return '7.1.0';
         }
@@ -60,7 +60,7 @@ if (!class_exists(Plugin_Data::class)) {
          *
          * @return string
          */
-        public static function plugin_text_domain(): string
+        public static function pluginTextDomain(): string
         {
             return 'joeee-booking';
         }
@@ -72,9 +72,9 @@ if (!class_exists(Plugin_Data::class)) {
          *
          * @return string 'joeee_booking'
          */
-        public static function plugin_text_domain_underscores(): string
+        public static function pluginTextDomainUnderscores(): string
         {
-            return str_replace('-', '_', self::plugin_text_domain());
+            return str_replace('-', '_', self::pluginTextDomain());
         }
 
         /**
@@ -84,9 +84,9 @@ if (!class_exists(Plugin_Data::class)) {
          *
          * @return string
          */
-        public static function get_plugin_display_name(): string
+        public static function getPluginDisplayName(): string
         {
-            return esc_html_x("Jö's booking", "Jö's Booking Plugin", self::plugin_text_domain());
+            return esc_html_x("Jö's booking", "Jö's Booking Plugin", self::pluginTextDomain());
         }
 
         /**
@@ -97,7 +97,7 @@ if (!class_exists(Plugin_Data::class)) {
          *
          * @return string
          */
-        public static function plugin_dir_path(): string
+        public static function pluginDirPath(): string
         {
             return trailingslashit(realpath(__DIR__ . DIRECTORY_SEPARATOR . '..'));
         }
@@ -109,9 +109,9 @@ if (!class_exists(Plugin_Data::class)) {
          *
          * @return string
          */
-        public static function plugin_dir_url(): string
+        public static function pluginDirUrl(): string
         {
-            return plugin_dir_url(self::main_plugin_file());
+            return plugin_dir_url(self::mainPluginFile());
         }
 
         /**
@@ -119,9 +119,9 @@ if (!class_exists(Plugin_Data::class)) {
          *
          * @return string 'joeee-booking.php'
          */
-        public static function plugin_basename(): string
+        public static function pluginBasename(): string
         {
-            return plugin_basename(self::main_plugin_file());
+            return plugin_basename(self::mainPluginFile());
         }
 
         /**
@@ -132,9 +132,9 @@ if (!class_exists(Plugin_Data::class)) {
          *
          * @return string
          */
-        public static function all_plugins_dir(): string
+        public static function allPluginsDir(): string
         {
-            return trailingslashit(realpath(self::plugin_dir_path() . '..'));
+            return trailingslashit(realpath(self::pluginDirPath() . '..'));
         }
 
         /**
@@ -144,9 +144,9 @@ if (!class_exists(Plugin_Data::class)) {
          *
          * @return string
          */
-        private static function main_plugin_file(): string
+        private static function mainPluginFile(): string
         {
-            return self::plugin_dir_path() . self::plugin_text_domain() . '.php';
+            return self::pluginDirPath() . self::pluginTextDomain() . '.php';
         }
     }
 }
