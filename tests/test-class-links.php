@@ -10,19 +10,19 @@
  */
 use Joeee_Booking\Common\Utilities\Links as Links;
 
+class Links_Test extends WP_UnitTestCase
+{
 
-
-class Links_Test extends WP_UnitTestCase {
-
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->class_instance = new Links();
     }
 
-    public function test_get_current_url() {
+    public function test_get_current_url()
+    {
         $link = $this->class_instance->get_current_url();
-
 
         $this->assertEquals("http://example.org", $link);
     }

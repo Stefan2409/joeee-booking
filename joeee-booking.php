@@ -58,8 +58,8 @@
 namespace Joeee_Booking;
 
 // Abort if this file is called directly.
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if (!defined('ABSPATH')) {
+    exit;
 }
 
 /**
@@ -67,7 +67,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @link https://getcomposer.org/doc/01-basic-usage.md#autoloading
  */
-require_once( __DIR__ . '/vendor/autoload.php' );
+require_once __DIR__ . '/vendor/autoload.php';
 
 // Define Constants
 
@@ -75,13 +75,13 @@ require_once( __DIR__ . '/vendor/autoload.php' );
  * Register Activation and Deactivation Hooks
  * This action is documented in src/core/class-activator.php
  */
-register_activation_hook( __FILE__, [ __NAMESPACE__ . '\Core\Activator', 'activate' ] );
+register_activation_hook(__FILE__, [__NAMESPACE__ . '\Core\Activator', 'activate']);
 
 /**
  * The code that runs during plugin deactivation.
  * This action is documented src/core/class-deactivator.php
  */
-register_deactivation_hook( __FILE__, [ __NAMESPACE__ . '\Core\Deactivator', 'deactivate' ] );
+register_deactivation_hook(__FILE__, [__NAMESPACE__ . '\Core\Deactivator', 'deactivate']);
 
 // Begin execution of the plugin.
-( new Bootstrap() )->init();
+(new Bootstrap())->init();
