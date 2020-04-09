@@ -227,19 +227,17 @@ if (!class_exists(Reservation::class)) {
             }
 
             if (isset($adults)) {
-
                 $old_reservation_sql = $this->getRoomReservation($reservation_id, $room_id)[0];
 
                 $persons = $adults + $kids;
 
-                $kids_old = $old_reservation_sql->kids;
-                $adults_old = $old_reservation_sql->adults;
+                $kids_old = $old_reservation_sql['kids'];
+                $adults_old = $old_reservation_sql['adults'];
 
                 $persons_old = $kids_old + $adults_old;
 
                 // This if clause creates the new guests if the # of persons is raised.
                 if ($persons > $persons_old) {
-
                     $User = new User();
 
                     $booker_object = $User->getUser($person_id)[0];
