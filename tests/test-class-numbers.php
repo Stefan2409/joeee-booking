@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class Numbers_Test
  *
@@ -8,6 +9,7 @@
 /**
  * Numbers test case.
  */
+
 use Joeee_Booking\Common\Utilities\Numbers as Numbers;
 
 class Numbers_Test extends WP_UnitTestCase
@@ -35,49 +37,49 @@ class Numbers_Test extends WP_UnitTestCase
     }
     public function test_round_up()
     {
-        $rounded = $this->class_instance->round_up($this->input_number);
+        $rounded = $this->class_instance->roundUp($this->input_number);
 
         $this->assertEquals($this->output_number_pl0, $rounded);
     }
 
     public function test_round_up_pl1()
     {
-        $rounded = $this->class_instance->round_up($this->input_number, 1);
+        $rounded = $this->class_instance->roundUp($this->input_number, 1);
 
         $this->assertEquals($this->output_number_pl1, $rounded);
     }
 
     public function test_round_up_pl2()
     {
-        $rounded = $this->class_instance->round_up($this->input_number, 2);
+        $rounded = $this->class_instance->roundUp($this->input_number, 2);
 
         $this->assertEquals($this->output_number_pl2, $rounded);
     }
 
     public function test_round_up_negative()
     {
-        $rounded = $this->class_instance->round_up($this->negative_number);
+        $rounded = $this->class_instance->roundUp($this->negative_number);
 
         $this->assertEquals($this->output_negative_number, $rounded);
     }
 
     public function test_round_up_negative_pl1()
     {
-        $rounded = $this->class_instance->round_up($this->negative_number, 1);
+        $rounded = $this->class_instance->roundUp($this->negative_number, 1);
 
         $this->assertEquals($this->output_negative_number_pl1, $rounded);
     }
 
     public function test_round_up_negative_pl2()
     {
-        $rounded = $this->class_instance->round_up($this->negative_number, 2);
+        $rounded = $this->class_instance->roundUp($this->negative_number, 2);
 
         $this->assertEquals($this->output_negative_number_pl2, $rounded);
     }
 
     public function test_round_up_to_next()
     {
-        $rounded = $this->class_instance->round_up_to_next($this->input_number, $this->interval);
+        $rounded = $this->class_instance->roundUpToNext($this->input_number, $this->interval);
 
         $this->assertEquals($this->output_round_up_to_next, $rounded);
     }

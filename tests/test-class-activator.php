@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class Activator_Test
  *
@@ -8,6 +9,7 @@
 /**
  * Activators test case.
  */
+
 use Joeee_Booking\Core\Activator as Activator;
 
 class Activator_Test extends WP_UnitTestCase
@@ -23,6 +25,8 @@ class Activator_Test extends WP_UnitTestCase
 
         $this->class_instance = new Activator();
 
+        remove_filter('query', array($this, '_create_temporary_table'));
+        remove_filter('query', array($this, '_drop_temporary_table'));
     }
 
     public function test_if_dbs_exist()

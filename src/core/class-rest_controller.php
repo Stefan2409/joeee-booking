@@ -95,7 +95,8 @@ if (!class_exists(RestController::class)) {
                     'methods' => WP_REST_Server::READABLE,
                     'callback' => array($this, 'getUsers'),
                     'args' => array(),
-                )));
+                )
+            ));
 
             register_rest_route($this->namespace, '/user/(?P<id>[\d]+)', array(
                 array(
@@ -163,7 +164,8 @@ if (!class_exists(RestController::class)) {
                             },
                         ),
                     ),
-                )));
+                )
+            ));
 
             /**
              * Registers room specific routes.
@@ -212,7 +214,8 @@ if (!class_exists(RestController::class)) {
                     'methods' => WP_REST_Server::READABLE,
                     'callback' => array($this, 'getRooms'),
                     'args' => array(),
-                )));
+                )
+            ));
 
             register_rest_route($this->namespace, '/room/(?P<id>[\d]+)', array(
                 array(
@@ -434,17 +437,17 @@ if (!class_exists(RestController::class)) {
                     'callback' => array($this, 'createExtras'),
                     'args' => array(
                         'title' => array(
-                            'type' => 'string',
-                            'required' => true,
+                            'type'      => 'string',
+                            'required'  => true,
                             'sanitize_callback' => 'sanitize_text_field',
                         ),
                         'price' => array(
-                            'type' => 'number',
-                            'required' => true,
+                            'type'      => 'number',
+                            'required'  => true,
                         ),
                         'bookable' => array(
-                            'type' => 'boolean',
-                            'required' => true,
+                            'type'      => 'boolean',
+                            'required'  => true,
                         ),
                     ),
                 ),
@@ -462,12 +465,32 @@ if (!class_exists(RestController::class)) {
                     ),
                 ),
                 array(
-                    'methods' => WP_REST_Server::DELETABLE,
-                    'callback' => array($this, 'deleteExtra'),
-                    'args' => array(
+                    'methods'   => WP_REST_Server::DELETABLE,
+                    'callback'  => array($this, 'deleteExtra'),
+                    'args'      => array(
                         'id' => array(
                             'type' => 'number',
                             'required' => true,
+                        ),
+                    ),
+                ),
+                array(
+                    'methods'   => WP_REST_Server::EDITABLE,
+                    'callback'  => array($this, 'editExtra'),
+                    'args'      => array(
+                        'id'        => array(
+                            'type'      => 'number',
+                            'required'  => true,
+                        ),
+                        'title'     => array(
+                            'type'      => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ),
+                        'price'     => array(
+                            'type'      => 'number',
+                        ),
+                        'bookable'  => array(
+                            'type'      => 'boolean',
                         ),
                     ),
                 ),
@@ -497,7 +520,6 @@ if (!class_exists(RestController::class)) {
                     ),
                 ),
             ));
-
         }
 
         /**
@@ -575,7 +597,6 @@ if (!class_exists(RestController::class)) {
 
             $response = $room->getRooms();
             return $response;
-
         }
 
         public function deleteRoom($request)
@@ -675,6 +696,17 @@ if (!class_exists(RestController::class)) {
             $Extra = new Extras();
 
             $result = $Extra->deleteExtra($request['id']);
+
+            return $result;
+        }
+
+        public function editExtra($request)
+        {
+            $data = $request->get_json_params();
+            $data['id'] = (int) $request['id'];
+            $Extra = new Extras();
+
+            $result = $Extra->editExtra($data);
 
             return $result;
         }

@@ -92,8 +92,17 @@ if (!class_exists(Reservation::class)) {
             $extra_keys = array_keys($extras);
             foreach ($extra_keys as $key) {
                 $extras_key_exists = $wpdb->get_var("SELECT count FROM $this->table_reservation_extra WHERE reservation_id = $reservation_id AND extra_id = $key");
+
+                $extra_price = $wpdb->get_var("SELECT price FROM $this->table_extra WHERE id = $key");
+
                 if ($extras_key_exists === null) {
-                    $extra_check = $wpdb->insert($this->table_reservation_extra, array('reservation_id' => $reservation_id, 'extra_id' => $key, 'count' => $extras[$key]), array('%d', '%d', '%d'));
+                    $insert_extras = array(
+                        'reservation_id'    => $reservation_id,
+                        'extra_id'          => $key,
+                        'count'             => $extras[$key],
+                        'price'             => $extra_price,
+                    );
+                    $extra_check = $wpdb->insert($this->table_reservation_extra, $insert_extras, array('%d', '%d', '%d', '%f'));
                     if (!$extra_check) {
                         return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured errors by creating the reservation extras! Please try again!', 'joeee-booking'), array('status' => 400));
                     }
@@ -330,7 +339,6 @@ if (!class_exists(Reservation::class)) {
 
         public function deleteReservation($reservation_id)
         {
-
         }
 
         protected function getReservationExtras($reservation_id)

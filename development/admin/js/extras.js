@@ -2,36 +2,126 @@ import $ from 'jquery';
 
 const { __, _x, _n, _nx } = wp.i18n;
 
-jQuery(document).ready(function() { 
+jQuery(document).ready(function () {
     const EXTRASFORM = $('#joeee-booking-extras-form');
     const EXTRASADD = $('#joeee-booking-extras-add');
-    const EXTRASCANCELBTN = $('#joeee-booking-extras-cancel-btn');
-    const EXTRASSUBMIT = $('#joeee-booking-extras-submit');
-    let i = 1;
 
-	EXTRASADD.click( function() {
-		i++;
-		$('#joeee-booking-extras-table-dynamic').append('<tr id="joeee-booking-extras-row'+i+'"><td><input type="text" name="name[]" placeholder="Extra" class="joeee-booking-form--extras-control"></td><td><input type="text" name="price[]" placeholder="Price" class="joeee-booking-form--extras-control"></td><td><input type="checkbox" name="bookingonline" id="joeee-booking-extras-0" value="on"></td><td><button type="button" name="remove" id="'+i+'" class="button-delete btn-remove">X</button></td></tr>');
-	});
 
-	$(document).on('click', '.btn-remove', function() {
-		let button_id = $(this).attr("id");
-		$('#joeee-booking-extras-row'+button_id).remove();
+    function edit_extras(id, text, column_name) {
+        let editExtra = {};
+        if (column_name === 'title') {
+            editExtra.title = text;
+        }
+        if (column_name === 'price') {
+            editExtra.price = parseFloat(text.trim().replace(',', '.'));
+        }
+        if (column_name === 'bookable') {
+            editExtra.bookable = text;
+        }
+        $.ajax({
+            type: 'PUT',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: joeeeExtrasRest.restURL + 'joeee-booking/v1/extra/' + id,
+            success: function (data) {
+                console.log("Success: ")
+                console.log(data);
+
+            },
+            error: function (data) {
+                console.log("Error: ");
+                console.log(data);
+            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-WP-Nonce', joeeeExtrasRest.restNonce);
+            },
+            data: JSON.stringify(editExtra),
+        });
+
+
+
+    }
+
+    EXTRASADD.click(function () {
+
+        let newExtra = {};
+
+        newExtra.title = $('#joeee-booking-extra-title').val();
+        let extraPrice = $('#joeee-booking-extra-price').val();
+        newExtra.price = parseFloat(extraPrice.trim().replace(',', '.'));
+        newExtra.bookable = $('#joeee-booking-extra-bookable').is(":checked");
+        if (newExtra.title == '') {
+            alert(__("You have to enter a title!", 'joeee-booking'));
+            return false;
+        }
+        if (newExtra.price == '') {
+            alert(__("You have to enter a price!", 'joeee-booking'));
+            return false;
+        }
+
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: joeeeExtrasRest.restURL + 'joeee-booking/v1/extra',
+            success: function (data) {
+                location.reload(true);
+
+            },
+            error: function (data) {
+                console.log("Error: ");
+                console.log(data);
+            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-WP-Nonce', joeeeExtrasRest.restNonce);
+            },
+            data: JSON.stringify(newExtra),
+        });
+
+
     });
-    
-    EXTRASSUBMIT.click(function(ev) {
-        ev.preventDefault();
 
-        let data = EXTRASFORM.serializeArray();
-        console.log(data);
-
+    $(document).on('blur', '.joeee_booking_extra_title', function () {
+        var id = $(this).data("id1");
+        var title = $(this).val();
+        edit_extras(id, title, "title");
     });
 
-    EXTRASCANCELBTN.click( function(ev) {
-        ev.preventDefault();
-        $('#joeee-booking-extras-row0 input').val('');
-        $('#joeee-booking-extras-0').prop("checked", false);
-        location.reload();
+    $(document).on('blur', '.joeee_booking_extra_price', function () {
+        var id = $(this).data("id2");
+        var price = $(this).val();
+        edit_extras(id, price, "price");
+    });
+
+    $(document).on('blur', '.joeee_booking_extra_bookable', function () {
+        var id = $(this).data("id3");
+        var bookable = $(this).is(":checked");
+        edit_extras(id, bookable, "bookable");
+    });
+
+
+
+    $(document).on('click', '.button-delete', function () {
+        let button_id = $(this).data("id4");
+        console.log(button_id);
+
+        $.ajax({
+            type: 'DELETE',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: joeeeExtrasRest.restURL + 'joeee-booking/v1/extra/' + button_id,
+            success: function (data) {
+                location.reload(true);
+
+            },
+            error: function (data) {
+                console.log("Error: ");
+                console.log(data);
+            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-WP-Nonce', joeeeExtrasRest.restNonce);
+            },
+        });
 
     });
 

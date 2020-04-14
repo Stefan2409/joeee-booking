@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class Activator_Test
  *
@@ -8,6 +9,7 @@
 /**
  * Rooms test case.
  */
+
 use Joeee_Booking\Core\Activator as Activator;
 use Joeee_Booking\Core\Room as Room;
 
@@ -16,25 +18,33 @@ class Rooms_Test extends WP_UnitTestCase
     protected $room_creation_data = [
         "id" => null,
         "number" => "107",
+        "adults" => 2,
+        "kids" => 0,
         "floor" => 1,
-        "capacity" => 2,
         "price" => 36.5,
         "active" => true,
+        "descripton" => "",
     ];
 
     protected $room_modify_data = [
         "id" => 1,
         "number" => "107",
+        "adults" => 2,
+        "kids"  => 1,
         "floor" => 1,
-        "capacity" => 2,
         "price" => 34.5,
         "active" => true,
+        "descritpion" => "",
     ];
 
     public function setUp()
     {
 
         parent::setUp();
+
+        // Removes temporary tables (needed for foreign key tables...)
+        remove_filter('query', array($this, '_create_temporary_table'));
+        remove_filter('query', array($this, '_drop_temporary_table'));
 
         $this->class_instance = new Activator();
     }
@@ -44,7 +54,7 @@ class Rooms_Test extends WP_UnitTestCase
         $this->class_instance->activate();
         $room = new Room();
 
-        $id = $room->create_room($this->room_creation_data);
+        $id = $room->createRoom($this->room_creation_data);
         $this->assertEquals(true, $id);
     }
 
@@ -53,8 +63,8 @@ class Rooms_Test extends WP_UnitTestCase
         $this->class_instance->activate();
         $room = new Room();
 
-        $room_id = $room->create_room($this->room_creation_data);
-        $id = $room->update_room($this->room_modify_data);
+        $room_id = $room->createRoom($this->room_creation_data);
+        $id = $room->updateRoom($this->room_modify_data);
 
         $this->assertEquals(true, $room_id);
         $this->assertEquals(array("success" => "Room updated."), $id);
@@ -65,14 +75,17 @@ class Rooms_Test extends WP_UnitTestCase
         $this->class_instance->activate();
         $room = new Room();
 
-        $room_id = $room->create_room($this->room_creation_data);
+        $room_id = $room->createRoom($this->room_creation_data);
         $this->assertEquals(1, $room_id);
 
-        $rooms = $room->get_rooms();
+        $rooms = $room->getRooms();
         $this->assertEquals(array(array(
             'id' => 1,
             'title' => "107",
-            'capacity' => 2,
+            'adults' => 2,
+            'kids'  => 0,
+            'description' => "",
+            'active'    => true,
         )), $rooms);
     }
 
@@ -81,7 +94,7 @@ class Rooms_Test extends WP_UnitTestCase
         $this->class_instance->activate();
         $room = new Room();
 
-        $room_id = $room->create_room($this->room_creation_data);
+        $room_id = $room->createRoom($this->room_creation_data);
         $this->assertEquals(1, $room_id);
 
         $expected = $this->room_creation_data;
@@ -89,7 +102,7 @@ class Rooms_Test extends WP_UnitTestCase
         $expected['id'] = 1;
         $expected['active'] = 1;
 
-        $rooms = $room->get_room(1);
+        $rooms = $room->getRoom(1);
         $this->assertEquals($expected, $rooms);
     }
 
@@ -98,7 +111,7 @@ class Rooms_Test extends WP_UnitTestCase
         $this->class_instance->activate();
         $room = new Room();
 
-        $rooms = $room->get_room(1);
+        $rooms = $room->getRoom(1);
         $this->assertEquals(true, is_wp_error($rooms));
 
         $this->assertEquals('There is no room with your given ID!', $rooms->get_error_message());
@@ -109,7 +122,7 @@ class Rooms_Test extends WP_UnitTestCase
         $this->class_instance->activate();
         $room = new Room();
 
-        $rooms = $room->get_room();
+        $rooms = $room->getRoom();
         $this->assertEquals(true, is_wp_error($rooms));
 
         $this->assertEquals('A valid ID is required!', $rooms->get_error_message());

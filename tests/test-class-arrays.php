@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class Arrays_Test
  *
@@ -8,6 +9,7 @@
 /**
  * Arrays test case.
  */
+
 use Joeee_Booking\Common\Utilities\Arrays as Arrays;
 
 class Arrays_Test extends WP_UnitTestCase
@@ -25,7 +27,7 @@ class Arrays_Test extends WP_UnitTestCase
         $output_array = ["test", "hallo", "Hello", "Geht"];
         $array_input = ["test", ["hallo", "Hello"], "Geht"];
 
-        $array_out = $this->class_instance->flatten_array($array_input);
+        $array_out = $this->class_instance->flattenArray($array_input);
 
         $this->assertEquals($output_array, $array_out);
     }
