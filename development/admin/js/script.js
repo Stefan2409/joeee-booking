@@ -321,7 +321,9 @@ jQuery(document).ready(function () {
 
 	function create_userdata(checked, comesfrom) {
 		let userdata = {};
-		userdata.email = checked.reservationEmail;
+		if (checked.reservationEmail !== "") {
+			userdata.email = checked.reservationEmail;
+		}
 		userdata.first_name = checked.reservationFirstName;
 		userdata.last_name = checked.reservationLastName;
 		userdata.gender = parseInt(checked.genderselect);

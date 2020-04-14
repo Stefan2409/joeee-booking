@@ -362,7 +362,7 @@ if (!class_exists(Reservation::class)) {
             JOIN $this->table_room_booked rb on rb.reservation_id = r.id
             JOIN $this->table_person p on p.id = r.person_id
             JOIN $this->table_address a on a.id = p.id
-            JOIN $this->table_users u on u.ID = p.user_id
+            LEFT JOIN $this->table_users u on u.ID = p.user_id
             WHERE r.id = $reservation_id AND rb.room_id = $room_id";
 
             $query_result = $wpdb->get_results($sql, ARRAY_A);
