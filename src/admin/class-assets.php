@@ -34,9 +34,9 @@ if (!class_exists(Assets::class)) {
         public function enqueueScripts(): void
         {
             if (defined('WP_DEBUG') && true === WP_DEBUG) {
-                wp_enqueue_script('joeee-booking', plugin_dir_url(__FILE__) . 'js/script.js', ['jquery', 'wp-i18n'], PluginData::pluginVersion(), false);
+                wp_enqueue_script('joeee-booking', plugin_dir_url(__FILE__) . 'js/script.js', ['jquery', 'jquery-ui-autocomplete', 'wp-i18n'], PluginData::pluginVersion(), false);
             } else {
-                wp_enqueue_script('joeee-booking', plugin_dir_url(__FILE__) . 'js/script.min.js', ['jquery', 'wp-i18n'], PluginData::pluginVersion(), false);
+                wp_enqueue_script('joeee-booking', plugin_dir_url(__FILE__) . 'js/script.min.js', ['jquery', 'jquery-ui-autocomplete', 'wp-i18n'], PluginData::pluginVersion(), false);
             }
             wp_localize_script('joeee-booking', 'joeeeRest', array(
                 'restURL' => rest_url(),

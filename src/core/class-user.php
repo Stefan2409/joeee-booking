@@ -54,6 +54,37 @@ if (!class_exists(User::class)) {
             return $user_id;
         }
 
+        public function getUserEmails($data)
+        {
+            global $wpdb;
+            $term = $data['term'];
+
+            $query = "SELECT user_email FROM $this->table_users WHERE user_email LIKE '$term%'";
+            $query_result = $wpdb->get_results($wpdb->prepare($query), ARRAY_A);
+
+            if ($query_result === null) {
+                return array();
+            }
+            $result = array();
+            foreach ($query_result as $email) {
+                array_push($result, $email['user_email']);
+            }
+            return $result;
+        }
+
+        public function getUserByEmail($data)
+        {
+            global $wpdb;
+            $email = $data['email'];
+            $user_id = email_exists($email);
+            $sql = "SELECT id FROM $this->table_person WHERE user_id = $user_id;";
+
+            $person_id = $wpdb->get_var($sql);
+
+            $result = $this->getUser($person_id);
+            return $result;
+        }
+
         public function createUser($data)
         {
             global $wpdb;

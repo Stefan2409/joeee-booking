@@ -167,6 +167,31 @@ if (!class_exists(RestController::class)) {
                 )
             ));
 
+            register_rest_route($this->namespace, '/user/email', array(
+                array(
+                    'methods'   => 'POST',
+                    'callback'  => array($this, 'getUserEmails'),
+                    'args'      => array(
+                        'term' => array(
+                            'type'                  => 'string',
+                            'sanitize_callback'     => 'sanitize_text_field',
+                            'required'              => true,
+                        ),
+                    ),
+                ),
+            ));
+
+            register_rest_route($this->namespace, '/user/byemail', array(
+                'methods'   => 'POST',
+                'callback'  => array($this, 'getUserByEmail'),
+                'args'      => array(
+                    'email'     => array(
+                        'type'      => 'string',
+                        'format'    => 'email',
+                    ),
+                ),
+            ));
+
             /**
              * Registers room specific routes.
              */
@@ -540,6 +565,20 @@ if (!class_exists(RestController::class)) {
             $response = $User->getUser($user_id);
 
             return $response;
+        }
+
+        public function getUserEmails($request)
+        {
+            $User = new User();
+            $result = $User->getUserEmails($request);
+            return $result;
+        }
+
+        public function getUserByEmail($request)
+        {
+            $User = new User();
+            $result = $User->getUserByEmail($request);
+            return $result;
         }
 
         public function createUser($request)

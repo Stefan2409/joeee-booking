@@ -338,6 +338,66 @@ jQuery(document).ready(function () {
 		return userdata;
 	}
 
+	function fillReservationForm(data) {
+		if ("reservation_id" in data[0]) {
+			RESID.val(data[0].reservation_id);
+		}
+		if ("room_id" in data[0]) {
+			RESROOMID.val(data[0].room_id);
+		}
+		if ("id" in data[0]) {
+			RESUSERID.val(data[0].id);
+		}
+		if ("booked_from" in data[0]) {
+			RESARRIVAL.val(data[0].booked_from.replace(" 12:00:00", ""));
+		}
+		if ("booked_to" in data[0]) {
+			RESDEPARTURE.val(data[0].booked_to.replace(" 12:00:00", ""));
+		}
+		if ("adults" in data[0]) {
+			RESPERSONS.val(data[0].adults);
+		}
+		if ("kids" in data[0]) {
+			RESKIDS.val(data[0].kids);
+		}
+		if ("user_email" in data[0]) {
+			RESEMAIL.val(data[0].user_email);
+		}
+		if ("first_name" in data[0]) {
+			RESFIRSTNAME.val(data[0].first_name);
+		}
+		if ("last_name" in data[0]) {
+			RESLASTNAME.val(data[0].last_name);
+		}
+		if ("nationality_id" in data[0]) {
+			RESNATIONALITY.val(data[0].nationality_id);
+		}
+		if ("confirmation" in data[0]) {
+			RESCONFIRMATION.val(data[0].confirmation);
+		}
+		if ("gender" in data[0]) {
+			RESGENDER.val(data[0].gender);
+		}
+		if ("birth" in data[0]) {
+			RESBIRTHDAY.val(data[0].birth);
+		}
+		if ("tin" in data[0]) {
+			RESTIN.val(data[0].tin);
+		}
+		if ("street" in data[0]) {
+			RESSTREET.val(data[0].street);
+		}
+		if ("zip" in data[0]) {
+			RESZIP.val(data[0].zip);
+		}
+		if ("city" in data[0]) {
+			RESCITY.val(data[0].city);
+		}
+		if ("state_id" in data[0]) {
+			RESCOUNTRY.val(data[0].state_id);
+		}
+	}
+
 	function checkRoomFormInputs(comesfrom) {
 		let formout = {};
 
@@ -583,25 +643,7 @@ jQuery(document).ready(function () {
 					$("label[for='joeee-booking-reservation-persons']").text(__("Total number of adults for this reservation.", "joeee-booking"));
 					$("label[for='joeee-booking-reservation-kids']").text(__("Total number of kids for this reservation.", "joeee-booking"));
 
-					RESID.val(data[0].reservation_id);
-					RESROOMID.val(data[0].room_id);
-					RESUSERID.val(data[0].id);
-					RESARRIVAL.val(data[0].booked_from.replace(" 12:00:00", ""));
-					RESDEPARTURE.val(data[0].booked_to.replace(" 12:00:00", ""));
-					RESPERSONS.val(data[0].adults);
-					RESKIDS.val(data[0].kids);
-					RESEMAIL.val(data[0].user_email);
-					RESFIRSTNAME.val(data[0].first_name);
-					RESLASTNAME.val(data[0].last_name);
-					RESNATIONALITY.val(data[0].nationality_id);
-					RESCONFIRMATION.val(data[0].confirmation);
-					RESGENDER.val(data[0].gender);
-					RESBIRTHDAY.val(data[0].birth);
-					RESTIN.val(data[0].tin);
-					RESSTREET.val(data[0].street);
-					RESZIP.val(data[0].zip);
-					RESCITY.val(data[0].city);
-					RESCOUNTRY.val(data[0].state_id);
+					fillReservationForm(data);
 
 					// Loads the extras counts in the reservation modifying form.
 					if (("extras" in data)) {
@@ -924,6 +966,60 @@ jQuery(document).ready(function () {
 				},
 				data: JSON.stringify(data),
 			});
+		}
+	});
+
+
+	RESEMAIL.autocomplete({
+		source: function (request, response) {
+			console.log(request);
+			let jsonRequest = {};
+			jsonRequest.term = request.term;
+			$.ajax({
+				type: 'POST',
+				dataType: 'json',
+				contentType: 'application/json',
+				url: joeeeRest.restURL + 'joeee-booking/v1/user/email',
+				success: function (data) {
+
+					console.log(data);
+					response(data);
+				},
+				error: function (data) {
+
+				},
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', joeeeRest.restNonce);
+				},
+				data: JSON.stringify(jsonRequest),
+			});
+		},
+		minLength: 3,
+		select: function (event, ui) {
+
+			let mail = ui.item.value;
+
+			let query = {};
+			query.email = mail;
+			$.ajax({
+				type: 'POST',
+				dataType: 'json',
+				contentType: 'application/json',
+				url: joeeeRest.restURL + 'joeee-booking/v1/user/byemail',
+				success: function (data) {
+
+					fillReservationForm(data);
+
+				},
+				error: function (data) {
+					console.log(data);
+				},
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', joeeeRest.restNonce);
+				},
+				data: JSON.stringify(query),
+			});
+
 		}
 	});
 
