@@ -31,6 +31,7 @@ import $ from 'jquery';
 import { Calendar } from '@fullcalendar/core';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import calendarInteraction from '@fullcalendar/interaction';
+import tippy from 'tippy.js';
 
 // Constants for internationalization purposes
 const { __, _x, _n, _nx } = wp.i18n;
@@ -566,6 +567,12 @@ jQuery(document).ready(function () {
 		events: {
 			url: joeeeRest.restURL + 'joeee-booking/v1/reservation',
 			method: 'GET'
+		},
+		eventRender: function (info) {
+			console.log(info.event.extendedProps);
+			tippy(info.el, {
+				content: __('Adults: ', 'joeee-booking') + info.event.extendedProps.adults + ' ' + __('Kids: ', 'joeee-booking') + info.event.extendedProps.kids,
+			});
 		},
 		eventDrop: function (event) {
 			let newResource = 0;

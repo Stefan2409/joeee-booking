@@ -97,10 +97,10 @@ if (!class_exists(Reservation::class)) {
 
                 if ($extras_key_exists === null) {
                     $insert_extras = array(
-                        'reservation_id'    => $reservation_id,
-                        'extra_id'          => $key,
-                        'count'             => $extras[$key],
-                        'price'             => $extra_price,
+                        'reservation_id' => $reservation_id,
+                        'extra_id' => $key,
+                        'count' => $extras[$key],
+                        'price' => $extra_price,
                     );
                     $extra_check = $wpdb->insert($this->table_reservation_extra, $insert_extras, array('%d', '%d', '%d', '%f'));
                     if (!$extra_check) {
@@ -395,7 +395,7 @@ if (!class_exists(Reservation::class)) {
         {
             global $wpdb;
 
-            $sql = "SELECT rb.reservation_id, rb.room_id, rb.booked_from, rb.booked_to, r.confirmation, p.first_name, p.last_name FROM $this->table_room_booked rb
+            $sql = "SELECT rb.reservation_id, rb.room_id, rb.booked_from, rb.booked_to, r.confirmation, p.first_name, p.last_name, r.adults, r.kids FROM $this->table_room_booked rb
             JOIN $this->table_reservation r on r.id = rb.reservation_id
             JOIN $this->table_person p on p.id = r.person_id
             WHERE booked_from >= MAKEDATE(YEAR(CURRENT_DATE()),DAYOFYEAR(CURRENT_DATE())-DAYOFMONTH(CURRENT_DATE())+1);";
@@ -424,6 +424,8 @@ if (!class_exists(Reservation::class)) {
                     'start' => $reservation->booked_from,
                     'end' => $reservation->booked_to,
                     'color' => $confirm($reservation->confirmation),
+                    'adults' => $reservation->adults,
+                    'kids' => $reservation->kids,
                 );
             }
 
