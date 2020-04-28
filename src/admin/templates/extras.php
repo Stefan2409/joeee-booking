@@ -42,7 +42,8 @@ if (isset($extra_result)) {
                         <td><input type="text" class="joeee_booking_extra_price" data-id2="<?php echo '' . $extra->id . ''; ?>" value="<?php echo $extra->price; ?>"></td>
                         <td><input type="checkbox" class="joeee_booking_extra_bookable" name="joeee-booking-extra-bookable" data-id3="<?php echo '' . $extra->id . ''; ?>" <?php if ($extra->bookable == 1) {
                                                                                                                                                                                 echo "checked='checked'";
-                                                                                                                                                                            } ?>></td>
+                                                                                                                                                                            } ?>>
+                        </td>
                         <td><button type="button" name="joeee-booking-extras-delete" class="button-delete" data-id4="<?php echo '' . $extra->id . ''; ?>">X</button><?php ?></td>
                     </tr>
                 <?php } ?>
