@@ -17,7 +17,7 @@ if (isset($extra_result)) {
 ?>
 
 <h1>Reservation Extras</h1>
-<p><?php _e("Here you can define bookable extras for your rooms and if it's possible to book them from the frontend or not. (The price is per person per day!)", "joeee-booking"); ?></p>
+<p><?php _e("Here you can define bookable extras for your rooms and if it's possible to book them from the frontend or not. (The price is per person per day!)", "joeee-booking");?></p>
 
 
 <div class="joeee-booking-extras-content">
@@ -36,22 +36,22 @@ if (isset($extra_result)) {
                     </td>
                     <td></td>
                 </tr>
-                <?php foreach ($extras as $extra) { ?>
+                <?php foreach ($extras as $extra) {?>
                     <tr>
                         <td><input type="text" class="joeee_booking_extra_title" data-id1="<?php echo '' . $extra->id . ''; ?>" value="<?php echo $extra->title; ?>"></td>
                         <td><input type="text" class="joeee_booking_extra_price" data-id2="<?php echo '' . $extra->id . ''; ?>" value="<?php echo $extra->price; ?>"></td>
                         <td><input type="checkbox" class="joeee_booking_extra_bookable" name="joeee-booking-extra-bookable" data-id3="<?php echo '' . $extra->id . ''; ?>" <?php if ($extra->bookable == 1) {
-                                                                                                                                                                                echo "checked='checked'";
-                                                                                                                                                                            } ?>>
+    echo "checked='checked'";
+}?>>
                         </td>
                         <td><button type="button" name="joeee-booking-extras-delete" class="button-delete" data-id4="<?php echo '' . $extra->id . ''; ?>">X</button><?php ?></td>
                     </tr>
-                <?php } ?>
+                <?php }?>
                 <tr id="joeee-booking-extras-row0">
-                    <td><input type="text" name="name[]" placeholder="<?php esc_attr_e('Enter your extra', 'joeee-booking') ?>" id="joeee-booking-extra-title" class="joeee-booking-form--extras-control"></td>
-                    <td><input type="text" name="price[]" placeholder="<?php esc_attr_e('Price', 'joeee-booking') ?>" id="joeee-booking-extra-price" class="joeee-booking-form--extras-control"></td>
-                    <td><input type="checkbox" name="bookingonline" id="joeee-booking-extra-bookable" value="on"></td>
-                    <td><button type="button" name="joeee-booking-extras-add" id="joeee-booking-extras-add" class="button-primary"><?php _e("Add extra", "joeee-booking") ?></button></td>
+                    <td><input type="text" name="name[]" placeholder="<?php esc_attr_e('Enter your extra', 'joeee-booking')?>" id="joeee-booking-extra-title" class="joeee-booking-form--extras-control" data-cy="extra-name"></td>
+                    <td><input type="text" name="price[]" placeholder="<?php esc_attr_e('Price', 'joeee-booking')?>" id="joeee-booking-extra-price" class="joeee-booking-form--extras-control" data-cy="extra-price"></td>
+                    <td><input type="checkbox" name="bookingonline" id="joeee-booking-extra-bookable" value="on" data-cy="extra-bookable"></td>
+                    <td><button type="button" name="joeee-booking-extras-add" id="joeee-booking-extras-add" class="button-primary" data-cy="extra-add-btn"><?php _e("Add extra", "joeee-booking")?></button></td>
                 </tr>
             </table>
         </form>
