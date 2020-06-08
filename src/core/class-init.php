@@ -42,6 +42,7 @@ if (!class_exists(Init::class)) {
             $this->definePublicHooks();
             $this->registerShortcodes();
             $this->loadRestApi();
+            $this->frontendLogin();
         }
 
         /**
@@ -129,6 +130,12 @@ if (!class_exists(Init::class)) {
             // Enqueue plugin's front-end assets
             $this->loader->addAction('wp_enqueue_scripts', $assets, 'enqueueStyles');
             $this->loader->addAction('wp_enqueue_scripts', $assets, 'enqueueScripts');
+        }
+
+        private function frontendLogin(): void {
+            $login = new Frontend\Login();
+
+            $this->loader->addAction('after_setup_theme', $login, 'add_login');
         }
 
         /**
