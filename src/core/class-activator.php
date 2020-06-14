@@ -4,6 +4,8 @@ namespace Joeee_Booking\Core;
 
 use Joeee_Booking\Common\Utilities\Country as Country;
 use Joeee_Booking\PluginData as PluginData;
+use Joeee_Booking\Core\MemberSite as MemberSite;
+use \WP_Error;
 
 // Abort if this file is called directly.
 if (!defined('ABSPATH')) {
@@ -173,6 +175,15 @@ if (!class_exists(Activator::class)) {
 			}
 
 			add_option('joeee_booking_db_version', $joeee_db_version);
+
+
+			$Member = new MemberSite();
+			$member_site_url = $Member->createMemberSite();
+			if (!is_wp_error($member_site_url)) {
+				add_option('joeee_booking_member_url', $member_site_url);
+			} else {
+				return $member_site_url;
+			}
 		}
 	}
 }

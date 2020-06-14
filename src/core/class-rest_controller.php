@@ -189,7 +189,22 @@ if (!class_exists(RestController::class)) {
                         'type'      => 'string',
                         'format'    => 'email',
                     ),
-                ),
+                )
+            ));
+
+            register_rest_route($this->namespace, 'user/login', array(
+                'methods'   => 'POST',
+                'callback'  => array($this, 'userLogin'),
+                'args'      => array(
+                    'user_login' => array(
+                        'type'  => 'string',
+                        'required'  => true,
+                    ),
+                    'user_password' => array( 
+                        'type'          => 'string',
+                        'required'      => true,
+                    ),),
+                'show_in_index' => false,
             ));
 
             /**
@@ -550,6 +565,15 @@ if (!class_exists(RestController::class)) {
         /**
          * User specific functionality
          */
+        public function userLogin($data) 
+        {
+            $User = new User();
+            $credentials = $data->get_json_params();
+            $response = $User->login($credentials);
+
+            return $response;
+        }
+
         public function getUsers($request)
         {
             $User = new User();

@@ -91,7 +91,7 @@ abstract class Shortcode
      */
     public function getErrorMessage(string $cause = '', string $fallback = ''): string
     {
-        if (current_user_can($this->required_capability())) {
+        if (current_user_can($this->requiredCapability())) {
             $message = $this->getErrorMessageToUserWithCap($cause);
         } else {
             $message = $fallback;

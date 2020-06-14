@@ -48,6 +48,8 @@ if (!class_exists(User::class)) {
                 'user_email' => $email,
                 'first_name' => $firstname,
                 'last_name' => $lastname,
+                'show_admin_bar_front' => 'false',
+                'role' => 'subscriber',
             );
 
             $user_id = wp_insert_user($userdata);
@@ -83,6 +85,19 @@ if (!class_exists(User::class)) {
 
             $result = $this->getUser($person_id);
             return $result;
+        }
+
+        public function login($credentials)
+        {
+            $credentials['remember'] = true;
+
+            $user_signon = wp_signon( $credentials, is_ssl() );
+
+            if (is_wp_error( $user_signon )) {
+                return new WP_Error("joeee-booking-user-error", esc_html__("Login error!", 'joeee-booking'), array('status' => 401));
+            } else {
+                return true;
+            }
         }
 
         public function createUser($data)
@@ -166,6 +181,10 @@ if (!class_exists(User::class)) {
                     return new WP_Error('joeee-booking-person-error', esc_html__('Error by creating the user.', 'joeee-booking'), array('status' => 400));
                 }
                 $data['id'] = $wpdb->insert_id;
+            }
+            if($user_id) {
+                $current_user = get_user_by('id', $user_id);
+                wp_set_auth_cookie($user_id, true, is_ssl());
             }
 
             return $data;
