@@ -1,38 +1,52 @@
-.App {
+.joeee-booking-reservation-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  margin: 5px 15px;
+  border: 1px solid rgb(180, 180, 180);
+  border-radius: 10px 10px 10px 10px;
+}
+
+.joeee-booking-reservation-pic-container {
+  border-radius: 10px 10px 0px 0px;
+  background-color: rgb(240, 240, 240);
+}
+
+.joeee-booking-reservation-pic-container img {
+  border-radius: 10px 10px 0px 0px;
+  max-width: 100%;
+}
+
+.joeee-booking-reservation-info-container {
+  background-color: cornflowerblue;
+  flex-grow: 1;
+  border-radius: 0px 0px 10px 10px;
+  padding: 5px;
+  background-color: rgb(240, 240, 240);
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+@media only screen and (min-width: 765px) {
+  .joeee-booking-reservation-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 5px 15px;
   }
-}
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
+  .joeee-booking-reservation-pic-container {
+    border-radius: 10px 0px 0px 10px;
+    flex-grow: 0;
+    height: 200px;
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
   }
-  to {
-    transform: rotate(360deg);
+
+  .joeee-booking-reservation-pic-container img {
+    border-radius: 10px 0px 0px 10px;
+    max-width: 300px;
+  }
+
+  .joeee-booking-reservation-info-container {
+    border-radius: 0px 10px 10px 0px;
+    text-align: left;
   }
 }

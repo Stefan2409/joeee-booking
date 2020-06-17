@@ -341,6 +341,56 @@ if (!class_exists(Reservation::class)) {
         {
         }
 
+        public function getUsersReservations($user_id)
+        {
+            global $wpdb;
+            $sql = "SELECT res.id, res.confirmation, res.adults, res.kids, book.room_id, book.booked_from, book.booked_to, room.description, room.floor  FROM $this->table_person as p 
+                INNER JOIN $this->table_reservation as res ON res.person_id = p.id
+                INNER JOIN $this->table_room_booked as book ON res.id = book.reservation_id
+                INNER JOIN $this->table_room as room ON book.room_id = room.id
+                WHERE p.user_id = $user_id";
+
+            $query_result = $wpdb->get_results($sql, ARRAY_A);
+            $result = array();
+            foreach ($query_result as $reservation) {
+                if (array_key_exists($reservation['id'], $result)) {
+                    $result[$reservation['id']]['rooms'][$reservation['room_id']] = array(
+                        "floor" => $reservation['floor'],
+                        "description" => $reservation['description'],
+                    );
+                } else {
+                    $confirm = function (int $argument) {
+                        switch ($argument) {
+                            case 1:
+                                return "confirmed";
+                                break;
+                            case 2:
+                                return "pending";
+                                break;
+                            case 3:
+                                return "Sorry, we're fully booked at the moment.";
+                                break;
+                        }
+                    };
+                    $result[$reservation['id']] = array(
+                        "confirmation" => $confirm($reservation['confirmation']),
+                        "adults"    => $reservation['adults'],
+                        "kids"      => $reservation['kids'],
+                        "booked_from" => str_replace('12:00:00', "", $reservation['booked_from']),
+                        "booked_to" => str_replace('12:00:00', "", $reservation['booked_to']),
+                        "rooms" => array(
+                            $reservation['room_id'] => array(
+                                "floor" => $reservation['floor'],
+                                "description" => $reservation['description'],
+                            ),
+                        ),
+                    );
+                }
+            }
+
+            return $result;
+        }
+
         protected function getReservationExtras($reservation_id)
         {
             global $wpdb;

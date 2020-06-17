@@ -1,0 +1,30 @@
+.Input {
+    display: block;
+    width: 90%;
+    margin: 0 auto 16px auto;
+    text-align: left;
+  
+    input {
+      display: block;
+      width: 100%;
+      padding: .6rem .5rem;
+      box-sizing: border-box;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+  
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 6px;
+  
+      abbr {
+        padding-right: 3px;
+      }
+    }
+  
+    .NotValid {
+      border-color: red;
+      color: red;
+    }
+  }

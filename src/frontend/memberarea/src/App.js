@@ -1,10 +1,12 @@
 import React from 'react';
 import './App.css';
+import Reservations from './Containers/Reservations/Reservations';
 
 function App() {
   return (
-    <div className="App">
-      <p>Members</p>
+    <div className="joeee-booking-members">
+      <p>Toolbar</p>
+      <Reservations />
     </div>
   );
 }

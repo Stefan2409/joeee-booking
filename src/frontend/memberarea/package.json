@@ -11,8 +11,9 @@
     "react-scripts": "3.4.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node ./scripts/start-non-split.js",
     "build": "node ./scripts/build-non-split.js",
+    "postbuild": "cp ./build/static/js/*.js ../js && cp ./build/static/css/*.css ../css",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -32,6 +33,7 @@
     ]
   },
   "devDependencies": {
+    "axios": "^0.19.2",
     "rewire": "^5.0.0"
   }
 }

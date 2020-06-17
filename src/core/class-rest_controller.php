@@ -200,10 +200,11 @@ if (!class_exists(RestController::class)) {
                         'type'  => 'string',
                         'required'  => true,
                     ),
-                    'user_password' => array( 
+                    'user_password' => array(
                         'type'          => 'string',
                         'required'      => true,
-                    ),),
+                    ),
+                ),
                 'show_in_index' => false,
             ));
 
@@ -378,6 +379,14 @@ if (!class_exists(RestController::class)) {
                         ),
                     ),
                 ),
+            ));
+
+            register_rest_route($this->namespace, '/reservation/user', array(
+                array(
+                    'methods' => WP_REST_Server::READABLE,
+                    'callback' => array($this, 'getReservationForLoggedInUser'),
+                    'args' => array(),
+                )
             ));
 
             register_rest_route($this->namespace, '/reservation/(?P<id>[\d]+)', array(
@@ -565,7 +574,7 @@ if (!class_exists(RestController::class)) {
         /**
          * User specific functionality
          */
-        public function userLogin($data) 
+        public function userLogin($data)
         {
             $User = new User();
             $credentials = $data->get_json_params();
@@ -710,6 +719,15 @@ if (!class_exists(RestController::class)) {
 
             $result = $Reservation->getReservations();
 
+            return $result;
+        }
+
+        public function getReservationForLoggedInUser()
+        {
+            $Reservation = new Reservation();
+            $user_id = get_current_user_id();
+
+            $result = $Reservation->getUsersReservations($user_id);
             return $result;
         }
 

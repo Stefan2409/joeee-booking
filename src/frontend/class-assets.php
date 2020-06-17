@@ -60,10 +60,12 @@ if (!class_exists(Assets::class)) {
         private function enqueueMemberScripts(): void
         {
             if (is_page('Members')) {
-                wp_enqueue_script('joeee-booking-members', plugin_dir_url(__FILE__) . 'memberarea/build/static/js/members.js', ['wp-element', 'wp-i18n'], PluginData::pluginVersion(), true);
+                wp_enqueue_script('joeee-booking-members', plugin_dir_url(__FILE__) . 'js/members.js', ['wp-element', 'wp-i18n'], PluginData::pluginVersion(), true);
                 wp_localize_script('joeee-booking-members', 'memberData', array(
                     'restURL' => rest_url(),
                     'loggedIn' => is_user_logged_in(),
+                    'restNonce' => wp_create_nonce('wp_rest'),
+                    'frontendPath' => get_site_url(null, "/wp-content/plugins/joeee-booking/src/frontend/"),
                 ));
             }
         }
@@ -71,7 +73,7 @@ if (!class_exists(Assets::class)) {
         private function enqueueMemberStyles(): void
         {
             if (is_page('Members')) {
-                wp_enqueue_style('joeee-booking-members', plugin_dir_url(__FILE__) . 'login/build/static/css/members.css', [], PluginData::pluginVersion(), 'all');
+                wp_enqueue_style('joeee-booking-members', plugin_dir_url(__FILE__) . 'css/members.css', [], PluginData::pluginVersion(), 'all');
             }
         }
     }
