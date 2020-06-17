@@ -1,27 +1,142 @@
-.Button {
-    background-color: transparent;
-    border: none;
-    color: white;
-    outline: none;
+.Button,
+.Button-primary,
+.Button-secondary {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 26px;
+    height: 28px;
+    margin: 0;
+    padding: 0 10px 1px;
     cursor: pointer;
-    font: inherit;
-    padding: 10px;
-    margin: 10px;
-    font-weight: bold;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 3px;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.Button,
+.Button-secondary {
+    color: #555;
+    border-color: #cccccc;
+    background: #f7f7f7;
+    box-shadow: inset 0 1px 0 #fff, 0 1px 0 rgba(0,0,0,.08);
+    vertical-align: top;
+}
+
+p .Button {
+    vertical-align: baseline;
+}
+
+.Button:hover,
+.Button-secondary:hover,
+.Button:focus,
+.Button-secondary:focus {
+    background: #fafafa;
+    border-color: #999;
+    color: #222;
+}
+
+.Button:focus,
+.Button-secondary:focus {
+    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,.2);
+    box-shadow: 1px 1px 1px rgba(0,0,0,.2);
+}
+
+.Button:active,
+.Button-secondary:active {
+    background: #eee;
+    border-color: #999;
+    color: #333;
+    box-shadow: inset 0 2px 5px -3px rgba( 0, 0, 0, 0.5 );
+}
+
+.Button-primary {
+    background: #2ea2cc;
+    border-color: #0074a2;
+    box-shadow: inset 0 1px 0 rgba(120,200,230,0.5), 0 1px 0 rgba(0,0,0,.15);
+    color: #fff;
+    text-decoration: none;
+}
+
+.Button-primary:hover,
+.Button-primary:focus {
+    background: #1e8cbe;
+    border-color: #0074a2;
+    box-shadow: inset 0 1px 0 rgba(120,200,230,0.6);
+    color: #fff;
+}
+
+.Button-primary:focus {
+    border-color: #0e3950;
+    box-shadow: inset 0 1px 0 rgba(120,200,230,0.6), 1px 1px 2px rgba(0,0,0,0.4);
+}
+
+.Button-primary:active {
+    background: #1b7aa6;
+    border-color: #005684;
+    color: rgba(255,255,255,0.95);
+    box-shadow: inset 0 1px 0 rgba(0,0,0,0.1);
+    vertical-align: top;
+}
+
+.Button-submit {
+    background-color: #02cc56;
+    border-width: 1px;
+    border-style: solid;
+    height: 28px;
+    box-sizing: border-box;
+    padding: 0 10px 1px;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.Button-submit:hover {
+  background: #43A047;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.Button-cancel {
+    background-color: #e74c3c;
+    border-width: 1px;
+    border-style: solid;
+    height: 28px;
+    box-sizing: border-box;
+    padding: 0 10px 1px;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+}
+.Button-cancel:hover {
+  background: #b60000f5;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.Button-delete {
+    background-color: #d41c08;
+    border-width: 1px;
+    border-style: solid;
+    height: 28px;
+    box-sizing: border-box;
+    padding: 0 10px 1px;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+}
+.Button-delete:hover {
+  background: #b60000f5;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.Position {
+  margin-top: 25px;
+  float: center;
+}
+
+@media only screen and (min-width: 765px) {
+  .Position {
+      float: right;
   }
-  
-  .Success {
-    color: #5C9210;
-  
-    &--large {
-      border: 1px solid #5C9210;
-      color: #5C9210;
-      font-size: 2rem;
-      padding: 1.25rem 1rem !important;
-      border-radius: 10px;
-    }
-  }
-  
-  .Danger {
-    color: #944317;
-  }
+}

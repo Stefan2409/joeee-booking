@@ -1,4 +1,5 @@
 /*global memberData*/
+
 import React, { Component } from 'react';
 import classes from './Reservations.module.css';
 import Reservation from '../Reservation/Reservation';

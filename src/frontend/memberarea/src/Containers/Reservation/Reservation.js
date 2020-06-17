@@ -1,6 +1,7 @@
 /*global memberData*/
 import React, { Component } from 'react';
 import classes from './Reservation.module.css';
+import Button from '../../Components/UI/Button/Button';
 
 
 const reservation = (props) => (
@@ -13,9 +14,11 @@ const reservation = (props) => (
                 <h3>
                     {props.fromDate} - {props.toDate}
                 </h3>
-                <p>Adults: {props.adults} Kids: {props.kids} </p>
-                <p>Rooms: {props.rooms}</p>
-                <p>Confirmation status: {props.confirmed}</p>
+                <p className={classes.Reservation}><strong>Adults: </strong> {props.adults}</p>
+                <p className={classes.Reservation}><strong>Kids: </strong>{props.kids} </p>
+                <p className={classes.Reservation}><strong>Rooms: </strong>{props.rooms}</p>
+                <p className={classes.Reservation}><strong>Confirmation status: </strong>{props.confirmed}</p>
+                <Button type="button" classType="Button-delete">Cancel Reservation</Button>
             </div>
         </div>
     </div>

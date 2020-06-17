@@ -1,5 +1,3 @@
-/*global wp*/
-/*global restRoute*/
 import React, { Component } from 'react';
 import Aux from '../../hoc/Aux/Aux';
 import Modal from '../../components/UI/Modal/Modal';
@@ -8,6 +6,8 @@ import Button from '../../components/UI/Button/Button';
 import RegisterMaster from '../Register/RegisterMaster';
 import classes from './Login.module.css';
 import axios from 'axios';
+
+const wp = window.wp;
 
 const { __, _x, _n, _nx } = wp.i18n;
 
