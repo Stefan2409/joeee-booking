@@ -362,13 +362,13 @@ if (!class_exists(Reservation::class)) {
                     $confirm = function (int $argument) {
                         switch ($argument) {
                             case 1:
-                                return "confirmed";
+                                return __("confirmed", "joeee-booking");
                                 break;
                             case 2:
-                                return "pending";
+                                return __("pending", "joeee-booking");
                                 break;
                             case 3:
-                                return "Sorry, we're fully booked at the moment.";
+                                return __("Sorry, we're fully booked at the moment.", "joeee-booking");
                                 break;
                         }
                     };

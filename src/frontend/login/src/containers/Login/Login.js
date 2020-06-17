@@ -1,5 +1,5 @@
-// /*global wp*/
-// /*global restRoute*/
+/*global wp*/
+/*global restRoute*/
 import React, { Component } from 'react';
 import Aux from '../../hoc/Aux/Aux';
 import Modal from '../../components/UI/Modal/Modal';
@@ -9,7 +9,7 @@ import RegisterMaster from '../Register/RegisterMaster';
 import classes from './Login.module.css';
 import axios from 'axios';
 
-// const { __, _x, _n, _nx } = wp.i18n;
+const { __, _x, _n, _nx } = wp.i18n;
 
 class Login extends Component {
     state = {
@@ -21,7 +21,7 @@ class Login extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeholder: /*__(*/'Email'/*, 'joeee-booking')*/,
+                    placeholder: __('Email', 'joeee-booking'),
                     name: 'email'
                 },
                 value: '',
@@ -35,7 +35,7 @@ class Login extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'password',
-                    placeholder: 'Password',
+                    placeholder: __('Password', 'joeee-booking'),
                     name: 'password'
                 },
                 value: '',
@@ -49,15 +49,15 @@ class Login extends Component {
     };
 
     closeModalHandler = () => {
-        this.setState({showlogin: false});
+        this.setState({ showlogin: false });
     }
 
     closeRegisterModalHandler = () => {
-        this.setState({showregister: false});
+        this.setState({ showregister: false });
     }
 
     openModalHandler = () => {
-        this.setState({showlogin: true});
+        this.setState({ showlogin: true });
     }
 
     inputChangedHandler = (event, inputIdentifier) => {
@@ -76,8 +76,8 @@ class Login extends Component {
         let formIsValid = true;
         for (let inputIdentifiers in updatedLoginForm) {
             formIsValid = updatedLoginForm[inputIdentifiers].valid && formIsValid;
-        } 
-        this.setState({loginForm: updatedLoginForm, formIsValid: formIsValid});
+        }
+        this.setState({ loginForm: updatedLoginForm, formIsValid: formIsValid });
     }
 
     checkValidity = (value, rules) => {
@@ -96,23 +96,23 @@ class Login extends Component {
         for (let formElementIdentifier in this.state.loginForm) {
             formData[formElementIdentifier] = this.state.loginForm[formElementIdentifier].value;
         }
-        axios.post("joeee-booking/v1/user/login", formData, {withCredentials: true})
+        axios.post("joeee-booking/v1/user/login", formData, { withCredentials: true })
             .then(response => {
                 window.location.reload();
             })
             .catch(error => {
-                this.setState({formIsValid: false});
+                this.setState({ formIsValid: false });
                 console.log(error);
             });
     }
 
     showRegisterForm = () => {
         this.closeModalHandler();
-        this.setState({showregister: true});
+        this.setState({ showregister: true });
     }
 
     render() {
-        
+
         const formElementsArray = [];
         for (let key in this.state.loginForm) {
             formElementsArray.push({
@@ -122,31 +122,31 @@ class Login extends Component {
         }
         return (
             <Aux>
-            <Modal show={this.state.showlogin} modalClosed={this.closeModalHandler} translate='translateY(-100vh)'>
-                <h2>Login</h2>
-                <form onSubmit={this.onSubmit}>
-                    {formElementsArray.map(formElement => (
-                        <Input
-                            key={formElement.id} 
-                            elementType={formElement.config.elementType} 
-                            elementConfig={formElement.config.elementConfig}
-                            value={formElement.config.value}
-                            changed={(event) => this.inputChangedHandler(event, formElement.id)}
-                            touched={formElement.config.touched}
-                            shouldValidate={formElement.config.validation}
-                            invalid={!formElement.config.valid}
-                        />
-                    ))}
-                    <p onClick={this.showRegisterForm} className={classes.Register} >REGISTER</p>
-                    <Button type="submit" btnType="Success" disabled={!this.state.formIsValid}>LOGIN</Button>
-                    
-                </form>
-            </Modal>
-            <Modal show={this.state.showregister} modalClosed={this.closeRegisterModalHandler} translate='translateY(-10000vh)' scrollable={true}>
-                        <RegisterMaster></RegisterMaster>
-            </Modal>
-            <span onClick={this.openModalHandler} style={{cursor: 'pointer'}}>Login</span>
-          </Aux>
+                <Modal show={this.state.showlogin} modalClosed={this.closeModalHandler} translate='translateY(-100vh)'>
+                    <h2>Login</h2>
+                    <form onSubmit={this.onSubmit}>
+                        {formElementsArray.map(formElement => (
+                            <Input
+                                key={formElement.id}
+                                elementType={formElement.config.elementType}
+                                elementConfig={formElement.config.elementConfig}
+                                value={formElement.config.value}
+                                changed={(event) => this.inputChangedHandler(event, formElement.id)}
+                                touched={formElement.config.touched}
+                                shouldValidate={formElement.config.validation}
+                                invalid={!formElement.config.valid}
+                            />
+                        ))}
+                        <p onClick={this.showRegisterForm} className={classes.Register} >REGISTER</p>
+                        <Button type="submit" btnType="Success" disabled={!this.state.formIsValid}>LOGIN</Button>
+
+                    </form>
+                </Modal>
+                <Modal show={this.state.showregister} modalClosed={this.closeRegisterModalHandler} translate='translateY(-10000vh)' scrollable={true}>
+                    <RegisterMaster></RegisterMaster>
+                </Modal>
+                <span onClick={this.openModalHandler} style={{ cursor: 'pointer' }}>Login</span>
+            </Aux>
         );
     }
 }
