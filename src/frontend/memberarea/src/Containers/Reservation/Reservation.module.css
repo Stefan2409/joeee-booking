@@ -14,12 +14,38 @@
     background-color: red;
 }
 
-.Position {
-    float: right;
+.ButtonPosition {
+    align-content: center;
 }
 
 .Verified {
     position: absolute;
-    left: 85%;
+    right: 40px;
+    top: 35%;
+}
+
+.Dates {
+    font-size: large;
+    font-weight: bold;
+}
+
+@media only screen and (min-width: 768px) {
+    .ButtonPosition {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        
+    }
+
+    .Dates {
+        font-size: larger;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .Reservation {
+        margin-bottom: 5px;
+    }
 }
 

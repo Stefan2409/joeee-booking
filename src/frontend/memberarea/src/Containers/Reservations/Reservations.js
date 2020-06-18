@@ -60,6 +60,7 @@ class Reservations extends Component {
         })
             .then(response => {
                 this.setState({ reservation: response.data });
+                console.log(response.data);
             });
     }
 
@@ -70,6 +71,11 @@ class Reservations extends Component {
         if (confirmed === 'Pending') {
             return 'yellow';
         }
+    }
+
+    deleteReservation = (id) => {
+        console.log(id.replace("joeee-booking-reservation-cancelBtn", ""));
+
     }
 
     render() {
@@ -84,7 +90,7 @@ class Reservations extends Component {
                 booked_to: this.state.reservation[key].booked_to,
                 rooms: this.state.reservation[key].rooms,
                 confirmed: this.state.reservation[key].confirmation,
-            })
+            });
         }
         return (
             <div>
@@ -98,9 +104,12 @@ class Reservations extends Component {
                             adults={reservation.adults}
                             kids={reservation.kids}
                             key={reservation.id}
+                            btnId={reservation.id}
                             rooms={Object.keys(reservation.rooms).length}
                             confirmed={reservation.confirmed}
-                            backgroundColor={this.backgroundConfirmed(reservation.confirmed)} />
+                            backgroundColor={this.backgroundConfirmed(reservation.confirmed)}
+                            clicked={this.deleteReservation}
+                        />
                     ))}
 
 
