@@ -129,14 +129,3 @@ p .Button {
   background: #b60000f5;
   transition: background-color 0.3s ease-in-out;
 }
-
-.Position {
-  margin-top: 25px;
-  float: center;
-}
-
-@media only screen and (min-width: 765px) {
-  .Position {
-      float: right;
-  }
-}

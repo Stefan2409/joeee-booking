@@ -33,16 +33,6 @@ export const adminstyles = () => {
         .pipe(dest('src/admin/css')); //Destination folder
 }
 
-export const frontendstyles = () => {
-    return src('development/frontend/scss/style.scss') //Main style input file. Here you should make frontend style changes
-        .pipe(gulpif(!PRODUCTION, sourcemaps.init())) //Initializes the sourcemaps if not in production
-        .pipe(sass().on('error', sass.logError)) //Converts scss to css.
-        .pipe(gulpif(PRODUCTION, postcss([ autoprefixer ]))) //prefixes for firefox, ie etc.
-        .pipe(gulpif(PRODUCTION, cleanCss({compatibility:'*'}))) //Minifys the css if in production mode; compatibility '*' ie10+ compatibility mode
-        .pipe(gulpif(!PRODUCTION, sourcemaps.write())) //writes the sourcemaps if not in production
-        .pipe(gulpif(PRODUCTION, rename('style.min.css'))) //renames the file in production mode
-        .pipe(dest('src/frontend/css')); //Destination folder
-}
 
 /**
  * For our JavaScript part:
@@ -114,46 +104,16 @@ export const adminScriptExtras = () => {
         .pipe(dest('src/admin/js'));
 }
 
-export const frontendscripts = () => {
-    return src('development/frontend/js/script.js')
-        .pipe(webpack({
-            module: {
-                rules: [
-                    {
-                        test: /\.js$/,
-                        use: {
-                            loader: 'babel-loader',
-                            options: {
-                                presets: []
-                            }
-                        }
-                    }
-                ]
-            },
-            mode: PRODUCTION ? 'production' : 'development',
-            devtool: !PRODUCTION ? 'inline-source-map' : false,
-            output: {
-                filename: 'script.js'
-            },
-            externals: {
-                jquery: 'jQuery'
-            },
-        }))
-        .pipe(gulpif(PRODUCTION, rename('script.min.js'))) //renames the file in production mode
-        .pipe(dest('src/frontend/js'));
-}
 
 
 
 // Watch task to run in development. So on save in a file everything gots recompiled.
 export const watchForChanges = () => {
     watch('development/admin/scss/**/*.scss', adminstyles);
-    watch('development/frontend/scss/**/*.scss', frontendstyles);
     watch('development/admin/js/script.js', adminscripts);
     watch('development/admin/js/extras.js', adminScriptExtras);
-    watch('development/frontend/js/**/*.js', frontendscripts);
 }
 
-export const build = series(parallel(adminstyles, frontendstyles, adminscripts), frontendscripts);
-export const dev = series(parallel(adminstyles, frontendstyles, adminscripts), adminScriptExtras, frontendscripts, watchForChanges);
+export const build = parallel(adminstyles, adminscripts);
+export const dev = series(parallel(adminstyles, adminscripts), adminScriptExtras, watchForChanges);
 export default dev;

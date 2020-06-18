@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Aux from '../../hoc/Aux/Aux';
+import Auxiliary from '../../hoc/Auxiliary/Auxiliary';
 import Modal from '../../components/UI/Modal/Modal';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
@@ -121,7 +121,7 @@ class Login extends Component {
             });
         }
         return (
-            <Aux>
+            <Auxiliary>
                 <Modal show={this.state.showlogin} modalClosed={this.closeModalHandler} translate='translateY(-100vh)'>
                     <h2>Login</h2>
                     <form onSubmit={this.onSubmit}>
@@ -146,7 +146,7 @@ class Login extends Component {
                     <RegisterMaster></RegisterMaster>
                 </Modal>
                 <span onClick={this.openModalHandler} style={{ cursor: 'pointer' }}>Login</span>
-            </Aux>
+            </Auxiliary>
         );
     }
 }

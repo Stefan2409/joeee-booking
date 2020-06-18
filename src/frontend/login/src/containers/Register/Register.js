@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Aux from '../../hoc/Aux/Aux';
+import Auxiliary from '../../hoc/Auxiliary/Auxiliary';
 import Button from '../../components/UI/Button/Button';
 import Input from '../../components/UI/Input/Input';
 
@@ -212,7 +212,7 @@ class Register extends Component {
             });
         }
         return (
-            <Aux>
+            <Auxiliary>
                 <form onSubmit={this.onSubmit}>
                     {formElementsArray.map(formElement => (
                         <Input
@@ -228,7 +228,7 @@ class Register extends Component {
                     ))}
                     <Button type="submit" btnType="Success" disabled={!this.state.formIsValid}>REGISTER</Button>
                 </form>
-            </Aux>           
+            </Auxiliary>           
         );
     }
 }

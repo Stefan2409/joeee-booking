@@ -24,6 +24,18 @@
   padding: 5px;
   background-color: rgb(240, 240, 240);
   text-align: center;
+  max-height: 200px;
+  max-width: 100%;
+}
+
+.material-icons.check {
+  color: rgb(66, 219, 20);
+  font-size: 36px;
+}
+
+.material-icons.pending {
+  color: rgb(255, 187, 0);
+  font-size: 36px;
 }
 
 @media only screen and (min-width: 765px) {

@@ -89,6 +89,7 @@ class Reservations extends Component {
         return (
             <div>
                 <h3 style={{ marginLeft: "20px" }}>Reservations:</h3>
+                <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
                 <section className={classes.Reservations}>
                     {reservationArray.map(reservation => (
                         <Reservation

@@ -13,3 +13,13 @@
 .Reservation.Canceled {
     background-color: red;
 }
+
+.Position {
+    float: right;
+}
+
+.Verified {
+    position: absolute;
+    left: 85%;
+}
+

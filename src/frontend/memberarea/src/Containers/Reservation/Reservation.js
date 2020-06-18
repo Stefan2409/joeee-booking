@@ -4,6 +4,15 @@ import classes from './Reservation.module.css';
 import Button from '../../Components/UI/Button/Button';
 
 
+const renderCheck = (confirm) => {
+    if(confirm === "confirmed") {
+        return <div className={classes.Verified}><i className="material-icons md-48 check">check_circle</i></div>;
+    }
+    if(confirm === "pending") {
+        return <div className={classes.Verified}><i className="material-icons md-48 pending">hourglass_empty</i></div>;
+    }
+}
+
 const reservation = (props) => (
     <div className="joeee-booking-reservation-container-height">
         <div className={[classes.Reservation, classes[props.confirmed]].join(' ') + " joeee-booking-reservation-container"}>
@@ -14,11 +23,14 @@ const reservation = (props) => (
                 <h3>
                     {props.fromDate} - {props.toDate}
                 </h3>
-                <p className={classes.Reservation}><strong>Adults: </strong> {props.adults}</p>
-                <p className={classes.Reservation}><strong>Kids: </strong>{props.kids} </p>
-                <p className={classes.Reservation}><strong>Rooms: </strong>{props.rooms}</p>
-                <p className={classes.Reservation}><strong>Confirmation status: </strong>{props.confirmed}</p>
-                <Button type="button" classType="Button-delete">Cancel Reservation</Button>
+                {renderCheck(props.confirmed)}
+                <div className={classes.Reservation}><strong>Adults: </strong> {props.adults}</div>
+                <div className={classes.Reservation}><strong>Kids: </strong>{props.kids}</div>
+                <div className={classes.Reservation}><strong>Rooms: </strong>{props.rooms}</div>
+                <div className={classes.Reservation}><strong>Confirmation status: </strong>{props.confirmed}</div>
+                <div className={classes.Position}>
+                    <Button type="button" classType="Button-delete">Cancel Reservation</Button>
+                </div>
             </div>
         </div>
     </div>
