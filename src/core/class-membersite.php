@@ -42,10 +42,10 @@ if (!class_exists(MemberSite::class)) {
                 return new WP_Error('joeee-booking-activation-error', esc_html__("Members page can't be created!", 'joeee-booking'), array('status' => 400));
             } else {
                 $member_site_url = get_page_link($new_page_id);
+                $picture = get_site_url(null, "/wp-content/plugins/joeee-booking/src/frontend/images/pic1_resized.jpg");
+                add_option('joeee_booking_membersite_picture', $picture, '', true);
                 return $member_site_url;
             }
-            $picture = get_site_url(null, "/wp-content/plugins/joeee-booking/src/frontend/images/pic1_resized.jpg");
-            add_option('joeee_booking_membersite_picture', $picture, '', true);
         }
     }
 }

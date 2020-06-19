@@ -91,9 +91,9 @@ if (!class_exists(User::class)) {
         {
             $credentials['remember'] = false;
 
-            $user_signon = wp_signon( $credentials, is_ssl() );
+            $user_signon = wp_signon($credentials, is_ssl());
 
-            if (is_wp_error( $user_signon )) {
+            if (is_wp_error($user_signon)) {
                 return new WP_Error("joeee-booking-user-error", esc_html__("Login error!", 'joeee-booking'), array('status' => 401));
             } else {
                 return true;
@@ -182,7 +182,8 @@ if (!class_exists(User::class)) {
                 }
                 $data['id'] = $wpdb->insert_id;
             }
-            if($user_id) {
+            // Logs the user in if he isn't a user with user creation privileges.
+            if ($user_id && !current_user_can('upload_files')) {
                 $current_user = get_user_by('id', $user_id);
                 wp_set_auth_cookie($user_id, true, is_ssl());
             }
