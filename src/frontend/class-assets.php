@@ -49,6 +49,7 @@ if (!class_exists(Assets::class)) {
                         'loggedIn' => is_user_logged_in(),
                         'restNonce' => wp_create_nonce('wp_rest'),
                         'frontendPath' => get_site_url(null, "/wp-content/plugins/joeee-booking/src/frontend/"),
+                        'memberPicture' => get_option('joeee_booking_membersite_picture'),
                     ));
                 }
             }

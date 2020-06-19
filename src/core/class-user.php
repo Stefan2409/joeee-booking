@@ -89,7 +89,7 @@ if (!class_exists(User::class)) {
 
         public function login($credentials)
         {
-            $credentials['remember'] = true;
+            $credentials['remember'] = false;
 
             $user_signon = wp_signon( $credentials, is_ssl() );
 

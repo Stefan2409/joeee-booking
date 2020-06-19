@@ -44,6 +44,8 @@ if (!class_exists(MemberSite::class)) {
                 $member_site_url = get_page_link($new_page_id);
                 return $member_site_url;
             }
+            $picture = get_site_url(null, "/wp-content/plugins/joeee-booking/src/frontend/images/pic1_resized.jpg");
+            add_option('joeee_booking_membersite_picture', $picture, '', true);
         }
     }
 }

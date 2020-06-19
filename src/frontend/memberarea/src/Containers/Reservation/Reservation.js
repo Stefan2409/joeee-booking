@@ -18,7 +18,7 @@ const reservation = (props) => (
     <div className="joeee-booking-reservation-container-height">
         <div className={[classes.Reservation, classes[props.confirmed]].join(' ') + " joeee-booking-reservation-container"}>
             <div className="joeee-booking-reservation-pic-container">
-                <img src={memberData.frontendPath + "images/pic1_resized.jpg"} alt="Room" />
+                <img src={memberData.memberPicture} alt="Room" />
             </div>
             <div className="joeee-booking-reservation-info-container">
                 <div className={classes.Dates}>
