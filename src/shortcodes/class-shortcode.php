@@ -173,7 +173,7 @@ abstract class Shortcode
      */
     public function getAtts(array $atts = []): array
     {
-        return shortcodeStts($this->getDefaults(), $atts, $this->getTag());
+        return shortcodeAtts($this->getDefaults(), $atts, $this->getTag());
     }
 
     /**

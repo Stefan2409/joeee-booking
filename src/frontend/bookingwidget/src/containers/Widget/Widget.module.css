@@ -1,0 +1,11 @@
+.Inputs {
+    font-weight: 200;
+    font-size: 19px;
+    line-height: 24px;
+    width: 100%;
+    font-family: inherit;
+}
+
+.Button {
+    width: 100%;
+}

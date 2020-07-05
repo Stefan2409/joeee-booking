@@ -43,6 +43,7 @@ if (!class_exists(Init::class)) {
             $this->registerShortcodes();
             $this->loadRestApi();
             $this->frontendLogin();
+            $this->addBookingWidget();
         }
 
         /**
@@ -111,7 +112,6 @@ if (!class_exists(Init::class)) {
 
             //Extras menu
             $this->loader->addAction('admin_menu', $admin_main_menu, 'addExtrasSubmenu');
-
         }
 
         /**
@@ -120,8 +120,7 @@ if (!class_exists(Init::class)) {
          */
         private function definePublicHooks(): void
         {
-            if (is_admin() && !wp_doing_ajax()
-            ) {
+            if (is_admin() && !wp_doing_ajax()) {
                 return;
             }
 
@@ -132,10 +131,17 @@ if (!class_exists(Init::class)) {
             $this->loader->addAction('wp_enqueue_scripts', $assets, 'enqueueScripts');
         }
 
-        private function frontendLogin(): void {
+        private function frontendLogin(): void
+        {
             $login = new Frontend\Login();
 
             $this->loader->addAction('after_setup_theme', $login, 'add_login');
+        }
+
+        private function addBookingWidget(): void
+        {
+            $widget = new Frontend\BookingWidget();
+            $this->loader->addAction('widgets_init', $widget, 'register');
         }
 
         /**
