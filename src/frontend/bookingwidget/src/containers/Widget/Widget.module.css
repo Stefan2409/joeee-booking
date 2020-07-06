@@ -1,7 +1,9 @@
 .Inputs {
-    font-weight: 200;
-    font-size: 19px;
-    line-height: 24px;
+    border-radius: 2px;
+    border: 1px solid #dbdbdb;
+    border-bottom-width: 2px;
+    font-weight: 400;
+    font-size: 1rem;
     width: 100%;
     font-family: inherit;
 }
@@ -9,3 +11,19 @@
 .Button {
     width: 100%;
 }
+
+@media screen and (min-width: 768px) {
+    .Inputs {
+      display: inline-block;
+      width: 150px;
+      line-height: 1.5;
+      height: 100%;
+
+    }
+
+    .Button {
+        display: inline-block;
+        width: 150px;
+    }
+    
+  }

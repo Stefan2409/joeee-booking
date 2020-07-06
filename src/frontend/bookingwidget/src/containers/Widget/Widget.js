@@ -5,6 +5,7 @@ import 'react-dates/lib/css/_datepicker.css';
 import { DateRangePicker } from 'react-dates';
 import Auxiliary from '../../hoc/Auxiliary/Auxiliary';
 import classes from './Widget.module.css';
+import './react_dates_override.css';
 
 class Widget extends Component {
     constructor(props) {
@@ -17,7 +18,8 @@ class Widget extends Component {
         };
     }
 
-    btnClick = () => {
+    btnClick = (event) => {
+        event.preventDefault();
         console.log(this.state);
     }
 
@@ -44,8 +46,12 @@ class Widget extends Component {
                     startDatePlaceholderText="Arrival"
                     endDatePlaceholderText="Departure"
                 ></DateRangePicker>
-                <input type="number" min="1" placeholder="Adults" onChange={this.adultsState} className={classes.Inputs} />
-                <input type="number" min="0" placeholder="Kids" onChange={this.kidsState} className={classes.Inputs} />
+                <div>
+                    <input type="number" min="1" placeholder="Adults" onChange={this.adultsState} className={classes.Inputs} />
+                </div>
+                <div>
+                    <input type="number" min="0" placeholder="Kids" onChange={this.kidsState} className={classes.Inputs} />
+                </div>
                 <button onClick={this.btnClick} className={classes.Button}>Search</button>
             </Auxiliary>
         );

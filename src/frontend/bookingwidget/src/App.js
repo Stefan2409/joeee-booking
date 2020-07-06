@@ -1,14 +1,14 @@
 import React from 'react';
-import './App.css';
+import classes from './App.module.css';
 import './containers/Widget/Widget';
 import Widget from './containers/Widget/Widget';
-import Auxiliary from './hoc/Auxiliary/Auxiliary';
+
 
 function App() {
   return (
-      <Auxiliary>
+      <div className={classes.App}>
         <Widget></Widget>
-      </Auxiliary>    
+      </div>   
   );
 }
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace Joeee_Booking\Frontend;
+use Joeee_Booking\PluginData as PluginData;
 
 // Abort if this file is called directly.
 if (!defined('ABSPATH')) {
@@ -42,6 +43,9 @@ if (!class_exists(BookingWidget::class)) {
 
         public function enqueueJQuery()
         {
+            wp_enqueue_style('joeee-booking-widgetstyle', plugin_dir_url(__FILE__) . 'css/widget.css', [], PluginData::pluginVersion(), 'all');
+            wp_enqueue_style('joeee-booking-bookingwidgetstyle', plugin_dir_url(__FILE__) . 'css/bookingwidget.css', [], PluginData::pluginVersion(), 'all');
+            wp_enqueue_script('joeee-booking-widget', plugin_dir_url(__FILE__) . 'js/bookingwidget.js', ['wp-element', 'wp-i18n', 'axios'], PluginData::pluginVersion(), true);
             wp_enqueue_script('jquery');
         }
     }
