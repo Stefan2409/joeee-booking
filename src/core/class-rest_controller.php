@@ -240,6 +240,10 @@ if (!class_exists(RestController::class)) {
                             'type' => 'number',
                             'required' => true,
                         ),
+                        'single_room_supplement' => array(
+                            'type'  => 'number',
+                            'required' => true,
+                        ),
                         'description' => array(
                             'type' => 'string',
                             'sanitize_callback' => 'sanitize_text_field',
@@ -284,6 +288,10 @@ if (!class_exists(RestController::class)) {
                             'required' => true,
                         ),
                         'price' => array(
+                            'type' => 'number',
+                            'required' => true,
+                        ),
+                        'single_room_supplement' => array(
                             'type' => 'number',
                             'required' => true,
                         ),

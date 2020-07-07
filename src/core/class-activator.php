@@ -95,6 +95,7 @@ if (!class_exists(Activator::class)) {
 				kids smallint(5),
 				floor smallint(5) NOT NULL,
 				price float(10) NOT NULL,
+				single_room_supplement float(10) NOT NULL,
 				active boolean NOT NULL,
 				description varchar(3000),
 				created timestamp,

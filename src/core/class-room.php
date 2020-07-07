@@ -70,7 +70,9 @@ if (!class_exists(Room::class)) {
             if (!(is_numeric($request['price']) || $request['price'] == null)) {
                 return new WP_Error('rest_forbidden', esc_html__("The price isn't numerical. Check the room json scheme!", "joeee-booking", array('status' => 400)));
             }
-
+            if (!(is_numeric($request['single_room_supplement']) || $request['single_room_supplement'] == null)) {
+                return new WP_Error('rest_forbidden', esc_html__("The single room supplement isn't numerical. Check the room json scheme!", "joeee-booking", array('status' => 400)));
+            }
             if (!(is_bool($request['active']) || $request['active'] == null)) {
                 return new WP_Error('rest_forbidden', esc_html__("The variable active isn't a boolean. Check the room json scheme!", "joeee-booking", array('status' => 400)));
             }
@@ -97,6 +99,10 @@ if (!class_exists(Room::class)) {
                     'filter' => FILTER_SANITIZE_NUMBER_INT,
                 ),
                 'price' => array(
+                    'filter' => FILTER_SANITIZE_NUMBER_FLOAT,
+                    'flags' => FILTER_FLAG_ALLOW_FRACTION,
+                ),
+                'single_room_supplement' => array(
                     'filter' => FILTER_SANITIZE_NUMBER_FLOAT,
                     'flags' => FILTER_FLAG_ALLOW_FRACTION,
                 ),
@@ -143,7 +149,7 @@ if (!class_exists(Room::class)) {
             if (empty($filtered)) {
                 return new WP_Error('joeee_booking_room_error', esc_html__('A valid ID is required!', 'joeee-booking'), array('status' => 400));
             }
-            $query = $wpdb->prepare("SELECT id, number, floor, adults, kids, price, description, active FROM $this->room_table WHERE id = %d", array($filtered));
+            $query = $wpdb->prepare("SELECT id, number, floor, adults, kids, price, single_room_supplement, description, active FROM $this->room_table WHERE id = %d", array($filtered));
             $result = $wpdb->get_row($query, ARRAY_A);
             if (empty($result)) {
                 return new WP_Error('joeee_booking_room_error', esc_html__('There is no room with your given ID!', 'joeee-booking'), array('status' => 400));
@@ -227,7 +233,7 @@ if (!class_exists(Room::class)) {
                 $rooms = $data['rooms'];
             }
 
-            $sql_query = "SELECT id, number, adults, kids, floor, price, description FROM $this->room_table WHERE id NOT IN
+            $sql_query = "SELECT id, number, adults, kids, floor, price, single_room_supplement, description FROM $this->room_table WHERE id NOT IN
             (SELECT room_id FROM $this->room_booked_table WHERE
             (booked_from <= %s AND booked_to >= %s)
             OR (booked_from <= %s AND booked_to >= %s)

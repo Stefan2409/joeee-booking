@@ -96,6 +96,13 @@ if (isset($extra_result)) {
                     <small>Error message</small>
                 </div>
                 <div class="joeee-booking-room-form-control">
+                    <label for="joeee-booking-room-single-supplement"><?php esc_html_e('Single Room Supplement', 'joeee-booking')?></label>
+                    <input type="text" placeholder="<?php esc_attr_e('Single Room Supplement', 'joeee-booking')?>" id="joeee-booking-room-single-supplement" data-cy="room-supplement">
+                    <i class="dashicons dashicons-yes-alt"></i>
+                    <i class="dashicons dashicons-warning"></i>
+                    <small>Error message</small>
+                </div>
+                <div class="joeee-booking-room-form-control">
                     <label for="joeee-booking-room-desc"><?php esc_html_e('Description', 'joeee-booking')?></label>
                     <textarea name="joeee-booking-room-desc" id="joeee-booking-room-desc" cols="30" rows="10" form="joeee-roombooking-room-form" data-cy="room-description"></textarea>
                     <i class="dashicons dashicons-yes-alt"></i>

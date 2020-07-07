@@ -46,6 +46,7 @@ jQuery(document).ready(function () {
 	const ROOMADULTS = $('#joeee-booking-room-adults');
 	const ROOMKIDS = $('#joeee-booking-room-kids');
 	const ROOMPRICE = $('#joeee-booking-room-price');
+	const ROOMSINGLESUP = $('#joeee-booking-room-single-supplement');
 	const ROOMDESC = $('#joeee-booking-room-desc');
 	const ROOMACTIVE = $('#joeee-booking-room-active');
 	const ROOMSUBMITBTN = $('#joeee-booking-room-submit');
@@ -407,6 +408,7 @@ jQuery(document).ready(function () {
 		let roomAdultsValue = ROOMADULTS.val().trim();
 		let roomKidsValue = ROOMKIDS.val().trim();
 		let roompriceValue = ROOMPRICE.val().trim().replace(',', '.');
+		let roomSingleSupValue = ROOMSINGLESUP.val().trim().replace(',', '.');
 		let roomDescription = ROOMDESC.val().trim();
 
 		if (isNaN(roomnumberValue.toString()) || roomnumberValue === '') {
@@ -450,6 +452,14 @@ jQuery(document).ready(function () {
 		else {
 			setSuccessFor(ROOMPRICE);
 			formout.price = parseFloat(roompriceValue);
+		}
+		if (isNaN(roomSingleSupValue) || roomSingleSupValue === '') {
+			setErrorFor(ROOMSINGLESUP, __('The single room supplement must be a float number!', 'joeee-booking'));
+			return false;
+		}
+		else {
+			setSuccessFor(ROOMSINGLESUP);
+			formout.single_room_supplement = parseFloat(roomSingleSupValue);
 		}
 		if (typeof roomDescription === 'string') {
 			formout.description = roomDescription;
@@ -538,6 +548,7 @@ jQuery(document).ready(function () {
 						ROOMKIDS.val(data.kids);
 						FLOORNUMBER.val(data.floor);
 						ROOMPRICE.val(data.price);
+						ROOMSINGLESUP.val(data.single_room_supplement);
 						ROOMDESC.val(data.description);
 						if (data.active == 1) {
 							ROOMACTIVE.prop('checked', true);
