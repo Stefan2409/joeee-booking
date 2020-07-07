@@ -6,6 +6,7 @@ import { DateRangePicker } from 'react-dates';
 import Auxiliary from '../../hoc/Auxiliary/Auxiliary';
 import classes from './Widget.module.css';
 import './react_dates_override.css';
+import axios from 'axios';
 
 class Widget extends Component {
     constructor(props) {
@@ -20,6 +21,16 @@ class Widget extends Component {
 
     btnClick = (event) => {
         event.preventDefault();
+        let formData = {};
+        formData.from = this.state.startDate;
+        formData.to = this.state.endDate;
+        axios.post("joeee-booking/v1/room/availability", formData, { withCredentials: true })
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.log(error);
+        });
         console.log(this.state);
     }
 
@@ -47,10 +58,10 @@ class Widget extends Component {
                     endDatePlaceholderText="Departure"
                 ></DateRangePicker>
                 <div>
-                    <input type="number" min="1" placeholder="Adults" onChange={this.adultsState} className={classes.Inputs} />
+                    <input type="number" min="1" placeholder="Adults" onChange={this.adultsState} />
                 </div>
                 <div>
-                    <input type="number" min="0" placeholder="Kids" onChange={this.kidsState} className={classes.Inputs} />
+                    <input type="number" min="0" placeholder="Kids" onChange={this.kidsState} />
                 </div>
                 <button onClick={this.btnClick} className={classes.Button}>Search</button>
             </Auxiliary>
