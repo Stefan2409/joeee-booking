@@ -4,6 +4,8 @@ import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import { DateRangePicker } from 'react-dates';
 import Auxiliary from '../../hoc/Auxiliary/Auxiliary';
+import ShowRooms from '../../components/ShowRooms/ShowRooms';
+import Modal from '../../components/UI/Modal/Modal';
 import classes from './Widget.module.css';
 import './react_dates_override.css';
 import axios from 'axios';
@@ -16,6 +18,8 @@ class Widget extends Component {
             endDate: null,
             adults: null,
             kids: null,
+            showRooms: false,
+            rooms: [],
         };
     }
 
@@ -26,12 +30,13 @@ class Widget extends Component {
         formData.to = this.state.endDate;
         axios.post("joeee-booking/v1/room/availability", formData, { withCredentials: true })
         .then(response => {
-            console.log(response.data);
+            this.setState({rooms: response.data});
+            console.log(this.state);
+            this.setState({showRooms: true});
         })
         .catch(error => {
             console.log(error);
         });
-        console.log(this.state);
     }
 
     adultsState = (e) => {
@@ -40,6 +45,10 @@ class Widget extends Component {
 
     kidsState = (e) => {
         this.setState({ kids: e.target.value });
+    }
+
+    closeModalHandler = () => {
+        this.setState({ showRooms: false });
     }
 
 
@@ -58,12 +67,24 @@ class Widget extends Component {
                     endDatePlaceholderText="Departure"
                 ></DateRangePicker>
                 <div>
-                    <input type="number" min="1" placeholder="Adults" onChange={this.adultsState} />
-                </div>
-                <div>
-                    <input type="number" min="0" placeholder="Kids" onChange={this.kidsState} />
+                    <input type="number" min="1" placeholder="Adults" onChange={this.adultsState} className={classes.Inputs} />
+                    <input type="number" min="0" placeholder="Kids" onChange={this.kidsState} className={classes.Inputs} />
                 </div>
                 <button onClick={this.btnClick} className={classes.Button}>Search</button>
+                <Modal show={this.state.showRooms} modalClosed={this.closeModalHandler} translate='translateY(-100vh)'>
+                    <h2>Available rooms</h2>
+                    {this.state.rooms.map(freerooms => (
+                        <ShowRooms
+                        roomNr={freerooms.number}
+                        adults={freerooms.adults}
+                        kids={freerooms.kids}
+                        description={freerooms.description}
+                        price={freerooms.price}
+                        singleRoomSup={freerooms.single_room_supplement}
+                        key={freerooms.id}/>
+                    ))}
+                    
+                </Modal>
             </Auxiliary>
         );
     }

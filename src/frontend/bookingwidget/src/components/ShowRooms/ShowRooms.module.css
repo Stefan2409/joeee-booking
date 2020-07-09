@@ -1,0 +1,12 @@
+.Showrooms {
+    border: 2px solid black;
+    border-radius: 3px;
+    margin: 5px;
+    padding: 5px;
+}
+
+@media screen and (min-width: 768px) {
+    .Showrooms {
+        text-align: left;
+    }
+}
