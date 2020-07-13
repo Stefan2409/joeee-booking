@@ -10,7 +10,11 @@ const ShowRooms = (props) => {
         <div><strong>Room description: </strong>{props.description}</div>
         <div><strong>Price per person and day: </strong>{props.price}</div>
         <div><strong>Single room supplement: </strong>{props.singleRoomSup}</div>
-        <input type="number" appearance="textfield" placeholder="Adults"/>
+        <div>
+        <input type="number" placeholder="Adults" min="1" max={props.adults}/>
+        <input type="number" placeholder="Kids" min="0" max={props.kids}/>
+
+        </div>
     </div>
     );
 };
