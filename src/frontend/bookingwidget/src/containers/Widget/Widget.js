@@ -6,6 +6,7 @@ import { DateRangePicker } from 'react-dates';
 import Auxiliary from '../../hoc/Auxiliary/Auxiliary';
 import ShowRooms from '../../components/ShowRooms/ShowRooms';
 import Modal from '../../components/UI/Modal/Modal';
+import OrderSummary from '../../components/OrderSummary/OrderSummary';
 import classes from './Widget.module.css';
 import './react_dates_override.css';
 import axios from 'axios';
@@ -16,11 +17,16 @@ class Widget extends Component {
         this.state = {
             startDate: null,
             endDate: null,
-            adults: null,
-            kids: null,
             showRooms: false,
             rooms: [],
+            roomsSelected: {},
         };
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.roomsSelected !== this.state.roomsSelected) {
+            console.log(this.state);
+        }
     }
 
     btnClick = (event) => {
@@ -39,13 +45,32 @@ class Widget extends Component {
         });
     }
 
-    adultsState = (e) => {
-        this.setState({ adults: e.target.value });
+    adultsRoom = (value, id) => {       
+            this.setState(prevState => ({
+                roomsSelected: {
+                    ...prevState.roomsSelected, // copy all other rooms selected
+                    [id]: { // add new key with id 
+                        ...prevState.roomsSelected[id.toString()], // copy all former attributes
+                        adults: value // add changed value
+                    }
+                }
+            }));
+            
     }
 
-    kidsState = (e) => {
-        this.setState({ kids: e.target.value });
+    kidsRoom = (value, id) => {
+        this.setState(prevState => ({
+            roomsSelected: {
+                ...prevState.roomsSelected, // copy all other rooms selected
+                [id]: { // add new key with id 
+                    ...prevState.roomsSelected[id.toString()], // copy all former attributes
+                    kids: value // add changed value
+                }
+            }
+        }));
     }
+
+
 
     closeModalHandler = () => {
         this.setState({ showRooms: false });
@@ -66,25 +91,26 @@ class Widget extends Component {
                     startDatePlaceholderText="Arrival"
                     endDatePlaceholderText="Departure"
                 ></DateRangePicker>
-                <div>
-                    <input type="number" min="1" placeholder="Adults" onChange={this.adultsState} className={classes.Inputs} />
-                    <input type="number" min="0" placeholder="Kids" onChange={this.kidsState} className={classes.Inputs} />
-                </div>
                 <button onClick={this.btnClick} className={classes.Button}>Search</button>
-                <Modal show={this.state.showRooms} modalClosed={this.closeModalHandler} translate='translateY(-100vh)'>
-                    <h2>Available rooms</h2>
-                    {this.state.rooms.map(freerooms => (
-                        <ShowRooms
-                        roomNr={freerooms.number}
-                        adults={freerooms.adults}
-                        kids={freerooms.kids}
-                        description={freerooms.description}
-                        price={freerooms.price}
-                        singleRoomSup={freerooms.single_room_supplement}
-                        key={freerooms.id}/>
-                    ))}
-                    
+                <Modal show={this.state.showRooms} modalClosed={this.closeModalHandler} translate='translateY(-200vh)'>
+                    <div>
+                        <h2>Available rooms</h2>
+                        {this.state.rooms.map(freerooms => (
+                            <ShowRooms
+                            roomNr={freerooms.number}
+                            adults={freerooms.adults}
+                            kids={freerooms.kids}
+                            description={freerooms.description}
+                            price={freerooms.price}
+                            singleRoomSup={freerooms.single_room_supplement}
+                            key={freerooms.id}
+                            roomID={freerooms.id}
+                            adultsRoom={this.adultsRoom}
+                            kidsRoom={this.kidsRoom}/>
+                        ))}
+                        </div>
                 </Modal>
+                <OrderSummary show={this.state.showRooms}/>
             </Auxiliary>
         );
     }

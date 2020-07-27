@@ -11,9 +11,16 @@ const ShowRooms = (props) => {
         <div><strong>Price per person and day: </strong>{props.price}</div>
         <div><strong>Single room supplement: </strong>{props.singleRoomSup}</div>
         <div>
-        <input type="number" placeholder="Adults" min="1" max={props.adults}/>
-        <input type="number" placeholder="Kids" min="0" max={props.kids}/>
-
+            <input type="number" id={"joeee-booking-room-reservation-adults" + props.roomID} 
+                placeholder="Adults" 
+                min="0" 
+                max={props.adults} 
+                onChange={e => props.adultsRoom(e.target.value, props.roomID)}/>
+            <input type="number" id={"joeee-booking-room-reservation-kids" + props.roomID} 
+                placeholder="Kids" 
+                min="0" 
+                max={props.kids} 
+                onChange={e => props.kidsRoom(e.target.value, props.roomID)}/>
         </div>
     </div>
     );
