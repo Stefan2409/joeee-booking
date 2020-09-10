@@ -1,19 +1,22 @@
 {
-  "name": "memberarea",
+  "name": "bookingcalendar",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.0.2",
-    "@testing-library/user-event": "^12.1.4",
+    "@fullcalendar/core": "^5.3.1",
+    "@fullcalendar/interaction": "^5.3.1",
+    "@fullcalendar/react": "^5.3.1",
+    "@fullcalendar/resource-timeline": "^5.3.1",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.3"
   },
   "scripts": {
-    "start": "node ./scripts/start-non-split.js",
-    "build": "node ./scripts/build-non-split.js",
-    "postbuild": "cp ./build/static/js/*.js ../js && cp ./build/static/css/*.css ../css",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -33,7 +36,6 @@
     ]
   },
   "devDependencies": {
-    "axios": "^0.20.0",
-    "rewire": "^5.0.0"
+    "axios": "^0.20.0"
   }
 }
