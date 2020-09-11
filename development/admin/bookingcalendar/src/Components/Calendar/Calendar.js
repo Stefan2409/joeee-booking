@@ -10,6 +10,18 @@ class Calendar extends React.Component {
         resources: {},
     };
 
+    // componentDidUpdate(prevProps, prevState) {
+    //     if (prevState.resources !== this.state.resources) {
+    //         axios.get("localhost/develop/wp-json/joeee-booking/v1/room")
+    //             .then(response => {
+    //                 this.setState({resources: response});
+    //             })
+    //             .catch(err => {
+    //                 console.log(err);
+    //             });
+    //     }
+    // }
+
     getResources(fetchInfo, successCallback, failureCallback) {
         axios.get("localhost/develop/wp-json/joeee-booking/v1/room")
         .then(response => {
@@ -46,7 +58,16 @@ class Calendar extends React.Component {
                     },
                     }}
                     resourceAreaWidth={'10%'}
-                    resources={this.getResources(fetchInfo, successCallback, failureCallback)}
+                    resources={[
+                        {
+                          id: 'a',
+                          title: 'Room A'
+                        },
+                        {
+                          id: 'b',
+                          title: 'Room B'
+                        }
+                      ]}
       />
             </div>
         );
