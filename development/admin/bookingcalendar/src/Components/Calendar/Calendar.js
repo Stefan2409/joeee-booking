@@ -5,32 +5,12 @@ import calendarInteraction from '@fullcalendar/interaction';
 import axios from 'axios';
 
 class Calendar extends React.Component {
+
     state = {
-        currentResources: [],
-        resources: {},
+        showAddRoom: false,
+        showAddReservation: false,
     };
 
-    // componentDidUpdate(prevProps, prevState) {
-    //     if (prevState.resources !== this.state.resources) {
-    //         axios.get("localhost/develop/wp-json/joeee-booking/v1/room")
-    //             .then(response => {
-    //                 this.setState({resources: response});
-    //             })
-    //             .catch(err => {
-    //                 console.log(err);
-    //             });
-    //     }
-    // }
-
-    getResources(fetchInfo, successCallback, failureCallback) {
-        axios.get("localhost/develop/wp-json/joeee-booking/v1/room")
-        .then(response => {
-            successCallback(response);
-        })
-        .catch(err => {
-            failureCallback(err);
-        })
-    }
 
     render() {
         return (
@@ -45,30 +25,28 @@ class Calendar extends React.Component {
                     selectable={true}
                     editable={true}
                     headerToolbar={{
-                    left: 'addRoom, addReservation, today, prev, next',
-                            center: 'title',
-                            right: 'resourceTimelineMonth, resourceTimelineWeek',
+                        left: 'addRoom addReservation today prev next',
+                        center: 'title',
+                        right: 'resourceTimelineMonth resourceTimelineWeek',
                     }}
                     customButtons={{
-                    addRoom: {
-                        text: 'Add room',    
-                    },
-                    addReservation: {
-                        text: 'Add reservation',
-                    },
+                        addRoom: {
+                            text: 'Add room',
+                            click: () => {
+                                this.setState({ showAddRoom: true })
+                                console.log(this.state);
+                            },
+                        },
+                        addReservation: {
+                            text: 'Add reservation',
+                            click: () => {
+                                this.setState({ showAddReservation: true });
+                            }
+                        },
                     }}
                     resourceAreaWidth={'10%'}
-                    resources={[
-                        {
-                          id: 'a',
-                          title: 'Room A'
-                        },
-                        {
-                          id: 'b',
-                          title: 'Room B'
-                        }
-                      ]}
-      />
+                    resources={"http://localhost/wp-json/joeee-booking/v1/room"}
+                />
             </div>
         );
     }
