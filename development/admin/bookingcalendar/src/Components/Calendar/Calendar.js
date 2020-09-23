@@ -45,7 +45,7 @@ class Calendar extends React.Component {
                         },
                     }}
                     resourceAreaWidth={'10%'}
-                    resources={"http://localhost/wp-json/joeee-booking/v1/room"}
+                    resources={this.props.rest_url + "room"}
                 />
             </div>
         );
