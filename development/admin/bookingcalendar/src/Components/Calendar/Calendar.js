@@ -2,7 +2,8 @@ import React from 'react';
 import FullCalendar from '@fullcalendar/react';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import calendarInteraction from '@fullcalendar/interaction';
-import axios from 'axios';
+import AddRoom from './Forms/AddRoom';
+
 
 class Calendar extends React.Component {
 
@@ -47,6 +48,8 @@ class Calendar extends React.Component {
                     resourceAreaWidth={'10%'}
                     resources={this.props.rest_url + "room"}
                 />
+
+                <AddRoom show = {this.state.showAddRoom}></AddRoom>
             </div>
         );
     }
