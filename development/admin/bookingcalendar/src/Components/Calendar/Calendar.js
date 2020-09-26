@@ -12,6 +12,10 @@ class Calendar extends React.Component {
         showAddReservation: false,
     };
 
+    closeRoomAddHandler = () => {
+        this.setState({ showAddRoom: false });
+    }
+
 
     render() {
         return (
@@ -49,7 +53,7 @@ class Calendar extends React.Component {
                     resources={this.props.rest_url + "room"}
                 />
 
-                <AddRoom show = {this.state.showAddRoom}></AddRoom>
+                <AddRoom show={this.state.showAddRoom} translate='translateY(-100vh)' closeRoomAddHandler={this.closeRoomAddHandler}></AddRoom>
             </div>
         );
     }
