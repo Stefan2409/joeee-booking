@@ -215,7 +215,7 @@ if (!class_exists(RestController::class)) {
                 array(
                     'methods' => WP_REST_Server::CREATABLE,
                     'callback' => array($this, 'createRoom'),
-                    'permission_callback' => array($this, 'checkUsersPermissionAdmin'),
+                    // 'permission_callback' => array($this, 'checkUsersPermissionAdmin'),
                     'args' => array(
                         'id' => array(
                             'type' => 'number',
