@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from '../../UI/Modal/Modal';
 import { removeEmptyFields } from '../../Helpers/removeEmptyFields';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from "yup";
+import axios from "axios";
 
 
 const schema = yup.object().shape({
@@ -25,12 +26,23 @@ const schema = yup.object().shape({
     country: yup.number(),
 });
 
+
+
 const AddReservation = (props) => {
     const { register, handleSubmit, reset, errors } = useForm({ resolver: yupResolver(schema) });
+    const [countries, setCountries] = useState({});
+
+    useEffect(() => {
+        axios.get(props.url + "country")
+            .then((data) => {
+                setCountries(data.data);
+            })
+    });
 
     const onSubmit = (data) => {
         data = removeEmptyFields(data);
         console.log(data);
+        console.log(countries);
     }
 
     const resetForm = (e) => {
@@ -66,8 +78,9 @@ const AddReservation = (props) => {
                     <p>{errors.last_name?.message}</p>
                     <label htmlFor="joeee-booking-reservation-nationality">Nationality</label>
                     <select id="joeee-booking-reservation-nationality" name="nationality" ref={register}>
-                        <option value="1">Austria</option>
-                        <option value="2">Germany</option>
+                        {countries.map((iso, country) => {
+                            return (<option value={iso}>{country}</option>)
+                        })}
                     </select>
                     <p>{errors.nationality?.message}</p>
                 </div>
