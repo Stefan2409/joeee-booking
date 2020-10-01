@@ -6,6 +6,7 @@ use Joeee_Booking\Core\Extras as Extras;
 use Joeee_Booking\Core\Reservation as Reservation;
 use Joeee_Booking\Core\Room as Room;
 use Joeee_Booking\Core\User as User;
+use Joeee_Booking\Core\InternationalizationI18n as Internationalization;
 use \WP_Error;
 use \WP_REST_Controller;
 use \WP_REST_Server;
@@ -38,6 +39,17 @@ if (!class_exists(RestController::class)) {
          */
         public function registerRoutes()
         {
+            /**
+             * Registers countries i18n route 
+             */
+
+             register_rest_route($this->namespace, '/country', array(
+                array(
+                    'methods' => WP_REST_Server::READABLE,
+                    'callback' => array($this, 'getCountryList'),
+                    'args' => array(),
+                ),
+            ));
             /**
              * Registers users specific routes.
              */
@@ -577,6 +589,14 @@ if (!class_exists(RestController::class)) {
                     ),
                 ),
             ));
+        }
+
+        /**
+         * i18n Country list
+         */
+        public function getCountryList() {
+            $international = new Internationalization;
+            return $international->countries();
         }
 
         /**
