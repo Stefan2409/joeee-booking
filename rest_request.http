@@ -1,15 +1,14 @@
-POST http://localhost/wp-json/joeee-booking/v1/user HTTP/1.1
+POST http://localhost/wp-json/joeee-booking/v1/room HTTP/1.1
 content-type: application/json
 
 {
-    "email": "happi@pepi.com",
-    "first_name": "Sepp",
-    "last_name": "Moser",
-    "gender": 1,
-    "birthday": "1984-02-02 12:00:00",
-    "nationality": 1,
-    "street": "",
-    "zip": "",
-    "city": "",
-    "country": 1
+    "active": true,
+    "adults": 1,
+    "description": "1",
+​    "floor": 1,
+    "image_url": "",
+    "kids": 1,
+    "number": "1",
+    "price": 1,
+    "single_room_supplement": 1,
 }

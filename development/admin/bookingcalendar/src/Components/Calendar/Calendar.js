@@ -3,7 +3,6 @@ import FullCalendar from '@fullcalendar/react';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import calendarInteraction from '@fullcalendar/interaction';
 import AddRoom from './Forms/AddRoom';
-import addReservation from './Forms/AddReservation';
 import AddReservation from './Forms/AddReservation';
 
 
@@ -13,6 +12,8 @@ class Calendar extends React.Component {
         showAddRoom: false,
         showAddReservation: false,
     };
+
+    calendarRef = React.createRef();
 
     closeRoomAddHandler = () => {
         this.setState({ showAddRoom: false });
@@ -27,6 +28,7 @@ class Calendar extends React.Component {
         return (
             <div>
                 <FullCalendar
+                    ref={this.calendarRef}
                     schedulerLicenseKey="GPL-My-Project-Is-Open-Source"
                     plugins={[calendarInteraction, resourceTimelinePlugin]}
                     aspectRatio={1.5}
@@ -45,7 +47,6 @@ class Calendar extends React.Component {
                             text: 'Add room',
                             click: () => {
                                 this.setState({ showAddRoom: true })
-                                console.log(this.state);
                             },
                         },
                         addReservation: {
@@ -60,9 +61,10 @@ class Calendar extends React.Component {
                     resourceClick={console.log("Test")}
                 />
 
-                <AddRoom 
-                    show={this.state.showAddRoom} 
-                    translate='translateY(-100vh)' 
+                <AddRoom
+                    calendar={this.calendarRef}
+                    show={this.state.showAddRoom}
+                    translate='translateY(-100vh)'
                     closeRoomAddHandler={this.closeRoomAddHandler}
                     url={this.props.rest_url}>
                 </AddRoom>

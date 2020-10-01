@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Modal from '../../UI/Modal/Modal';
+import { removeEmptyFields } from '../../Helpers/removeEmptyFields';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from "yup";
@@ -18,24 +19,45 @@ const schema = yup.object().shape({
 });
 
 const AddRoom = (props) => {
-    const { register, handleSubmit, reset, errors } = useForm({resolver: yupResolver(schema)});
+    const { register, handleSubmit, reset, errors } = useForm({ resolver: yupResolver(schema) });
+    const [info, setInfo] = useState("");
+    const [infoColor, setInfoColor] = useState("green");
+    const [showInfo, setShowInfo] = useState("hidden");
+
     const onSubmit = (data) => {
+        data = removeEmptyFields(data);
+        let calendarApi = props.calendar.current.getApi();
         console.log(data);
         axios.post(props.url + "room", data)
-            .then(function(response) {
+            .then(function (response) {
                 console.log(response);
-                reset();
+                setInfo("Successfully saved the room.")
+                setInfoColor("green");
+                setShowInfo("visible");
+                calendarApi.refetchResources();
+                setTimeout(() => {
+                    reset();
+                    setShowInfo("hidden");
+                    props.closeRoomAddHandler();
+                }, 2000);
+
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error);
+                setInfo(error.response.data.message);
+                setInfoColor("red");
+                setShowInfo("visible");
             })
     };
 
-    const resetForm = () => {
+    const resetForm = (e) => {
+        e.preventDefault();
+        reset();
         props.closeRoomAddHandler();
     }
     return (
         <Modal show={props.show} translate={props.translate} modalClosed={props.closeRoomAddHandler}>
+            <h2>Add Room</h2>
             <form>
                 <input type="hidden" name="id" />
                 <label htmlFor="joeee-booking-roomnumber">Room Number</label>
@@ -65,6 +87,8 @@ const AddRoom = (props) => {
                 <label htmlFor="joeee-booking-roomactive">Active</label>
                 <input id="joeee-booking-roomactive" type="checkbox" placeholder="Active" name="active" ref={register} />
                 <p>{errors.active?.message}</p>
+
+                <p style={{ visibility: showInfo, color: infoColor }}>{info}</p>
 
                 <button onClick={handleSubmit(onSubmit)}>Submit</button>
                 <button onClick={resetForm}>Cancel</button>

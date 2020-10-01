@@ -126,7 +126,7 @@ if (!class_exists(Room::class)) {
                 $check_room_number = $wpdb->prepare("SELECT id FROM $this->room_table WHERE number = '%s'", $filtered['number']);
                 $room_number_exists = $wpdb->get_row($check_room_number, ARRAY_A);
                 if (isset($room_number_exists)) {
-                    return new WP_Error('joeee_booking_room_error', esc_html__('The room number already exists!', 'joeee-booking'));
+                    return new WP_Error('joeee_booking_room_error', esc_html__('The room number already exists!', 'joeee-booking'), array('status' => 404));
                 }
                 unset($filtered['id']);
                 $wpdb->insert($this->room_table, $filtered);
