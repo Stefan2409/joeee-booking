@@ -15,7 +15,7 @@ const schema = yup.object().shape({
     email: yup.string().email(),
     first_name: yup.string(),
     last_name: yup.string(),
-    nationality: yup.number().integer(),
+    nationality: yup.string().max(2),
     confirmation: yup.number().integer().positive(),
     gender: yup.number().integer(),
     birth: yup.date(),
@@ -23,14 +23,14 @@ const schema = yup.object().shape({
     street: yup.string(),
     zip: yup.string(),
     city: yup.string(),
-    country: yup.number(),
+    country: yup.string().max(2),
 });
 
 
 
 const AddReservation = (props) => {
     const { register, handleSubmit, reset, errors } = useForm({ resolver: yupResolver(schema) });
-    const [countries, setCountries] = useState({});
+    const [countries, setCountries] = useState({ "AT": "Austria" });
 
     useEffect(() => {
         axios.get(props.url + "country")
@@ -78,8 +78,8 @@ const AddReservation = (props) => {
                     <p>{errors.last_name?.message}</p>
                     <label htmlFor="joeee-booking-reservation-nationality">Nationality</label>
                     <select id="joeee-booking-reservation-nationality" name="nationality" ref={register}>
-                        {countries.map((iso, country) => {
-                            return (<option value={iso}>{country}</option>)
+                        {Object.keys(countries).map((key, index) => {
+                            return (<option value={key}>{countries[key]}</option>)
                         })}
                     </select>
                     <p>{errors.nationality?.message}</p>
@@ -116,9 +116,9 @@ const AddReservation = (props) => {
                     <p>{errors.city?.message}</p>
                     <label htmlFor="joeee-booking-reservation-country">Country</label>
                     <select id="joeee-booking-reservation-country" name="country" ref={register}>
-                        <option value="1">Austria</option>
-                        <option value="2">Germany</option>
-                        <option value="3">Belarus</option>
+                        {Object.keys(countries).map((key, index) => {
+                            return (<option value={key}>{countries[key]}</option>)
+                        })}
                     </select>
 
                     <button onClick={handleSubmit(onSubmit)}>Submit</button>
