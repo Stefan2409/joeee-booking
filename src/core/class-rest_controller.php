@@ -3,10 +3,10 @@
 namespace Joeee_Booking;
 
 use Joeee_Booking\Core\Extras as Extras;
+use Joeee_Booking\Core\InternationalizationI18n as Internationalization;
 use Joeee_Booking\Core\Reservation as Reservation;
 use Joeee_Booking\Core\Room as Room;
 use Joeee_Booking\Core\User as User;
-use Joeee_Booking\Core\InternationalizationI18n as Internationalization;
 use \WP_Error;
 use \WP_REST_Controller;
 use \WP_REST_Server;
@@ -40,10 +40,10 @@ if (!class_exists(RestController::class)) {
         public function registerRoutes()
         {
             /**
-             * Registers countries i18n route 
+             * Registers countries i18n route
              */
 
-             register_rest_route($this->namespace, '/country', array(
+            register_rest_route($this->namespace, '/country', array(
                 array(
                     'methods' => WP_REST_Server::READABLE,
                     'callback' => array($this, 'getCountryList'),
@@ -79,7 +79,8 @@ if (!class_exists(RestController::class)) {
                             'format' => 'date-time',
                         ),
                         'nationality' => array(
-                            'type' => 'number',
+                            'type' => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
                         ),
                         'tin' => array(
                             'type' => 'string',
@@ -98,7 +99,8 @@ if (!class_exists(RestController::class)) {
                             'sanitize_callback' => 'sanitize_text_field',
                         ),
                         'country' => array(
-                            'type' => 'number',
+                            'type' => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
                         ),
 
                     ),
@@ -107,7 +109,7 @@ if (!class_exists(RestController::class)) {
                     'methods' => WP_REST_Server::READABLE,
                     'callback' => array($this, 'getUsers'),
                     'args' => array(),
-                )
+                ),
             ));
 
             register_rest_route($this->namespace, '/user/(?P<id>[\d]+)', array(
@@ -141,7 +143,8 @@ if (!class_exists(RestController::class)) {
                             'format' => 'date-time',
                         ),
                         'nationality' => array(
-                            'type' => 'number',
+                            'type' => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
                         ),
                         'tin' => array(
                             'type' => 'string',
@@ -160,7 +163,8 @@ if (!class_exists(RestController::class)) {
                             'sanitize_callback' => 'sanitize_text_field',
                         ),
                         'country' => array(
-                            'type' => 'number',
+                            'type' => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
                         ),
 
                     ),
@@ -176,45 +180,45 @@ if (!class_exists(RestController::class)) {
                             },
                         ),
                     ),
-                )
+                ),
             ));
 
             register_rest_route($this->namespace, '/user/email', array(
                 array(
-                    'methods'   => 'POST',
-                    'callback'  => array($this, 'getUserEmails'),
-                    'args'      => array(
+                    'methods' => 'POST',
+                    'callback' => array($this, 'getUserEmails'),
+                    'args' => array(
                         'term' => array(
-                            'type'                  => 'string',
-                            'sanitize_callback'     => 'sanitize_text_field',
-                            'required'              => true,
+                            'type' => 'string',
+                            'sanitize_callback' => 'sanitize_text_field',
+                            'required' => true,
                         ),
                     ),
                 ),
             ));
 
             register_rest_route($this->namespace, '/user/byemail', array(
-                'methods'   => 'POST',
-                'callback'  => array($this, 'getUserByEmail'),
-                'args'      => array(
-                    'email'     => array(
-                        'type'      => 'string',
-                        'format'    => 'email',
+                'methods' => 'POST',
+                'callback' => array($this, 'getUserByEmail'),
+                'args' => array(
+                    'email' => array(
+                        'type' => 'string',
+                        'format' => 'email',
                     ),
-                )
+                ),
             ));
 
             register_rest_route($this->namespace, 'user/login', array(
-                'methods'   => 'POST',
-                'callback'  => array($this, 'userLogin'),
-                'args'      => array(
+                'methods' => 'POST',
+                'callback' => array($this, 'userLogin'),
+                'args' => array(
                     'user_login' => array(
-                        'type'  => 'string',
-                        'required'  => true,
+                        'type' => 'string',
+                        'required' => true,
                     ),
                     'user_password' => array(
-                        'type'          => 'string',
-                        'required'      => true,
+                        'type' => 'string',
+                        'required' => true,
                     ),
                 ),
                 'show_in_index' => false,
@@ -253,7 +257,7 @@ if (!class_exists(RestController::class)) {
                             'required' => true,
                         ),
                         'single_room_supplement' => array(
-                            'type'  => 'number',
+                            'type' => 'number',
                             'required' => true,
                         ),
                         'description' => array(
@@ -271,7 +275,7 @@ if (!class_exists(RestController::class)) {
                     'methods' => WP_REST_Server::READABLE,
                     'callback' => array($this, 'getRooms'),
                     'args' => array(),
-                )
+                ),
             ));
 
             register_rest_route($this->namespace, '/room/(?P<id>[\d]+)', array(
@@ -406,7 +410,7 @@ if (!class_exists(RestController::class)) {
                     'methods' => WP_REST_Server::READABLE,
                     'callback' => array($this, 'getReservationForLoggedInUser'),
                     'args' => array(),
-                )
+                ),
             ));
 
             register_rest_route($this->namespace, '/reservation/(?P<id>[\d]+)', array(
@@ -506,17 +510,17 @@ if (!class_exists(RestController::class)) {
                     'callback' => array($this, 'createExtras'),
                     'args' => array(
                         'title' => array(
-                            'type'      => 'string',
-                            'required'  => true,
+                            'type' => 'string',
+                            'required' => true,
                             'sanitize_callback' => 'sanitize_text_field',
                         ),
                         'price' => array(
-                            'type'      => 'number',
-                            'required'  => true,
+                            'type' => 'number',
+                            'required' => true,
                         ),
                         'bookable' => array(
-                            'type'      => 'boolean',
-                            'required'  => true,
+                            'type' => 'boolean',
+                            'required' => true,
                         ),
                     ),
                 ),
@@ -534,9 +538,9 @@ if (!class_exists(RestController::class)) {
                     ),
                 ),
                 array(
-                    'methods'   => WP_REST_Server::DELETABLE,
-                    'callback'  => array($this, 'deleteExtra'),
-                    'args'      => array(
+                    'methods' => WP_REST_Server::DELETABLE,
+                    'callback' => array($this, 'deleteExtra'),
+                    'args' => array(
                         'id' => array(
                             'type' => 'number',
                             'required' => true,
@@ -544,22 +548,22 @@ if (!class_exists(RestController::class)) {
                     ),
                 ),
                 array(
-                    'methods'   => WP_REST_Server::EDITABLE,
-                    'callback'  => array($this, 'editExtra'),
-                    'args'      => array(
-                        'id'        => array(
-                            'type'      => 'number',
-                            'required'  => true,
+                    'methods' => WP_REST_Server::EDITABLE,
+                    'callback' => array($this, 'editExtra'),
+                    'args' => array(
+                        'id' => array(
+                            'type' => 'number',
+                            'required' => true,
                         ),
-                        'title'     => array(
-                            'type'      => 'string',
+                        'title' => array(
+                            'type' => 'string',
                             'sanitize_callback' => 'sanitize_text_field',
                         ),
-                        'price'     => array(
-                            'type'      => 'number',
+                        'price' => array(
+                            'type' => 'number',
                         ),
-                        'bookable'  => array(
-                            'type'      => 'boolean',
+                        'bookable' => array(
+                            'type' => 'boolean',
                         ),
                     ),
                 ),
@@ -594,7 +598,8 @@ if (!class_exists(RestController::class)) {
         /**
          * i18n Country list
          */
-        public function getCountryList() {
+        public function getCountryList()
+        {
             $international = new Internationalization;
             return $international->countries();
         }

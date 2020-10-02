@@ -29,8 +29,10 @@ const schema = yup.object().shape({
 
 
 const AddReservation = (props) => {
-    const { register, handleSubmit, reset, errors } = useForm({ resolver: yupResolver(schema) });
+    const { register, handleSubmit, watch, reset, errors } = useForm({ resolver: yupResolver(schema) });
+    const watchDate = watch(['arrival', 'departure']);
     const [countries, setCountries] = useState({ "AT": "Austria" });
+
 
     useEffect(() => {
         axios.get(props.url + "country")
@@ -39,15 +41,49 @@ const AddReservation = (props) => {
             })
     });
 
+    const create_userdata = (data) => {
+        let userdata = {};
+        userdata.email = data.email;
+        userdata.first_name = data.first_name;
+        userdata.last_name = data.last_name;
+        userdata.gender = parseInt(data.gender);
+        userdata.birthday = data.birth;
+        userdata.nationality = data.nationality;
+        userdata.tin = data.tin;
+        userdata.street = data.street;
+        userdata.zip = data.zip;
+        userdata.city = data.city;
+        userdata.country = data.country;
+
+        return userdata;
+    }
+
     const onSubmit = (data) => {
         data = removeEmptyFields(data);
         console.log(data);
-        console.log(countries);
+        let userdata = create_userdata(data);
+        userdata = removeEmptyFields(userdata);
+
+        axios.post(props.url + 'user', userdata)
+            .then((data) => {
+                console.log(data);
+
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
     }
 
     const resetForm = (e) => {
         e.preventDefault();
         reset();
+    }
+
+    const handleKeyPress = () => {
+
+        console.log('enter');
+        console.log(watchDate);
     }
 
     return (
@@ -59,7 +95,8 @@ const AddReservation = (props) => {
                     <input id="joeee-booking-reservation-arrival" type="date" placeholder="Arrival" name="arrival" ref={register} />
                     <p>{errors.arrival?.message}</p>
                     <label htmlFor="joeee-booking-reservation-departure">Departure</label>
-                    <input id="joeee-booking-reservation-departure" type="date" placeholder="Departure" name="departure" ref={register} />
+                    <input id="joeee-booking-reservation-departure" type="date" placeholder="Departure" name="departure" ref={register}
+                        onChange={handleKeyPress} />
                     <p>{errors.departure?.message}</p>
                     <label htmlFor="joeee-booking-reservation-adults">Adults</label>
                     <input id="joeee-booking-reservation-adults" type="number" placeholder="Adults" name="adults" ref={register} />
@@ -79,7 +116,7 @@ const AddReservation = (props) => {
                     <label htmlFor="joeee-booking-reservation-nationality">Nationality</label>
                     <select id="joeee-booking-reservation-nationality" name="nationality" ref={register}>
                         {Object.keys(countries).map((key, index) => {
-                            return (<option value={key}>{countries[key]}</option>)
+                            return (<option value={key} key={key}>{countries[key]}</option>)
                         })}
                     </select>
                     <p>{errors.nationality?.message}</p>
@@ -117,9 +154,10 @@ const AddReservation = (props) => {
                     <label htmlFor="joeee-booking-reservation-country">Country</label>
                     <select id="joeee-booking-reservation-country" name="country" ref={register}>
                         {Object.keys(countries).map((key, index) => {
-                            return (<option value={key}>{countries[key]}</option>)
+                            return (<option value={key} key={key}>{countries[key]}</option>)
                         })}
                     </select>
+
 
                     <button onClick={handleSubmit(onSubmit)}>Submit</button>
                     <button onClick={resetForm}>Cancel</button>

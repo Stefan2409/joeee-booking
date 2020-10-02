@@ -153,7 +153,7 @@ if (!class_exists(User::class)) {
                     "state_id" => $country,
                 );
 
-                $address_fields = array('%d', '%s', '%s', '%s', '%s', '%d');
+                $address_fields = array('%d', '%s', '%s', '%s', '%s', '%s');
 
                 $address_created = $wpdb->insert($this->table_address, $create_address, $address_fields);
 
@@ -173,7 +173,7 @@ if (!class_exists(User::class)) {
                     "nationality_id" => $nationality,
                 );
 
-                $person_fields = array('%d', '%s', '%s', '%d', '%d', '%s', '%d');
+                $person_fields = array('%d', '%s', '%s', '%d', '%d', '%s', '%s');
 
                 $person_created = $wpdb->insert($this->table_person, $create_person, $person_fields);
 
@@ -289,7 +289,7 @@ if (!class_exists(User::class)) {
                 "city" => $data['city'],
                 "state_id" => $data['country'],
             );
-            $address_fields = array('%s', '%s', '%s', '%s', '%d');
+            $address_fields = array('%s', '%s', '%s', '%s', '%s');
 
             $update_person = array(
                 "first_name" => $data['first_name'],
@@ -299,7 +299,7 @@ if (!class_exists(User::class)) {
                 "nationality_id" => $data['nationality'],
             );
 
-            $person_fields = array('%s', '%s', '%d', '%s', '%d');
+            $person_fields = array('%s', '%s', '%d', '%s', '%s');
 
             $address_return = $wpdb->update($this->table_address, $update_address, $address, $address_fields, array('%d'));
             if ($address_return === false) {
