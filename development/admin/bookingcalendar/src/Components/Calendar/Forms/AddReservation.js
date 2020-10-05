@@ -9,7 +9,7 @@ import axios from "axios";
 
 const schema = yup.object().shape({
     arrival: yup.string().required(),
-    departure: yup.date().required(),
+    departure: yup.string().required(),
     adults: yup.number().integer().min(1).required(),
     kids: yup.number().integer(),
     email: yup.string().email(),
@@ -31,14 +31,22 @@ const schema = yup.object().shape({
 const AddReservation = (props) => {
     const { register, handleSubmit, watch, reset, errors } = useForm({ resolver: yupResolver(schema) });
     const watchDate = watch(['arrival', 'departure']);
+    const [roomAvailable, setRoomAvailable] = useState([]);
     const [countries, setCountries] = useState({ "AT": "Austria" });
+    const [info, setInfo] = useState("");
+    const [infoColor, setInfoColor] = useState("green");
+    const [showInfo, setShowInfo] = useState("hidden");
 
 
     useEffect(() => {
-        axios.get(props.url + "country")
-            .then((data) => {
-                setCountries(data.data);
-            })
+        // We need to check the length otherwise the get request gets triggered infinite times
+        if (Object.keys(countries).length === 1) {
+            axios.get(props.url + "country")
+                .then((data) => {
+                    setCountries(data.data);
+                })
+        }
+
     });
 
     const create_userdata = (data) => {
@@ -58,19 +66,71 @@ const AddReservation = (props) => {
         return userdata;
     }
 
+    const createReservationData = (data) => {
+        let reservationData = {};
+        if (typeof data.room !== 'undefined') {
+            reservationData.room_id = data.room.filter(Boolean);
+        }
+        else {
+            console.log("You have to select a room!");
+            return false;
+        }
+
+        reservationData.booked_from = data.arrival + "T12:00:00";
+        reservationData.booked_to = data.departure + "T12:00:00";
+        reservationData.adults = data.adults;
+        reservationData.kids = data.kids;
+        reservationData.confirmation = parseInt(data.confirmation);
+        return reservationData;
+    }
+
+    const createReservation = (reservationData) => {
+        axios.post(props.url + 'reservation', reservationData)
+            .then((data) => {
+                setRoomAvailable([]);
+                setInfo("Successfully saved the reservation.")
+                setInfoColor("green");
+                setShowInfo("visible");
+                setTimeout(() => {
+                    reset();
+                    setShowInfo("hidden");
+                    props.closeReservationAddHandler();
+                }, 1500);
+            })
+            .catch((error) => {
+                setInfo("Error by saving the reservation!")
+                setInfoColor("red");
+                setShowInfo("visible");
+                setTimeout(() => {
+                    setShowInfo("hidden");
+                }, 2000);
+            })
+    }
+
     const onSubmit = (data) => {
         data = removeEmptyFields(data);
-        console.log(data);
         let userdata = create_userdata(data);
         userdata = removeEmptyFields(userdata);
+        let reservationData = createReservationData(data);
+        if (!reservationData) {
+            return;
+        }
+        console.log(reservationData);
 
         axios.post(props.url + 'user', userdata)
             .then((data) => {
-                console.log(data);
+                reservationData.person_id = data.data.id;
+                createReservation(reservationData);
 
             })
             .catch((error) => {
-                console.log(error);
+                setInfo("Error by creating the user.")
+                setInfoColor("red");
+                setShowInfo("visible");
+
+                setTimeout(() => {
+                    setShowInfo("hidden");
+                }, 1500);
             });
 
     }
@@ -78,12 +138,25 @@ const AddReservation = (props) => {
     const resetForm = (e) => {
         e.preventDefault();
         reset();
+        setRoomAvailable([]);
+        props.closeReservationAddHandler();
     }
 
     const handleKeyPress = () => {
+        if ((watchDate.arrival.length !== 10) && (watchDate.departure.length !== 10)) {
+            return;
+        }
+        let checkAvailability = {};
 
-        console.log('enter');
-        console.log(watchDate);
+        checkAvailability.from = watchDate.arrival + " 12:01:00";
+        checkAvailability.to = watchDate.departure + " 11:59:00";
+        axios.post(props.url + 'room/availability', checkAvailability)
+            .then((rooms) => {
+                setRoomAvailable(rooms.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
     return (
@@ -124,8 +197,8 @@ const AddReservation = (props) => {
                 <div>
                     <label htmlFor="joeee-booking-reservation-confirmation">Confirmation Status</label>
                     <select id="joeee-booking-reservation-confirmation" name="confirmation" ref={register}>
-                        <option value="1">Pending</option>
-                        <option value="2">Confirmed</option>
+                        <option value="2">Pending</option>
+                        <option value="1">Confirmed</option>
                         <option value="3">Denied</option>
                     </select>
                     <p>{errors.confirmation?.message}</p>
@@ -157,6 +230,15 @@ const AddReservation = (props) => {
                             return (<option value={key} key={key}>{countries[key]}</option>)
                         })}
                     </select>
+                    {roomAvailable.map((room, index) => {
+                        return (
+                            <div key={room.id}>
+                                <label htmlFor={'joeee-booking-reservation-room-' + room.id}>Room {room.number}</label>
+                                <input type="checkbox" key={room.id} value={room.id} id={'joeee-booking-reservation-room-' + room.id} name={"room[" + index + "]"} ref={register} />
+                            </div>
+                        )
+                    })}
+                    <p style={{ visibility: showInfo, color: infoColor }}>{info}</p>
 
 
                     <button onClick={handleSubmit(onSubmit)}>Submit</button>

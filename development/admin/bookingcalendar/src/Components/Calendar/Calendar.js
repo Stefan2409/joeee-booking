@@ -56,6 +56,7 @@ class Calendar extends React.Component {
                             }
                         },
                     }}
+                    events={this.props.rest_url + "reservation"}
                     resourceAreaWidth={'10%'}
                     resources={this.props.rest_url + "room"}
                     resourceClick={console.log("Test")}

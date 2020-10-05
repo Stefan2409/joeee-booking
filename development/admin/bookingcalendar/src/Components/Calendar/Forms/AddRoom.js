@@ -39,7 +39,7 @@ const AddRoom = (props) => {
                     reset();
                     setShowInfo("hidden");
                     props.closeRoomAddHandler();
-                }, 2000);
+                }, 1500);
 
             })
             .catch(function (error) {
