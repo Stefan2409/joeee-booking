@@ -85,12 +85,15 @@ const AddReservation = (props) => {
     }
 
     const createReservation = (reservationData) => {
+        let calendarApi = props.calendar.current.getApi();
         axios.post(props.url + 'reservation', reservationData)
             .then((data) => {
+                
                 setRoomAvailable([]);
                 setInfo("Successfully saved the reservation.")
                 setInfoColor("green");
                 setShowInfo("visible");
+                calendarApi.refetchEvents();
                 setTimeout(() => {
                     reset();
                     setShowInfo("hidden");
@@ -99,6 +102,7 @@ const AddReservation = (props) => {
             })
             .catch((error) => {
                 setInfo("Error by saving the reservation!")
+                console.log(error);
                 setInfoColor("red");
                 setShowInfo("visible");
                 setTimeout(() => {
@@ -125,6 +129,7 @@ const AddReservation = (props) => {
             })
             .catch((error) => {
                 setInfo("Error by creating the user.")
+                console.log(error);
                 setInfoColor("red");
                 setShowInfo("visible");
 

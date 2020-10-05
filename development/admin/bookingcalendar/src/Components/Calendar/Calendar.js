@@ -23,6 +23,10 @@ class Calendar extends React.Component {
         this.setState({ showAddReservation: false });
     }
 
+    handleEventClick = (clickInfo) => {
+        console.log(clickInfo.event.title);
+    }
+
 
     render() {
         return (
@@ -57,6 +61,7 @@ class Calendar extends React.Component {
                         },
                     }}
                     events={this.props.rest_url + "reservation"}
+                    eventClick={this.handleEventClick}
                     resourceAreaWidth={'10%'}
                     resources={this.props.rest_url + "room"}
                     resourceClick={console.log("Test")}
@@ -73,7 +78,8 @@ class Calendar extends React.Component {
                     show={this.state.showAddReservation}
                     translate='translatey(-100vh)'
                     closeReservationAddHandler={this.closeReservationAddHandler}
-                    url={this.props.rest_url}>
+                    url={this.props.rest_url}
+                    calendar={this.calendarRef}>
 
                 </AddReservation>
             </div>
