@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import Modal from '../../UI/Modal/Modal';
+import DateFnsUtils from '@date-io/date-fns';
 import { removeEmptyFields } from '../../Helpers/removeEmptyFields';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from "yup";
 import axios from "axios";
-
+import {Dialog, DialogTitle, DialogContent, DialogActions, Grid, InputLabel, Select, TextField} from '@material-ui/core';
+import {DatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
 
 const schema = yup.object().shape({
     arrival: yup.string().required(),
@@ -36,6 +37,9 @@ const AddReservation = (props) => {
     const [info, setInfo] = useState("");
     const [infoColor, setInfoColor] = useState("green");
     const [showInfo, setShowInfo] = useState("hidden");
+    const [arrivalDate, handleArrivalDate] = useState(new Date());
+    const [departureDate, handleDepartureDate] = useState(new Date());
+    const [birthDate, handleBirthDate] = useState(new Date());
 
 
     useEffect(() => {
@@ -147,7 +151,9 @@ const AddReservation = (props) => {
         props.closeReservationAddHandler();
     }
 
-    const handleKeyPress = () => {
+    const handleKeyPress = (date) => {
+        handleDepartureDate(date);
+        console.log(departureDate.toDateString);
         if ((watchDate.arrival.length !== 10) && (watchDate.departure.length !== 10)) {
             return;
         }
@@ -162,79 +168,100 @@ const AddReservation = (props) => {
             .catch((err) => {
                 console.log(err);
             });
+        
     }
 
     return (
-        <Modal show={props.show} translate={props.translate} modalClosed={props.closeReservationAddHandler}>
-            <h2>Add Reservation</h2>
-            <form>
-                <div>
-                    <label htmlFor="joeee-booking-reservation-arrival">Arrival</label>
-                    <input id="joeee-booking-reservation-arrival" type="date" placeholder="Arrival" name="arrival" ref={register} />
+        <Dialog open={props.show} onClose={props.closeReservationAddHandler} maxWidth="lg" fullWidth area-labelledby="joeee-booking-reservation-form-title">
+            <DialogTitle id="joeee-booking-reservation-form-title" >Add Reservation</DialogTitle>
+            <DialogContent>
+                <Grid container>
+            <form onSubmit={onSubmit}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid item xs={12} sm={6}>
+                        <DatePicker value={arrivalDate} label="Arrival" name="arrival" onChange={handleArrivalDate} inputRef={register}/>
                     <p>{errors.arrival?.message}</p>
-                    <label htmlFor="joeee-booking-reservation-departure">Departure</label>
-                    <input id="joeee-booking-reservation-departure" type="date" placeholder="Departure" name="departure" ref={register}
-                        onChange={handleKeyPress} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                    <DatePicker value={departureDate} label="Departure" name="departure" onChange={handleKeyPress} inputRef={register}/>
                     <p>{errors.departure?.message}</p>
-                    <label htmlFor="joeee-booking-reservation-adults">Adults</label>
-                    <input id="joeee-booking-reservation-adults" type="number" placeholder="Adults" name="adults" ref={register} />
+                    </Grid>
+                    
+                    <Grid item xs={12} sm={6}>
+                    <TextField label="Adults" type="number" variant="outlined" name="adults" fullWidth inputRef={register} />
                     <p>{errors.adults?.message}</p>
-                    <label htmlFor="joeee-booking-reservation-kids">Kids</label>
-                    <input id="joeee-booking-reservation-kids" type="number" placeholder="Kids" name="kids" ref={register} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                    <TextField label="Kids" type="number" variant="outlined" name="kids" fullWidth inputRef={register} />
                     <p>{errors.kids?.message}</p>
-                    <label htmlFor="joeee-booking-reservation-email">E-Mail</label>
-                    <input id="joeee-booking-reservation-email" type="email" placeholder="E-Mail" name="email" ref={register} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                    <TextField label="E-Mail" type="email" variant="outlined" name="email" inputRef={register} />
                     <p>{errors.email?.message}</p>
-                    <label htmlFor="joeee-booking-reservation-firstname">First Name</label>
-                    <input id="joeee-booking-reservation-firstname" type="text" placeholder="First Name" name="first_name" ref={register} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                    <TextField label="First Name" type="text" variant="outlined" name="first_name" inputRef={register} />
                     <p>{errors.first_name?.message}</p>
-                    <label htmlFor="joeee-booking-reservation-lastname">Last Name</label>
-                    <input id="joeee-booking-reservation-lastname" type="text" placeholder="Last Name" name="last_name" ref={register} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                    <TextField label="Last Name" type="text" variant="outlined" name="last_name" inputRef={register} />
                     <p>{errors.last_name?.message}</p>
-                    <label htmlFor="joeee-booking-reservation-nationality">Nationality</label>
-                    <select id="joeee-booking-reservation-nationality" name="nationality" ref={register}>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                    <InputLabel id="joeee-booking-reservation-nationality">Nationality</InputLabel>
+                    <Select labelId="joeee-booking-reservation-nationality" variant="outlined" name="nationality" fullWidth ref={register}>
                         {Object.keys(countries).map((key, index) => {
                             return (<option value={key} key={key}>{countries[key]}</option>)
                         })}
-                    </select>
+                    </Select>
                     <p>{errors.nationality?.message}</p>
-                </div>
-                <div>
-                    <label htmlFor="joeee-booking-reservation-confirmation">Confirmation Status</label>
-                    <select id="joeee-booking-reservation-confirmation" name="confirmation" ref={register}>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                    <InputLabel id="joeee-booking-reservation-confirmation">Confirmation Status</InputLabel>
+                    <Select labelId="joeee-booking-reservation-confirmation" variant="outlined" fullWidth name="confirmation" ref={register}>
                         <option value="2">Pending</option>
                         <option value="1">Confirmed</option>
                         <option value="3">Denied</option>
-                    </select>
+                    </Select>
                     <p>{errors.confirmation?.message}</p>
-                    <label htmlFor="joeee-booking-reservation-gender">Gender</label>
-                    <select id="joeee-booking-reservation-gender" name="gender" ref={register}>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                    <InputLabel id="joeee-booking-reservation-gender">Gender</InputLabel>
+                    <Select labelId="joeee-booking-reservation-gender" variant="outlined" fullWidth name="gender" ref={register}>
                         <option value="1">Male</option>
                         <option value="2">Female</option>
                         <option value="3">Other</option>
-                    </select>
+                    </Select>
                     <p>{errors.gender?.message}</p>
-                    <label htmlFor="joeee-booking-reservation-birth">Date of Birth</label>
-                    <input id="joeee-booking-reservation-birth" type="date" placeholder="Date of Birth" name="birth" ref={register} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                    <DatePicker label="Date of Birth" value={birthDate} onChange={handleBirthDate} variant="outlined" name="birth" inputRef={register} />
                     <p>{errors.birth?.message}</p>
-                    <label htmlFor="joeee-booking-reservation-tin">TIN</label>
-                    <input id="joeee-booking-reservation-tin" type="text" placeholder="TIN" name="tin" ref={register} />
+                    </Grid>
+                    </MuiPickersUtilsProvider>
+                    <Grid item xs={12} sm={6}>
+                    <TextField label="TIN" type="text" variant="outlined" name="tin" inputRef={register} />
                     <p>{errors.tin?.message}</p>
-                    <label htmlFor="joeee-booking-reservation-street">Street/House Nr.:</label>
-                    <input id="joeee-booking-reservation-street" type="text" placeholder="Street/House Nr." name="street" ref={register} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                    <TextField label="Street/House Nr.:" type="text" variant="outlined" name="street" inputRef={register} />
                     <p>{errors.street?.message}</p>
-                    <label htmlFor="joeee-booking-reservation-zip">ZIP</label>
-                    <input id="joeee-booking-reservation-zip" type="text" placeholder="ZIP" name="zip" ref={register} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                    <TextField label="ZIP" type="text" variant="outlined" name="zip" inputRef={register} />
                     <p>{errors.zip?.message}</p>
-                    <label htmlFor="joeee-booking-reservation-city">City</label>
-                    <input id="joeee-booking-reservation-city" type="text" placeholder="City" name="city" ref={register} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                    <TextField label="City" type="text" variant="outlined" name="city" inputRef={register} />
                     <p>{errors.city?.message}</p>
-                    <label htmlFor="joeee-booking-reservation-country">Country</label>
-                    <select id="joeee-booking-reservation-country" name="country" ref={register}>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                    <InputLabel id="joeee-booking-reservation-country">Country</InputLabel>
+                    <Select labelId="joeee-booking-reservation-country" variant="outlined" fullWidth name="country" ref={register}>
                         {Object.keys(countries).map((key, index) => {
                             return (<option value={key} key={key}>{countries[key]}</option>)
                         })}
-                    </select>
+                    </Select>
                     {roomAvailable.map((room, index) => {
                         return (
                             <div key={room.id}>
@@ -244,13 +271,17 @@ const AddReservation = (props) => {
                         )
                     })}
                     <p style={{ visibility: showInfo, color: infoColor }}>{info}</p>
+                    </Grid>
 
-
+                    <Grid item xs={12} sm={6}>
                     <button onClick={handleSubmit(onSubmit)}>Submit</button>
                     <button onClick={resetForm}>Cancel</button>
-                </div>
+                    </Grid>
+                    
             </form>
-        </Modal>
+            </Grid>
+            </DialogContent>
+        </Dialog>
     );
 }
 
