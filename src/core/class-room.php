@@ -226,6 +226,10 @@ if (!class_exists(Room::class)) {
             global $wpdb;
             $booked_from = $data['from'];
             $booked_to = $data['to'];
+            if ($booked_to <= $booked_from) {
+                return [];
+            }
+
             if (isset($data['persons'])) {
                 $persons = $data['persons'];
             }
