@@ -33,6 +33,12 @@ class Calendar extends React.Component {
         this.setState({ showAddReservation: true });
     }
 
+    handleResourceClick = (arg) => {
+        arg.el.addEventListener("click", () => {
+            console.log(arg);
+        });
+    }
+
 
     render() {
         return (
@@ -69,14 +75,14 @@ class Calendar extends React.Component {
                     }}
                     events={this.props.rest_url + "reservation"}
                     eventClick={this.handleEventClick}
-                    resourceAreaWidth={'10%'}
+                    resourceAreaWidth={'12%'}
                     resources={this.props.rest_url + "room"}
                     resourceClick={console.log("Test")}
                     resourceOrder="title"
                     resourceAreaColumns={[
                         {
                             field: 'title',
-                            headerContent: 'Room Number'
+                            headerContent: 'Room #'
                         },
                         {
                             field: 'adults',
@@ -86,6 +92,7 @@ class Calendar extends React.Component {
                             field: 'kids',
                             headerContent: 'Kids'
                         }]}
+                    resourceLabelDidMount={this.handleResourceClick}
                 />
 
                 <AddRoom

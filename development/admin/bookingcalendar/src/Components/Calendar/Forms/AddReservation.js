@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from "yup";
 import axios from "axios";
-import { Button, ButtonGroup, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, FormControlLabel, FormGroup, Grid, InputLabel, Select, Switch, TextField, FormControl } from '@material-ui/core';
+import { Button, ButtonGroup, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, FormControlLabel, FormGroup, Grid, TextField, FormControl } from '@material-ui/core';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import ReactHookFormSelect from '../../Helpers/ReactHookFormSelect';
 
@@ -32,7 +32,7 @@ const schema = yup.object().shape({
 
 
 const AddReservation = (props) => {
-    const { register, handleSubmit, watch, reset, errors, control } = useForm({ resolver: yupResolver(schema) });
+    const { register, handleSubmit, reset, errors, control } = useForm({ resolver: yupResolver(schema) });
     const [roomAvailable, setRoomAvailable] = useState([]);
     const [countries, setCountries] = useState({ "AT": "Austria" });
     const [info, setInfo] = useState("");
@@ -333,6 +333,7 @@ const AddReservation = (props) => {
                                         <FormControlLabel
                                             control={<Checkbox color="primary" value={room.id} key={room.id} name={"room[" + index + "]"} inputRef={register} />}
                                             label={room.number}
+                                            key={room.id}
                                         />
                                     )
                                 })}
