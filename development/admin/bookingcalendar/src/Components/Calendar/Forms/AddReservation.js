@@ -42,7 +42,6 @@ const AddReservation = (props) => {
     const [departureDate, setDepartureDate] = useState(addDays(new Date(), 2));
     const [birthDate, setBirthDate] = useState(new Date());
 
-
     useEffect(() => {
         // We need to check the length otherwise the get request gets triggered infinite times
         if (Object.keys(countries).length === 1) {
@@ -182,11 +181,15 @@ const AddReservation = (props) => {
         setBirthDate(date);
     }
 
+    const onModify = (data) => {
+        console.log(data);
+    }
+
     return (
         <Dialog open={props.show} onClose={props.closeReservationAddHandler} maxWidth="lg" fullWidth area-labelledby="joeee-booking-reservation-form-title">
             <DialogTitle id="joeee-booking-reservation-form-title" >Add Reservation</DialogTitle>
             <DialogContent>
-                <form onSubmit={onSubmit}>
+                <form onSubmit={props.addReservation ? onSubmit : onModify}>
                     <Grid container spacing={1}>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <Grid item xs={12} sm={6}>
@@ -341,10 +344,18 @@ const AddReservation = (props) => {
 
                         <Grid item xs={12}>
                             <FormControl>
-                                <ButtonGroup variant="contained">
-                                    <Button color="primary" onClick={handleSubmit(onSubmit)}>Submit</Button>
-                                    <Button color="secondary" onClick={resetForm}>Cancel</Button>
-                                </ButtonGroup>
+                                {props.addReservation && (
+                                    <ButtonGroup variant="contained">
+                                        <Button color="primary" onClick={handleSubmit(onSubmit)}>Submit</Button>
+                                        <Button color="secondary" onClick={resetForm}>Cancel</Button>
+                                    </ButtonGroup>
+                                )}
+                                {props.modifyReservation && (
+                                    <ButtonGroup variant="contained">
+                                        <Button color="primary" onClick={handleSubmit(onModify)}>Update</Button>
+                                        <Button color="secondary" onClick={resetForm}>Cancel</Button>
+                                    </ButtonGroup>
+                                )}
                             </FormControl>
                         </Grid>
                     </Grid>

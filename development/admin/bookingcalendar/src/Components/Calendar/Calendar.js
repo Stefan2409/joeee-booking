@@ -11,6 +11,8 @@ class Calendar extends React.Component {
     state = {
         showAddRoom: false,
         showAddReservation: false,
+        addReservation: false,
+        modifyReservation: false,
     };
 
     calendarRef = React.createRef();
@@ -21,10 +23,14 @@ class Calendar extends React.Component {
 
     closeReservationAddHandler = () => {
         this.setState({ showAddReservation: false });
+        this.setState({ modifyReservation: false });
+        this.setState({ addReservation: false });
     }
 
     handleEventClick = (clickInfo) => {
         console.log(clickInfo.event.title);
+        this.setState({ modifyReservation: true });
+        this.setState({ showAddReservation: true });
     }
 
 
@@ -56,6 +62,7 @@ class Calendar extends React.Component {
                         addReservation: {
                             text: 'Add reservation',
                             click: () => {
+                                this.setState({ addReservation: true });
                                 this.setState({ showAddReservation: true });
                             }
                         },
@@ -65,6 +72,20 @@ class Calendar extends React.Component {
                     resourceAreaWidth={'10%'}
                     resources={this.props.rest_url + "room"}
                     resourceClick={console.log("Test")}
+                    resourceOrder="title"
+                    resourceAreaColumns={[
+                        {
+                            field: 'title',
+                            headerContent: 'Room Number'
+                        },
+                        {
+                            field: 'adults',
+                            headerContent: 'Adults'
+                        },
+                        {
+                            field: 'kids',
+                            headerContent: 'Kids'
+                        }]}
                 />
 
                 <AddRoom
@@ -79,7 +100,9 @@ class Calendar extends React.Component {
                     translate='translatey(-100vh)'
                     closeReservationAddHandler={this.closeReservationAddHandler}
                     url={this.props.rest_url}
-                    calendar={this.calendarRef}>
+                    calendar={this.calendarRef}
+                    addReservation={this.state.addReservation}
+                    modifyReservation={this.state.modifyReservation}>
 
                 </AddReservation>
             </div>
