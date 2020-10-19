@@ -4,6 +4,7 @@ import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import calendarInteraction from '@fullcalendar/interaction';
 import AddRoom from './Forms/AddRoom';
 import AddReservation from './Forms/AddReservation';
+import axios from 'axios';
 
 
 class Calendar extends React.Component {
@@ -13,12 +14,18 @@ class Calendar extends React.Component {
         showAddReservation: false,
         addReservation: false,
         modifyReservation: false,
+        modifyRoom: false,
+        addRoom: false,
+        modifyRoomData: {},
     };
 
     calendarRef = React.createRef();
 
     closeRoomAddHandler = () => {
         this.setState({ showAddRoom: false });
+        this.setState({modifyRoomData: {}});
+        this.setState({addRoom: false});
+        this.setState({modifyRoom: false});
     }
 
     closeReservationAddHandler = () => {
@@ -35,7 +42,16 @@ class Calendar extends React.Component {
 
     handleResourceClick = (arg) => {
         arg.el.addEventListener("click", () => {
-            console.log(arg);
+            console.log(arg.resource.id);
+            axios.get(this.props.rest_url + 'room/' + arg.resource.id)
+                .then((roomInfo) => {
+                    console.log(roomInfo);
+                    this.setState({modifyRoomData: roomInfo.data});
+                    this.setState({modifyRoom: true});
+                    this.setState({showAddRoom: true});
+                }
+
+                );
         });
     }
 
@@ -62,7 +78,8 @@ class Calendar extends React.Component {
                         addRoom: {
                             text: 'Add room',
                             click: () => {
-                                this.setState({ showAddRoom: true })
+                                this.setState({ showAddRoom: true });
+                                this.setState({addRoom: true});
                             },
                         },
                         addReservation: {
@@ -77,7 +94,6 @@ class Calendar extends React.Component {
                     eventClick={this.handleEventClick}
                     resourceAreaWidth={'12%'}
                     resources={this.props.rest_url + "room"}
-                    resourceClick={console.log("Test")}
                     resourceOrder="title"
                     resourceAreaColumns={[
                         {
@@ -100,7 +116,10 @@ class Calendar extends React.Component {
                     show={this.state.showAddRoom}
                     translate='translateY(-100vh)'
                     closeRoomAddHandler={this.closeRoomAddHandler}
-                    url={this.props.rest_url}>
+                    url={this.props.rest_url}
+                    modifyRoomData={this.state.modifyRoomData}
+                    addRoom={this.state.addRoom}
+                    modifyRoom={this.state.modifyRoom}>
                 </AddRoom>
                 <AddReservation
                     show={this.state.showAddReservation}

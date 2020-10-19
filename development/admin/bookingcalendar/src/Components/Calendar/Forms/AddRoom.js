@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { removeEmptyFields } from '../../Helpers/removeEmptyFields';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
@@ -23,6 +23,10 @@ const AddRoom = (props) => {
     const [info, setInfo] = useState("");
     const [infoColor, setInfoColor] = useState("green");
     const [showInfo, setShowInfo] = useState("hidden");
+
+    useEffect(() => {
+        reset(props.modifyRoomData);
+    }, [props.modifyRoomData, reset]);
 
     const onSubmit = (data) => {
         data = removeEmptyFields(data);
@@ -49,6 +53,40 @@ const AddRoom = (props) => {
                 setShowInfo("visible");
             })
     };
+
+    const onModify = (data) => {
+        data = removeEmptyFields(data);
+        let calendarApi = props.calendar.current.getApi();
+        delete data.id;
+
+        console.log(data);
+        axios.post(props.url + "room/" + props.modifyRoomData.id, data)
+            .then(function (response) {
+                console.log(response);
+                setInfo("Successfully saved the room.")
+                setInfoColor("green");
+                setShowInfo("visible");
+                calendarApi.refetchResources();
+                setTimeout(() => {
+                    reset();
+                    setShowInfo("hidden");
+                    props.closeRoomAddHandler();
+                }, 1500);
+
+            })
+            .catch(function (error) {
+                console.log(error);
+                setInfo(error.response.data.message);
+                setInfoColor("red");
+                setShowInfo("visible");
+            })
+    };
+
+    const deleteRoom = (e) => {
+        e.preventDefault();
+        console.log(props.modifyRoomData.id);
+        console.log("Delete room clicked.");
+    }
 
     const resetForm = (e) => {
         e.preventDefault();
@@ -154,10 +192,21 @@ const AddRoom = (props) => {
                         </Grid>
                         <Grid item xs={12}>
                             <DialogActions>
-                                <ButtonGroup variant="contained">
-                                    <Button color="primary" onClick={handleSubmit(onSubmit)}>Submit</Button>
-                                    <Button color="secondary" onClick={resetForm}>Cancel</Button>
-                                </ButtonGroup>
+                                
+                                {props.modifyRoom && (
+                                    <ButtonGroup variant="contained">
+                                        <Button color="primary" onClick={handleSubmit(onModify)}>Save</Button>
+                                        <Button color="secondary" onClick={resetForm}>Cancel</Button>
+                                        <Button color="secondary" onClick={deleteRoom}>Delete Room</Button>
+                                    </ButtonGroup>
+                                )}
+                                {props.addRoom && (
+                                    <ButtonGroup variant="contained">
+                                        <Button color="primary" onClick={handleSubmit(onSubmit)}>Submit</Button>
+                                        <Button color="secondary" onClick={resetForm}>Cancel</Button>
+                                    </ButtonGroup>
+                                )}
+                               
                             </DialogActions>
                         </Grid>
                     </Grid>

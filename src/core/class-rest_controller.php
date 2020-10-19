@@ -282,7 +282,7 @@ if (!class_exists(RestController::class)) {
                 array(
                     'methods' => WP_REST_Server::EDITABLE,
                     'callback' => array($this, 'updateRoom'),
-                    'permission_callback' => array($this, 'checkUsersPermissionAdmin'),
+                    // 'permission_callback' => array($this, 'checkUsersPermissionAdmin'),
                     'args' => array(
                         'id' => array(
                             'type' => 'number',
