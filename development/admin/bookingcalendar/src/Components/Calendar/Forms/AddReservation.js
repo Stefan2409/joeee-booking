@@ -65,9 +65,11 @@ const AddReservation = (props) => {
             .catch((err) => {
                 console.log(err);
             });
-
-
     }, [arrivalDate, departureDate]);
+
+    useEffect(() => {
+        reset(props.modifyReservationData);
+    }, [props.modifyReservationData, reset]);
 
     const create_userdata = (data) => {
         let userdata = {};

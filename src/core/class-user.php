@@ -150,7 +150,7 @@ if (!class_exists(User::class)) {
                     "street" => $street,
                     "zip" => $zip,
                     "city" => $city,
-                    "state_id" => $country,
+                    "country" => $country,
                 );
 
                 $address_fields = array('%d', '%s', '%s', '%s', '%s', '%s');
@@ -170,7 +170,7 @@ if (!class_exists(User::class)) {
                     "gender" => $gender,
                     "address_id" => $address_id,
                     "birth" => $birthday,
-                    "nationality_id" => $nationality,
+                    "nationality" => $nationality,
                 );
 
                 $person_fields = array('%d', '%s', '%s', '%d', '%d', '%s', '%s');
@@ -195,10 +195,9 @@ if (!class_exists(User::class)) {
         {
             global $wpdb;
 
-            $sql = "SELECT person.user_id, user.user_email, person.first_name, person.last_name, gender, birth, nationality_id, tin, street, zip, city, state_id FROM $this->table_person person
+            $sql = "SELECT person.user_id, user.user_email, person.first_name, person.last_name, gender, birth, nationality, tin, street, zip, city, country FROM $this->table_person person
             LEFT JOIN $this->table_users user ON person.user_id = user.ID
-            LEFT JOIN $this->table_address address ON person.address_id = address.id
-            LEFT JOIN $this->table_country country ON address.state_id = country.id";
+            LEFT JOIN $this->table_address address ON person.address_id = address.id";
             $result = $wpdb->get_results($sql);
 
             return $result;
@@ -208,10 +207,9 @@ if (!class_exists(User::class)) {
         {
             global $wpdb;
 
-            $sql = "SELECT person.user_id, user.user_email, person.first_name, person.last_name, gender, birth, nationality_id, tin, street, zip, city, state_id FROM $this->table_person person
+            $sql = "SELECT person.user_id, user.user_email, person.first_name, person.last_name, gender, birth, nationality, tin, street, zip, city, country FROM $this->table_person person
             LEFT JOIN $this->table_users user ON person.user_id = user.ID
             LEFT JOIN $this->table_address address ON person.address_id = address.id
-            LEFT JOIN $this->table_country country ON address.state_id = country.id
             WHERE person.id = $person_id";
             $result = $wpdb->get_results($sql);
 
@@ -287,7 +285,7 @@ if (!class_exists(User::class)) {
                 "street" => $data['street'],
                 "zip" => $data['zip'],
                 "city" => $data['city'],
-                "state_id" => $data['country'],
+                "country" => $data['country'],
             );
             $address_fields = array('%s', '%s', '%s', '%s', '%s');
 
@@ -296,7 +294,7 @@ if (!class_exists(User::class)) {
                 "last_name" => $data['last_name'],
                 "gender" => $data['gender'],
                 "birth" => $data['birthday'],
-                "nationality_id" => $data['nationality'],
+                "nationality" => $data['nationality'],
             );
 
             $person_fields = array('%s', '%s', '%d', '%s', '%s');

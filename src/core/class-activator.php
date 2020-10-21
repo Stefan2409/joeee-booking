@@ -50,7 +50,7 @@ if (!class_exists(Activator::class)) {
 				gender boolean,
 				address_id int(10),
 				birth date,
-				nationality_id varchar(2),
+				nationality varchar(2),
 				CONSTRAINT person_foreign PRIMARY KEY  (id),
 				FOREIGN KEY  (user_id) REFERENCES $table_users (id),
 				FOREIGN KEY  (address_id) REFERENCES $table_address (id)
@@ -63,7 +63,7 @@ if (!class_exists(Activator::class)) {
 				street varchar(255),
 				zip varchar(255),
 				city varchar(255),
-				state_id varchar(2),
+				country varchar(2),
 				PRIMARY KEY  (id)
 				) $charset_collate;";
 

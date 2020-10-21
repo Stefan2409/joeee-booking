@@ -59,13 +59,13 @@ if (!class_exists(Reservation::class)) {
             $new_user_data['first_name'] = "Guest";
             $new_user_data['last_name'] = $booker['last_name'];
             $new_user_data['birthday'] = null;
-            $new_user_data['nationality'] = $booker['nationality_id'];
+            $new_user_data['nationality'] = $booker['nationality'];
             $new_user_data['tin'] = null;
             $new_user_data['street'] = "";
             $new_user_data['zip'] = "";
             $new_user_data['city'] = "";
             $new_user_data['gender'] = 1;
-            $new_user_data['country'] = $booker['nationality_id'];
+            $new_user_data['country'] = $booker['nationality'];
             $new_user_data['email'] = "";
             $User = new User();
             for ($i = 0; $i < $number_persons - 1; $i++) {
@@ -253,7 +253,7 @@ if (!class_exists(Reservation::class)) {
 
                     $booker = array();
                     $booker['last_name'] = $booker_object->last_name;
-                    $booker['nationality_id'] = $booker_object->nationality_id;
+                    $booker['nationality'] = $booker_object->nationality;
 
                     $fellow_persons_new = $persons - $persons_old;
 
@@ -408,7 +408,7 @@ if (!class_exists(Reservation::class)) {
         public function getRoomReservation($reservation_id, $room_id)
         {
             global $wpdb;
-            $sql = "SELECT p.id, u.user_email, p.first_name, p.last_name, p.gender, p.birth, p.nationality_id, a.tin, a.street, a.zip, a.city, a.state_id, rb.room_id, rb.reservation_id, rb.booked_from, rb.booked_to, r.confirmation, r.adults, r.kids FROM $this->table_reservation r
+            $sql = "SELECT p.id, u.user_email, p.first_name, p.last_name, p.gender, p.birth, p.nationality, a.tin, a.street, a.zip, a.city, a.country, rb.room_id, rb.reservation_id, rb.booked_from, rb.booked_to, r.confirmation, r.adults, r.kids FROM $this->table_reservation r
             JOIN $this->table_room_booked rb on rb.reservation_id = r.id
             JOIN $this->table_person p on p.id = r.person_id
             JOIN $this->table_address a on a.id = p.id
@@ -424,13 +424,16 @@ if (!class_exists(Reservation::class)) {
             if (isset($extras)) {
                 $query_result['extras'] = $extras;
             }
+            $query_result[0]['arrival'] = str_replace(" 12:00:00", "", $query_result[0]['booked_from']);
+            $query_result[0]['departure'] = str_replace(" 12:00:00", "", $query_result[0]['booked_to']);
+            $query_result[0]['email'] = $query_result[0]['user_email'];
             return $query_result;
         }
 
         public function getReservation($id)
         {
             global $wpdb;
-            $sql = "SELECT p.id, u.user_email, p.first_name, p.last_name, p.gender, p.birth, p.nationality_id, a.tin, a.street, a.zip, a.city, a.state_id, rb.room_id, rb.reservation_id, rb.booked_from, rb.booked_to FROM $this->table_reservation r
+            $sql = "SELECT p.id, u.user_email, p.first_name, p.last_name, p.gender, p.birth, p.nationality, a.tin, a.street, a.zip, a.city, a.country, rb.room_id, rb.reservation_id, rb.booked_from, rb.booked_to FROM $this->table_reservation r
             JOIN $this->table_room_booked rb on rb.reservation_id = r.id
             JOIN $this->table_person p on p.id = r.person_id
             JOIN $this->table_address a on a.id = p.id

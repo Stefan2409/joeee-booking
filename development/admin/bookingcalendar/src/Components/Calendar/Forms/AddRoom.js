@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { removeEmptyFields } from '../../Helpers/removeEmptyFields';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from "yup";
 import axios from "axios";
@@ -19,16 +19,21 @@ const schema = yup.object().shape({
 });
 
 const AddRoom = (props) => {
-    const { register, handleSubmit, reset, errors } = useForm({ resolver: yupResolver(schema) });
+    const { register, handleSubmit, reset, errors, control } = useForm({ resolver: yupResolver(schema) });
     const [info, setInfo] = useState("");
     const [infoColor, setInfoColor] = useState("green");
     const [showInfo, setShowInfo] = useState("hidden");
 
     useEffect(() => {
-        reset(props.modifyRoomData);
+        let data = props.modifyRoomData;
+        if (data.active === "0") {
+            delete data.active;
+        }
+        reset(data);
     }, [props.modifyRoomData, reset]);
 
     const onSubmit = (data) => {
+        console.log(data);
         data = removeEmptyFields(data);
         let calendarApi = props.calendar.current.getApi();
         console.log(data);
@@ -182,9 +187,22 @@ const AddRoom = (props) => {
                                 inputRef={register} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <FormControlLabel
-                                control={<Switch name="active" inputRef={register} color="primary" />}
-                                label="Active"
+                            <Controller
+                                name="active"
+                                control={control}
+                                defaultValue={false}
+                                render={(props) => (
+                                    <FormControlLabel
+                                        control={<Switch
+                                            name="active"
+                                            color="primary"
+                                            onChange={(e) => props.onChange(e.target.checked)}
+                                            checked={props.value} />}
+                                        label="Active"
+
+                                    />
+
+                                )}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -192,7 +210,7 @@ const AddRoom = (props) => {
                         </Grid>
                         <Grid item xs={12}>
                             <DialogActions>
-                                
+
                                 {props.modifyRoom && (
                                     <ButtonGroup variant="contained">
                                         <Button color="primary" onClick={handleSubmit(onModify)}>Save</Button>
@@ -202,11 +220,11 @@ const AddRoom = (props) => {
                                 )}
                                 {props.addRoom && (
                                     <ButtonGroup variant="contained">
-                                        <Button color="primary" onClick={handleSubmit(onSubmit)}>Submit</Button>
+                                        <Button color="primary" onClick={handleSubmit(onSubmit)}>Save</Button>
                                         <Button color="secondary" onClick={resetForm}>Cancel</Button>
                                     </ButtonGroup>
                                 )}
-                               
+
                             </DialogActions>
                         </Grid>
                     </Grid>

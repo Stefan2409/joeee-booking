@@ -17,15 +17,17 @@ class Calendar extends React.Component {
         modifyRoom: false,
         addRoom: false,
         modifyRoomData: {},
+        activeChecked: false,
+        modifyReservationData: {},
     };
 
     calendarRef = React.createRef();
 
     closeRoomAddHandler = () => {
         this.setState({ showAddRoom: false });
-        this.setState({modifyRoomData: {}});
-        this.setState({addRoom: false});
-        this.setState({modifyRoom: false});
+        this.setState({ modifyRoomData: {} });
+        this.setState({ addRoom: false });
+        this.setState({ modifyRoom: false });
     }
 
     closeReservationAddHandler = () => {
@@ -35,9 +37,19 @@ class Calendar extends React.Component {
     }
 
     handleEventClick = (clickInfo) => {
-        console.log(clickInfo.event.title);
-        this.setState({ modifyReservation: true });
-        this.setState({ showAddReservation: true });
+        let getReservationData = {};
+        getReservationData.id = clickInfo.event.id;
+        getReservationData.room_id = clickInfo.event._def.resourceIds;
+        axios.post(this.props.rest_url + 'reservation/room', getReservationData)
+            .then((reservationData) => {
+                console.log(reservationData.data[0]);
+                this.setState({ modifyReservationData: reservationData.data[0] });
+                this.setState({ modifyReservation: true });
+                this.setState({ showAddReservation: true });
+            })
+            .catch((error) => {
+                console.log(error)
+            });
     }
 
     handleResourceClick = (arg) => {
@@ -45,10 +57,17 @@ class Calendar extends React.Component {
             console.log(arg.resource.id);
             axios.get(this.props.rest_url + 'room/' + arg.resource.id)
                 .then((roomInfo) => {
-                    console.log(roomInfo);
-                    this.setState({modifyRoomData: roomInfo.data});
-                    this.setState({modifyRoom: true});
-                    this.setState({showAddRoom: true});
+                    console.log(roomInfo.data);
+                    if (roomInfo.data.active === "1") {
+                        this.setState({ activeChecked: true });
+                    }
+                    else {
+                        this.setState({ activeChecked: false });
+                    }
+
+                    this.setState({ modifyRoomData: roomInfo.data });
+                    this.setState({ modifyRoom: true });
+                    this.setState({ showAddRoom: true });
                 }
 
                 );
@@ -66,20 +85,27 @@ class Calendar extends React.Component {
                     aspectRatio={1.5}
                     slotDuration={'12:00'}
                     scrollTime={'00:00'}
-                    initialView={'resourceTimelineMonth'}
+                    initialView={'resourceTimelineThirtyDays'}
+                    views={{
+                        resourceTimelineThirtyDays: {
+                            type: 'resourceTimeline',
+                            duration: { days: 30 },
+                            buttonText: '30 days'
+                        }
+                    }}
                     selectable={true}
                     editable={true}
                     headerToolbar={{
                         left: 'addRoom addReservation today prev next',
                         center: 'title',
-                        right: 'resourceTimelineMonth resourceTimelineWeek',
+                        right: 'resourceTimelineThirtyDays resourceTimelineMonth resourceTimelineWeek',
                     }}
                     customButtons={{
                         addRoom: {
                             text: 'Add room',
                             click: () => {
                                 this.setState({ showAddRoom: true });
-                                this.setState({addRoom: true});
+                                this.setState({ addRoom: true });
                             },
                         },
                         addReservation: {
@@ -119,7 +145,9 @@ class Calendar extends React.Component {
                     url={this.props.rest_url}
                     modifyRoomData={this.state.modifyRoomData}
                     addRoom={this.state.addRoom}
-                    modifyRoom={this.state.modifyRoom}>
+                    modifyRoom={this.state.modifyRoom}
+                //activeChecked={this.state.activeChecked}
+                >
                 </AddRoom>
                 <AddReservation
                     show={this.state.showAddReservation}
@@ -128,7 +156,8 @@ class Calendar extends React.Component {
                     url={this.props.rest_url}
                     calendar={this.calendarRef}
                     addReservation={this.state.addReservation}
-                    modifyReservation={this.state.modifyReservation}>
+                    modifyReservation={this.state.modifyReservation}
+                    modifyReservationData={this.state.modifyReservationData}>
 
                 </AddReservation>
             </div>
