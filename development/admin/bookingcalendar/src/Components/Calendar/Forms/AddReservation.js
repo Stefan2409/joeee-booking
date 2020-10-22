@@ -187,6 +187,10 @@ const AddReservation = (props) => {
         console.log(data);
     }
 
+    const deleteReservation = () => {
+        console.log("Delete Button clicked.");
+    }
+
     return (
         <Dialog open={props.show} onClose={props.closeReservationAddHandler} maxWidth="lg" fullWidth area-labelledby="joeee-booking-reservation-form-title">
             <DialogTitle id="joeee-booking-reservation-form-title" >Add Reservation</DialogTitle>
@@ -418,6 +422,7 @@ const AddReservation = (props) => {
                                     <ButtonGroup variant="contained">
                                         <Button color="primary" onClick={handleSubmit(onModify)}>Update</Button>
                                         <Button color="secondary" onClick={resetForm}>Cancel</Button>
+                                        <Button color="secondary" onClick={deleteReservation}>Delete Reservation</Button>
                                     </ButtonGroup>
                                 )}
                             </FormControl>
