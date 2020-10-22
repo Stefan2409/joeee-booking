@@ -34,6 +34,7 @@ class Calendar extends React.Component {
         this.setState({ showAddReservation: false });
         this.setState({ modifyReservation: false });
         this.setState({ addReservation: false });
+        this.setState({ modifyReservationData: {}});
     }
 
     handleEventClick = (clickInfo) => {

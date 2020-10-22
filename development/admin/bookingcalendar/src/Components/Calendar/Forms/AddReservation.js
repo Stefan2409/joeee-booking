@@ -11,13 +11,13 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import ReactHookFormSelect from '../../Helpers/ReactHookFormSelect';
 
 const schema = yup.object().shape({
-    arrival: yup.string().required(),
-    departure: yup.string().required(),
-    adults: yup.number().integer().min(1).required(),
+    arrival: yup.string().required('Please enter an arrival date!'),
+    departure: yup.string().required('Please enter a departure date!'),
+    adults: yup.number().integer().min(1).required('Please enter the number of adults!'),
     kids: yup.number().integer(),
     email: yup.string().email(),
     first_name: yup.string(),
-    last_name: yup.string(),
+    last_name: yup.string().required('Please enter a last name for the booker!'),
     nationality: yup.string().max(2),
     confirmation: yup.number().integer().positive(),
     gender: yup.number().integer(),
@@ -202,10 +202,10 @@ const AddReservation = (props) => {
                                     label="Arrival"
                                     minDate={addDays(new Date(), 1)}
                                     name="arrival"
-                                    disablePast
+                                    error={errors.arrival ? true : false}
+                                    helperText={errors.arrival?.message}
                                     onChange={handleArrivalDate}
                                     inputRef={register} />
-                                <p>{errors.arrival?.message}</p>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <DatePicker
@@ -215,30 +215,65 @@ const AddReservation = (props) => {
                                     label="Departure"
                                     minDate={addDays(new Date(), 2)}
                                     name="departure"
-                                    disablePast
+                                    error={errors.departure ? true : false}
+                                    helperText={errors.departure?.message}
                                     onChange={handleDepartureDate}
                                     inputRef={register} />
-                                <p>{errors.departure?.message}</p>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField label="Adults" type="number" variant="outlined" name="adults" fullWidth inputRef={register} />
-                                <p>{errors.adults?.message}</p>
+                                <TextField 
+                                    label="Adults" 
+                                    type="number" 
+                                    variant="outlined" 
+                                    name="adults"
+                                    error={errors.adults ? true : false}
+                                    helperText={errors.adults?.message} 
+                                    fullWidth 
+                                    inputRef={register} />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField label="Kids" type="number" variant="outlined" name="kids" fullWidth inputRef={register} />
-                                <p>{errors.kids?.message}</p>
+                                <TextField 
+                                    label="Kids" 
+                                    type="number" 
+                                    variant="outlined" 
+                                    name="kids"
+                                    error={errors.kids ? true : false}
+                                    helperText={errors.kids?.message} 
+                                    fullWidth 
+                                    inputRef={register} />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField label="E-Mail" type="email" variant="outlined" name="email" fullWidth inputRef={register} />
-                                <p>{errors.email?.message}</p>
+                                <TextField 
+                                    label="E-Mail" 
+                                    type="email" 
+                                    variant="outlined" 
+                                    name="email"
+                                    error={errors.email ? true : false}
+                                    helperText={errors.email?.message} 
+                                    fullWidth 
+                                    inputRef={register} />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField label="First Name" type="text" variant="outlined" name="first_name" fullWidth inputRef={register} />
-                                <p>{errors.first_name?.message}</p>
+                                <TextField 
+                                    label="First Name" 
+                                    type="text" 
+                                    variant="outlined" 
+                                    name="first_name"
+                                    error={errors.first_name ? true : false}
+                                    helperText={errors.first_name?.message} 
+                                    fullWidth 
+                                    inputRef={register} />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField label="Last Name" type="text" variant="outlined" name="last_name" fullWidth inputRef={register} />
-                                <p>{errors.last_name?.message}</p>
+                                <TextField 
+                                    label="Last Name" 
+                                    type="text" 
+                                    variant="outlined" 
+                                    name="last_name"
+                                    error={errors.last_name ? true : false}
+                                    helperText={errors.last_name?.message} 
+                                    fullWidth 
+                                    inputRef={register} />
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <ReactHookFormSelect
@@ -253,7 +288,6 @@ const AddReservation = (props) => {
                                         return (<option value={key} key={key}>{countries[key]}</option>)
                                     })}
                                 </ReactHookFormSelect>
-                                <p>{errors.nationality?.message}</p>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <ReactHookFormSelect
@@ -268,7 +302,6 @@ const AddReservation = (props) => {
                                     <option value="1">Confirmed</option>
                                     <option value="3">Denied</option>
                                 </ReactHookFormSelect>
-                                <p>{errors.confirmation?.message}</p>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <ReactHookFormSelect
@@ -283,7 +316,6 @@ const AddReservation = (props) => {
                                     <option value="2">Female</option>
                                     <option value="3">Other</option>
                                 </ReactHookFormSelect>
-                                <p>{errors.gender?.message}</p>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <DatePicker
@@ -294,25 +326,54 @@ const AddReservation = (props) => {
                                     disableFuture
                                     variant="outlined"
                                     name="birth"
+                                    error={errors.birth ? true : false}
+                                    helperText={errors.birth?.message}
                                     inputRef={register} />
-                                <p>{errors.birth?.message}</p>
                             </Grid>
                         </MuiPickersUtilsProvider>
                         <Grid item xs={12} sm={6}>
-                            <TextField label="TIN" type="text" variant="outlined" name="tin" fullWidth inputRef={register} />
-                            <p>{errors.tin?.message}</p>
+                            <TextField 
+                                label="TIN" 
+                                type="text" 
+                                variant="outlined" 
+                                name="tin"
+                                error={errors.tin ? true : false}
+                                helperText={errors.tin?.message} 
+                                fullWidth 
+                                inputRef={register} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <TextField label="Street/House Nr.:" type="text" variant="outlined" name="street" fullWidth inputRef={register} />
-                            <p>{errors.street?.message}</p>
+                            <TextField 
+                                label="Street/House Nr.:" 
+                                type="text" 
+                                variant="outlined" 
+                                name="street"
+                                error={errors.street ? true : false}
+                                helperText={errors.street?.message} 
+                                fullWidth 
+                                inputRef={register} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <TextField label="ZIP" type="text" variant="outlined" name="zip" fullWidth inputRef={register} />
-                            <p>{errors.zip?.message}</p>
+                            <TextField 
+                                label="ZIP" 
+                                type="text" 
+                                variant="outlined" 
+                                name="zip"
+                                error={errors.zip ? true : false}
+                                helperText={errors.zip?.message} 
+                                fullWidth 
+                                inputRef={register} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <TextField label="City" type="text" variant="outlined" name="city" fullWidth inputRef={register} />
-                            <p>{errors.city?.message}</p>
+                            <TextField 
+                                label="City" 
+                                type="text" 
+                                variant="outlined" 
+                                name="city"
+                                error={errors.city ? true : false}
+                                helperText={errors.city?.message} 
+                                fullWidth 
+                                inputRef={register} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <ReactHookFormSelect
