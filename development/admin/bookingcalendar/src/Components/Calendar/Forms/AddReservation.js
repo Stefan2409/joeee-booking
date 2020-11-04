@@ -9,6 +9,7 @@ import axios from "axios";
 import { Button, ButtonGroup, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, FormControlLabel, FormGroup, Grid, TextField, FormControl } from '@material-ui/core';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import ReactHookFormSelect from '../../Helpers/ReactHookFormSelect';
+import AddRoomToReservationControllers from '../AddRoomToReservationControllers/AddRoomToReservationControllers';
 
 const schema = yup.object().shape({
     arrival: yup.string().required('Please enter an arrival date!'),
@@ -184,6 +185,7 @@ const AddReservation = (props) => {
     }
 
     const onModify = (data) => {
+
         console.log(data);
     }
 
@@ -225,58 +227,58 @@ const AddReservation = (props) => {
                                     inputRef={register} />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField 
-                                    label="Adults" 
-                                    type="number" 
-                                    variant="outlined" 
+                                <TextField
+                                    label="Adults"
+                                    type="number"
+                                    variant="outlined"
                                     name="adults"
                                     error={errors.adults ? true : false}
-                                    helperText={errors.adults?.message} 
-                                    fullWidth 
+                                    helperText={errors.adults?.message}
+                                    fullWidth
                                     inputRef={register} />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField 
-                                    label="Kids" 
-                                    type="number" 
-                                    variant="outlined" 
+                                <TextField
+                                    label="Kids"
+                                    type="number"
+                                    variant="outlined"
                                     name="kids"
                                     error={errors.kids ? true : false}
-                                    helperText={errors.kids?.message} 
-                                    fullWidth 
+                                    helperText={errors.kids?.message}
+                                    fullWidth
                                     inputRef={register} />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField 
-                                    label="E-Mail" 
-                                    type="email" 
-                                    variant="outlined" 
+                                <TextField
+                                    label="E-Mail"
+                                    type="email"
+                                    variant="outlined"
                                     name="email"
                                     error={errors.email ? true : false}
-                                    helperText={errors.email?.message} 
-                                    fullWidth 
+                                    helperText={errors.email?.message}
+                                    fullWidth
                                     inputRef={register} />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField 
-                                    label="First Name" 
-                                    type="text" 
-                                    variant="outlined" 
+                                <TextField
+                                    label="First Name"
+                                    type="text"
+                                    variant="outlined"
                                     name="first_name"
                                     error={errors.first_name ? true : false}
-                                    helperText={errors.first_name?.message} 
-                                    fullWidth 
+                                    helperText={errors.first_name?.message}
+                                    fullWidth
                                     inputRef={register} />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField 
-                                    label="Last Name" 
-                                    type="text" 
-                                    variant="outlined" 
+                                <TextField
+                                    label="Last Name"
+                                    type="text"
+                                    variant="outlined"
                                     name="last_name"
                                     error={errors.last_name ? true : false}
-                                    helperText={errors.last_name?.message} 
-                                    fullWidth 
+                                    helperText={errors.last_name?.message}
+                                    fullWidth
                                     inputRef={register} />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -336,47 +338,47 @@ const AddReservation = (props) => {
                             </Grid>
                         </MuiPickersUtilsProvider>
                         <Grid item xs={12} sm={6}>
-                            <TextField 
-                                label="TIN" 
-                                type="text" 
-                                variant="outlined" 
+                            <TextField
+                                label="TIN"
+                                type="text"
+                                variant="outlined"
                                 name="tin"
                                 error={errors.tin ? true : false}
-                                helperText={errors.tin?.message} 
-                                fullWidth 
+                                helperText={errors.tin?.message}
+                                fullWidth
                                 inputRef={register} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <TextField 
-                                label="Street/House Nr.:" 
-                                type="text" 
-                                variant="outlined" 
+                            <TextField
+                                label="Street/House Nr.:"
+                                type="text"
+                                variant="outlined"
                                 name="street"
                                 error={errors.street ? true : false}
-                                helperText={errors.street?.message} 
-                                fullWidth 
+                                helperText={errors.street?.message}
+                                fullWidth
                                 inputRef={register} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <TextField 
-                                label="ZIP" 
-                                type="text" 
-                                variant="outlined" 
+                            <TextField
+                                label="ZIP"
+                                type="text"
+                                variant="outlined"
                                 name="zip"
                                 error={errors.zip ? true : false}
-                                helperText={errors.zip?.message} 
-                                fullWidth 
+                                helperText={errors.zip?.message}
+                                fullWidth
                                 inputRef={register} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <TextField 
-                                label="City" 
-                                type="text" 
-                                variant="outlined" 
+                            <TextField
+                                label="City"
+                                type="text"
+                                variant="outlined"
                                 name="city"
                                 error={errors.city ? true : false}
-                                helperText={errors.city?.message} 
-                                fullWidth 
+                                helperText={errors.city?.message}
+                                fullWidth
                                 inputRef={register} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -394,7 +396,7 @@ const AddReservation = (props) => {
                             </ReactHookFormSelect>
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <FormGroup row>
+                            <FormGroup column>
                                 {roomAvailable.map((room, index) => {
                                     return (
                                         <FormControlLabel
@@ -404,7 +406,9 @@ const AddReservation = (props) => {
                                         />
                                     )
                                 })}
+                                <AddRoomToReservationControllers roomAvailable={roomAvailable} />
                             </FormGroup>
+
                         </Grid>
                         <p style={{ visibility: showInfo, color: infoColor }}>{info}</p>
 

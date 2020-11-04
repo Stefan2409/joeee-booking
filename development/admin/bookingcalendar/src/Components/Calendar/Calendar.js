@@ -2,6 +2,7 @@ import React from 'react';
 import FullCalendar from '@fullcalendar/react';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import calendarInteraction from '@fullcalendar/interaction';
+import './Calendar.css';
 import AddRoom from './Forms/AddRoom';
 import AddReservation from './Forms/AddReservation';
 import axios from 'axios';
@@ -34,7 +35,7 @@ class Calendar extends React.Component {
         this.setState({ showAddReservation: false });
         this.setState({ modifyReservation: false });
         this.setState({ addReservation: false });
-        this.setState({ modifyReservationData: {}});
+        this.setState({ modifyReservationData: {} });
     }
 
     handleEventClick = (clickInfo) => {
@@ -120,6 +121,7 @@ class Calendar extends React.Component {
                     events={this.props.rest_url + "reservation"}
                     eventClick={this.handleEventClick}
                     resourceAreaWidth={'12%'}
+                    resourceLabelClassNames={['joeee-booking-resource-label']}
                     resources={this.props.rest_url + "room"}
                     resourceOrder="title"
                     resourceAreaColumns={[

@@ -105,6 +105,8 @@ if (!class_exists(Activator::class)) {
 				reservation_id int(10) NOT NULL,
 				booked_from datetime NOT NULL,
 				booked_to datetime NOT NULL,
+				adults tinyint(3),
+				kids tinyint(3),
 				price float(10) NOT NULL,
 				CONSTRAINT booked_foreign PRIMARY KEY  (room_id, reservation_id),
 				FOREIGN KEY  (room_id) REFERENCES $table_room (id)
