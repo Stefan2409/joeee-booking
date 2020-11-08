@@ -386,7 +386,6 @@ if (!class_exists(RestController::class)) {
                         ),
                         'adults' => array(
                             'type' => 'number',
-                            'required' => true,
                         ),
                         'kids' => array(
                             'type' => 'number',
@@ -394,11 +393,11 @@ if (!class_exists(RestController::class)) {
                         'extras' => array(
                             'type' => 'object',
                         ),
-                        'room_id' => array(
+                        'room_data' => array(
                             'type' => 'array',
-                            'items' => array(
-                                'type' => 'number',
-                            ),
+                            // 'items' => array(
+                            //     'type' => 'number',
+                            // ),
                             'required' => true,
                         ),
                     ),

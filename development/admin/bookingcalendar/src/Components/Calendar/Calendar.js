@@ -20,6 +20,7 @@ class Calendar extends React.Component {
         modifyRoomData: {},
         activeChecked: false,
         modifyReservationData: {},
+        modifyBookedRoomsData: {},
     };
 
     calendarRef = React.createRef();
@@ -42,9 +43,16 @@ class Calendar extends React.Component {
         let getReservationData = {};
         getReservationData.id = clickInfo.event.id;
         getReservationData.room_id = clickInfo.event._def.resourceIds;
-        axios.post(this.props.rest_url + 'reservation/room', getReservationData)
+        axios.get(this.props.rest_url + 'reservation/' + getReservationData.id)
             .then((reservationData) => {
-                console.log(reservationData.data[0]);
+                console.log(reservationData);
+                let roomsBooked = {};
+                reservationData.data.map((data) => {
+                    console.log("Room: " + data.room_id + " Kids: " + data.kids + " Adults: " + data.adults);
+                    roomsBooked[data.room_id] = { adults: data.adults, kids: data.kids };
+                });
+                this.setState({ modifyBookedRoomsData: roomsBooked });
+                console.log(this.state.modifyBookedRoomsData);
                 this.setState({ modifyReservationData: reservationData.data[0] });
                 this.setState({ modifyReservation: true });
                 this.setState({ showAddReservation: true });
@@ -160,7 +168,8 @@ class Calendar extends React.Component {
                     calendar={this.calendarRef}
                     addReservation={this.state.addReservation}
                     modifyReservation={this.state.modifyReservation}
-                    modifyReservationData={this.state.modifyReservationData}>
+                    modifyReservationData={this.state.modifyReservationData}
+                    modifyBookedRoomsData={this.state.modifyBookedRoomsData}>
 
                 </AddReservation>
             </div>

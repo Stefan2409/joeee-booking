@@ -6,16 +6,14 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from "yup";
 import axios from "axios";
-import { Button, ButtonGroup, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, FormControlLabel, FormGroup, Grid, TextField, FormControl } from '@material-ui/core';
+import { Button, ButtonGroup, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, FormControlLabel, FormGroup, Grid, List, ListItem, ListSubheader, TextField, FormControl } from '@material-ui/core';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import ReactHookFormSelect from '../../Helpers/ReactHookFormSelect';
-import AddRoomToReservationControllers from '../AddRoomToReservationControllers/AddRoomToReservationControllers';
+
 
 const schema = yup.object().shape({
     arrival: yup.string().required('Please enter an arrival date!'),
     departure: yup.string().required('Please enter a departure date!'),
-    adults: yup.number().integer().min(1).required('Please enter the number of adults!'),
-    kids: yup.number().integer(),
     email: yup.string().email(),
     first_name: yup.string(),
     last_name: yup.string().required('Please enter a last name for the booker!'),
@@ -42,6 +40,8 @@ const AddReservation = (props) => {
     const [arrivalDate, setArrivalDate] = useState(addDays(new Date(), 1));
     const [departureDate, setDepartureDate] = useState(addDays(new Date(), 2));
     const [birthDate, setBirthDate] = useState(new Date());
+    const [loading, setLoading] = useState(false);
+    const [roomsBooked, setRoomsBooked] = useState([]);
 
     useEffect(() => {
         // We need to check the length otherwise the get request gets triggered infinite times
@@ -91,8 +91,20 @@ const AddReservation = (props) => {
 
     const createReservationData = (data) => {
         let reservationData = {};
-        if (typeof data.room !== 'undefined') {
-            reservationData.room_id = data.room.filter(Boolean);
+        let roomData = {};
+        if (typeof data.roomadults !== 'undefined') {
+            data.roomadults.forEach((number, room) => {
+                if (number !== "" || data.roomkids[room] !== "") {
+                    if (number === "") {
+                        number = 0;
+                    }
+                    if (data.roomkids[room] === "") {
+                        data.roomkids[room] = 0;
+                    }
+                    roomData[room] = { adults: parseInt(number), kids: parseInt(data.roomkids[room]) };
+                }
+            });
+            reservationData.room_data = roomData;
         }
         else {
             console.log("You have to select a room!");
@@ -101,8 +113,6 @@ const AddReservation = (props) => {
 
         reservationData.booked_from = data.arrival + "T12:00:00";
         reservationData.booked_to = data.departure + "T12:00:00";
-        reservationData.adults = data.adults;
-        reservationData.kids = data.kids;
         reservationData.confirmation = parseInt(data.confirmation);
         return reservationData;
     }
@@ -111,6 +121,7 @@ const AddReservation = (props) => {
         let calendarApi = props.calendar.current.getApi();
         axios.post(props.url + 'reservation', reservationData)
             .then((data) => {
+                setLoading(false);
                 console.log(data.response);
                 setRoomAvailable([]);
                 setInfo("Successfully saved the reservation.")
@@ -135,6 +146,7 @@ const AddReservation = (props) => {
     }
 
     const onSubmit = (data) => {
+        setLoading(true);
         console.log(data);
         data = removeEmptyFields(data);
         let userdata = create_userdata(data);
@@ -153,6 +165,7 @@ const AddReservation = (props) => {
 
             })
             .catch((error) => {
+                setLoading(false);
                 setInfo("Error by creating the user.")
                 console.log(error);
                 setInfoColor("red");
@@ -224,28 +237,6 @@ const AddReservation = (props) => {
                                     error={errors.departure ? true : false}
                                     helperText={errors.departure?.message}
                                     onChange={handleDepartureDate}
-                                    inputRef={register} />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    label="Adults"
-                                    type="number"
-                                    variant="outlined"
-                                    name="adults"
-                                    error={errors.adults ? true : false}
-                                    helperText={errors.adults?.message}
-                                    fullWidth
-                                    inputRef={register} />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    label="Kids"
-                                    type="number"
-                                    variant="outlined"
-                                    name="kids"
-                                    error={errors.kids ? true : false}
-                                    helperText={errors.kids?.message}
-                                    fullWidth
                                     inputRef={register} />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -396,7 +387,7 @@ const AddReservation = (props) => {
                             </ReactHookFormSelect>
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <FormGroup column>
+                            {/* <FormGroup column>
                                 {roomAvailable.map((room, index) => {
                                     return (
                                         <FormControlLabel
@@ -406,11 +397,48 @@ const AddReservation = (props) => {
                                         />
                                     )
                                 })}
-                                <AddRoomToReservationControllers roomAvailable={roomAvailable} />
+
+                            </FormGroup> */}
+                            <FormGroup>
+                                <List
+                                    aria-labelledby="joeee-booking-reservation-room-list-subheader"
+                                    subheader={
+                                        <ListSubheader component="div" id="joeee-booking-reservation-room-list-subheader">
+                                            <strong>Available rooms in the selected period:</strong>
+                                        </ListSubheader>
+                                    }
+                                >
+                                    {roomAvailable.map((room, index) => {
+                                        return (
+                                            <ListItem key={index} divider>
+                                                <div className="joeee-booking-add-room-to-reservation-label"><strong>Room: {room.number}</strong></div>
+                                                <TextField
+                                                    label={"Adults" + " (" + "max.: " + room.adults + ")"}
+                                                    type="number"
+                                                    InputLabelProps={{ shrink: true, }}
+                                                    name={"roomadults[" + room.id + "]"}
+                                                    variant="outlined"
+                                                    inputProps={{ min: 0, max: room.adults }}
+                                                    inputRef={register}
+                                                />
+                                                <TextField
+                                                    label={"Kids" + " (" + "max.: " + room.kids + ")"}
+                                                    type="number"
+                                                    InputLabelProps={{ shrink: true, }}
+                                                    name={"roomkids[" + room.id + "]"}
+                                                    variant="outlined"
+                                                    inputProps={{ min: 0, max: room.kids }}
+                                                    inputRef={register}
+                                                />
+                                            </ListItem>
+                                        )
+                                    })}
+                                </List>
                             </FormGroup>
 
                         </Grid>
                         <p style={{ visibility: showInfo, color: infoColor }}>{info}</p>
+                        {loading && <CircularProgress />}
 
 
 

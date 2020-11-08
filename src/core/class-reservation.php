@@ -119,7 +119,7 @@ if (!class_exists(Reservation::class)) {
         {
             global $wpdb;
 
-            if (count($data['room_id']) == 0) {
+            if (count($data['room_data']) == 0) {
                 return new WP_Error('joeee_booking_reservation_error', esc_html__('You have to give me a room id!', 'joeee-booking'), array('status' => 400));
             }
             if (count($data['person_id']) == 0) {
@@ -128,7 +128,11 @@ if (!class_exists(Reservation::class)) {
 
             $booker_id = $data['person_id'][0];
             $booker = $wpdb->get_row("SELECT * FROM $this->table_person WHERE id = $booker_id", ARRAY_A);
-            $number_persons = $data['adults'] + $data['kids'];
+            $number_persons = 0;
+            foreach ($data["room_data"] as $room) {
+                $number_persons += $room['adults'] + $room['kids'];
+            }
+            
             $person_ids = $data['person_id'];
             unset($person_ids[0]);
             if (count($data['person_id']) == 1 && $number_persons > 1) {
@@ -142,11 +146,9 @@ if (!class_exists(Reservation::class)) {
             $reservation_data = array(
                 'person_id' => $booker_id,
                 'confirmation' => $data['confirmation'],
-                'adults' => $data['adults'],
-                'kids' => $data['kids'],
             );
 
-            $reservation_check = $wpdb->insert($this->table_reservation, $reservation_data, array('%d', '%d', '%d', '%d'));
+            $reservation_check = $wpdb->insert($this->table_reservation, $reservation_data, array('%d', '%d'));
             if (!$reservation_check) {
                 return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured an error by saving the reservation.', 'joeee-booking'), array('status' => 400));
             }
@@ -154,7 +156,7 @@ if (!class_exists(Reservation::class)) {
             $booked_from = $data['booked_from'];
             $booked_to = $data['booked_to'];
 
-            foreach ($data['room_id'] as $room) {
+            foreach ($data['room_data'] as $room => $occupancy) {
                 $room_price = $wpdb->get_var("SELECT price FROM $this->table_room WHERE id = $room");
                 $room_booked_data = array(
                     'room_id' => $room,
@@ -162,9 +164,11 @@ if (!class_exists(Reservation::class)) {
                     'booked_from' => $booked_from,
                     'booked_to' => $booked_to,
                     'price' => $room_price,
+                    'adults' => $occupancy['adults'],
+                    'kids' => $occupancy['kids'],
                 );
 
-                $room_booked_check = $wpdb->insert($this->table_room_booked, $room_booked_data, array('%d', '%d', '%s', '%s', '%f'));
+                $room_booked_check = $wpdb->insert($this->table_room_booked, $room_booked_data, array('%d', '%d', '%s', '%s', '%f', '%d', '%d'));
 
                 if (!$room_booked_check) {
                     $this->resetDatabaseAfterError($reservation_id);
@@ -408,7 +412,7 @@ if (!class_exists(Reservation::class)) {
         public function getRoomReservation($reservation_id, $room_id)
         {
             global $wpdb;
-            $sql = "SELECT p.id, u.user_email, p.first_name, p.last_name, p.gender, p.birth, p.nationality, a.tin, a.street, a.zip, a.city, a.country, rb.room_id, rb.reservation_id, rb.booked_from, rb.booked_to, r.confirmation, r.adults, r.kids FROM $this->table_reservation r
+            $sql = "SELECT p.id, u.user_email, p.first_name, p.last_name, p.gender, p.birth, p.nationality, a.tin, a.street, a.zip, a.city, a.country, rb.room_id, rb.reservation_id, rb.booked_from, rb.booked_to, r.confirmation, rb.adults, rb.kids FROM $this->table_reservation r
             JOIN $this->table_room_booked rb on rb.reservation_id = r.id
             JOIN $this->table_person p on p.id = r.person_id
             JOIN $this->table_address a on a.id = p.id
@@ -433,7 +437,7 @@ if (!class_exists(Reservation::class)) {
         public function getReservation($id)
         {
             global $wpdb;
-            $sql = "SELECT p.id, u.user_email, p.first_name, p.last_name, p.gender, p.birth, p.nationality, a.tin, a.street, a.zip, a.city, a.country, rb.room_id, rb.reservation_id, rb.booked_from, rb.booked_to FROM $this->table_reservation r
+            $sql = "SELECT p.id, u.user_email, p.first_name, p.last_name, p.gender, p.birth, p.nationality, a.tin, a.street, a.zip, a.city, a.country, rb.room_id, rb.reservation_id, rb.booked_from, rb.booked_to, rb.adults, rb.kids FROM $this->table_reservation r
             JOIN $this->table_room_booked rb on rb.reservation_id = r.id
             JOIN $this->table_person p on p.id = r.person_id
             JOIN $this->table_address a on a.id = p.id
@@ -448,7 +452,7 @@ if (!class_exists(Reservation::class)) {
         {
             global $wpdb;
 
-            $sql = "SELECT rb.reservation_id, rb.room_id, rb.booked_from, rb.booked_to, r.confirmation, p.first_name, p.last_name, r.adults, r.kids FROM $this->table_room_booked rb
+            $sql = "SELECT rb.reservation_id, rb.room_id, rb.booked_from, rb.booked_to, rb.adults, rb.kids, r.confirmation, p.first_name, p.last_name FROM $this->table_room_booked rb
             JOIN $this->table_reservation r on r.id = rb.reservation_id
             JOIN $this->table_person p on p.id = r.person_id
             WHERE booked_from >= MAKEDATE(YEAR(CURRENT_DATE()),DAYOFYEAR(CURRENT_DATE())-DAYOFMONTH(CURRENT_DATE())+1);";

@@ -93,8 +93,6 @@ if (!class_exists(Activator::class)) {
 				id int(10) NOT NULL AUTO_INCREMENT,
 				person_id int(10) NOT NULL,
 				confirmation tinyint(3),
-				adults tinyint(3),
-				kids tinyint(3),
 				created timestamp,
 				CONSTRAINT reservation_foreign PRIMARY KEY  (id),
 				FOREIGN KEY  (person_id) REFERENCES $table_person (id)
