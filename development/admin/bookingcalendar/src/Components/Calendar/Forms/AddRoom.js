@@ -4,7 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from "yup";
 import axios from "axios";
-import { Button, ButtonGroup, Dialog, DialogContent, DialogActions, FormControlLabel, Grid, DialogTitle, Switch, TextField } from '@material-ui/core';
+import { Button, ButtonGroup, CircularProgress, Dialog, DialogContent, DialogActions, FormControlLabel, Grid, DialogTitle, Switch, TextField } from '@material-ui/core';
 
 const schema = yup.object().shape({
     number: yup.string().required(),
@@ -23,6 +23,7 @@ const AddRoom = (props) => {
     const [info, setInfo] = useState("");
     const [infoColor, setInfoColor] = useState("green");
     const [showInfo, setShowInfo] = useState("hidden");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         let data = props.modifyRoomData;
@@ -34,12 +35,14 @@ const AddRoom = (props) => {
 
     const onSubmit = (data) => {
         console.log(data);
+        setLoading(true);
         data = removeEmptyFields(data);
         let calendarApi = props.calendar.current.getApi();
         console.log(data);
         axios.post(props.url + "room", data)
             .then(function (response) {
                 console.log(response);
+                setLoading(false);
                 setInfo("Successfully saved the room.")
                 setInfoColor("green");
                 setShowInfo("visible");
@@ -53,6 +56,7 @@ const AddRoom = (props) => {
             })
             .catch(function (error) {
                 console.log(error);
+                setLoading(false);
                 setInfo(error.response.data.message);
                 setInfoColor("red");
                 setShowInfo("visible");
@@ -60,6 +64,7 @@ const AddRoom = (props) => {
     };
 
     const onModify = (data) => {
+        setLoading(true);
         data = removeEmptyFields(data);
         let calendarApi = props.calendar.current.getApi();
         delete data.id;
@@ -67,6 +72,7 @@ const AddRoom = (props) => {
         console.log(data);
         axios.post(props.url + "room/" + props.modifyRoomData.id, data)
             .then(function (response) {
+                setLoading(false);
                 console.log(response);
                 setInfo("Successfully saved the room.")
                 setInfoColor("green");
@@ -80,6 +86,7 @@ const AddRoom = (props) => {
 
             })
             .catch(function (error) {
+                setLoading(false);
                 console.log(error);
                 setInfo(error.response.data.message);
                 setInfoColor("red");
@@ -206,6 +213,7 @@ const AddRoom = (props) => {
                             />
                         </Grid>
                         <Grid item xs={12}>
+                            {loading && <CircularProgress />}
                             <p style={{ visibility: showInfo, color: infoColor }}>{info}</p>
                         </Grid>
                         <Grid item xs={12}>
