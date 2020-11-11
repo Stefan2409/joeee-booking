@@ -20,7 +20,7 @@ class Calendar extends React.Component {
         modifyRoomData: {},
         activeChecked: false,
         modifyReservationData: {},
-        modifyBookedRoomsData: {},
+        modifyBookedRoomsData: [],
     };
 
     calendarRef = React.createRef();
@@ -46,7 +46,7 @@ class Calendar extends React.Component {
         axios.get(this.props.rest_url + 'reservation/' + getReservationData.id)
             .then((reservationData) => {
                 console.log(reservationData);
-                let roomsBooked = {};
+                let roomsBooked = [];
                 reservationData.data.map((data) => {
                     console.log("Room: " + data.room_id + " Kids: " + data.kids + " Adults: " + data.adults);
                     roomsBooked[data.room_id] = { adults: data.adults, kids: data.kids };

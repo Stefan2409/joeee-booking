@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { addDays, format, differenceInDays } from 'date-fns';
+import { addDays, format, differenceInDays, parse } from 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { removeEmptyFields } from '../../Helpers/removeEmptyFields';
 import { useForm } from 'react-hook-form';
@@ -69,8 +69,25 @@ const AddReservation = (props) => {
     }, [arrivalDate, departureDate]);
 
     useEffect(() => {
-        reset(props.modifyReservationData);
+        let fillFormData = props.modifyReservationData;
+        fillFormData.email = props.modifyReservationData.user_email;
+        if (fillFormData.booked_from) {
+            setArrivalDate(Date.parse(fillFormData.booked_from));
+        }
+        if (fillFormData.booked_to) {
+            setDepartureDate(Date.parse(fillFormData.booked_to));
+        }
+
+
+        reset(fillFormData);
+        console.log(fillFormData);
     }, [props.modifyReservationData, reset]);
+
+    useEffect(() => {
+        let bookedRooms = props.modifyBookedRoomsData;
+        setRoomsBooked(bookedRooms);
+        console.log(roomsBooked);
+    }, [props.modifyBookedRoomsData, reset]);
 
     const create_userdata = (data) => {
         let userdata = {};
@@ -206,6 +223,14 @@ const AddReservation = (props) => {
         console.log("Delete Button clicked.");
     }
 
+    const bookedRoomsHelper = () => {
+        roomsBooked.forEach((occupied, room_id) => {
+            return <p>Test</p>;
+        });
+
+
+    }
+
     return (
         <Dialog open={props.show} onClose={props.closeReservationAddHandler} maxWidth="lg" fullWidth area-labelledby="joeee-booking-reservation-form-title">
             <DialogTitle id="joeee-booking-reservation-form-title" >Add Reservation</DialogTitle>
@@ -219,7 +244,7 @@ const AddReservation = (props) => {
                                     format="yyyy-MM-dd"
                                     value={arrivalDate}
                                     label="Arrival"
-                                    minDate={addDays(new Date(), 1)}
+                                    // minDate={addDays(new Date(), 1)} 
                                     name="arrival"
                                     error={errors.arrival ? true : false}
                                     helperText={errors.arrival?.message}
@@ -232,7 +257,7 @@ const AddReservation = (props) => {
                                     format="yyyy-MM-dd"
                                     value={departureDate}
                                     label="Departure"
-                                    minDate={addDays(new Date(), 2)}
+                                    // minDate={addDays(new Date(), 2)}
                                     name="departure"
                                     error={errors.departure ? true : false}
                                     helperText={errors.departure?.message}
@@ -387,18 +412,7 @@ const AddReservation = (props) => {
                             </ReactHookFormSelect>
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            {/* <FormGroup column>
-                                {roomAvailable.map((room, index) => {
-                                    return (
-                                        <FormControlLabel
-                                            control={<Checkbox color="primary" value={room.id} key={room.id} name={"room[" + index + "]"} inputRef={register} />}
-                                            label={room.number}
-                                            key={room.id}
-                                        />
-                                    )
-                                })}
-
-                            </FormGroup> */}
+                            {props.modifyReservation && bookedRoomsHelper()}
                             <FormGroup>
                                 <List
                                     aria-labelledby="joeee-booking-reservation-room-list-subheader"
