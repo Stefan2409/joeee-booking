@@ -1,7 +1,7 @@
-GET  http://localhost/wp-json/joeee-booking/v1/reservation/room HTTP/1.1
+POST  http://localhost/wp-json/joeee-booking/v1/reservation/room HTTP/1.1
 content-type: application/json
 
 {
-    "id": 8,
-    "room_id": 3 
+    "id": 1,
+    "room_id": 2 
 }
