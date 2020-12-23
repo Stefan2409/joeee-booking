@@ -8,7 +8,7 @@
     "@testing-library/user-event": "^12.1.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "4.0.1"
   },
   "scripts": {
     "start": "node ./scripts/start-non-split.js",
@@ -33,7 +33,7 @@
     ]
   },
   "devDependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.0",
     "rewire": "^5.0.0"
   }
 }

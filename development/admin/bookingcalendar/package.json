@@ -18,7 +18,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hook-form": "^6.8.4",
-    "react-scripts": "3.4.3",
+    "react-scripts": "4.0.1",
     "yup": "^0.29.3"
   },
   "scripts": {
@@ -43,6 +43,6 @@
     ]
   },
   "devDependencies": {
-    "axios": "^0.20.0"
+    "axios": "^0.21.0"
   }
 }
