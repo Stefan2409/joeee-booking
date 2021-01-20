@@ -437,7 +437,7 @@ if (!class_exists(Reservation::class)) {
         public function getReservation($id)
         {
             global $wpdb;
-            $sql = "SELECT p.id, u.user_email, p.first_name, p.last_name, p.gender, p.birth, p.nationality, a.tin, a.street, a.zip, a.city, a.country, rb.room_id, rb.reservation_id, rb.booked_from, rb.booked_to, rb.adults, rb.kids FROM $this->table_reservation r
+            $sql = "SELECT r.confirmation, p.id, u.user_email, p.first_name, p.last_name, p.gender, p.birth, p.nationality, a.tin, a.street, a.zip, a.city, a.country, rb.room_id, rb.reservation_id, rb.booked_from, rb.booked_to, rb.adults, rb.kids FROM $this->table_reservation r
             JOIN $this->table_room_booked rb on rb.reservation_id = r.id
             JOIN $this->table_person p on p.id = r.person_id
             JOIN $this->table_address a on a.id = p.id
@@ -455,7 +455,9 @@ if (!class_exists(Reservation::class)) {
             $sql = "SELECT rb.reservation_id, rb.room_id, rb.booked_from, rb.booked_to, rb.adults, rb.kids, r.confirmation, p.first_name, p.last_name FROM $this->table_room_booked rb
             JOIN $this->table_reservation r on r.id = rb.reservation_id
             JOIN $this->table_person p on p.id = r.person_id
-            WHERE booked_from >= MAKEDATE(YEAR(CURRENT_DATE()),DAYOFYEAR(CURRENT_DATE())-DAYOFMONTH(CURRENT_DATE())+1);";
+            WHERE booked_from >= MAKEDATE(YEAR(CURRENT_DATE()) - 1, DAYOFYEAR(CURRENT_DATE()));";
+
+            //MAKEDATE(YEAR(CURRENT_DATE()),DAYOFYEAR(CURRENT_DATE())-DAYOFMONTH(CURRENT_DATE())+1) for 1 month, does not work over the year...
 
             $query_result = $wpdb->get_results($sql);
             $result = array();

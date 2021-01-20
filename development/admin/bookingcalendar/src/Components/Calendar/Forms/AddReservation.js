@@ -9,6 +9,7 @@ import axios from "axios";
 import { Button, ButtonGroup, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, FormControlLabel, FormGroup, Grid, List, ListItem, ListSubheader, TextField, FormControl } from '@material-ui/core';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import ReactHookFormSelect from '../../Helpers/ReactHookFormSelect';
+import BookedRoomList from './BookedRoomList';
 
 
 const schema = yup.object().shape({
@@ -31,7 +32,7 @@ const schema = yup.object().shape({
 
 
 const AddReservation = (props) => {
-    const { register, handleSubmit, reset, errors, control } = useForm({ resolver: yupResolver(schema) });
+    const { register, handleSubmit, reset, errors, control, setValue } = useForm({ resolver: yupResolver(schema) });
     const [roomAvailable, setRoomAvailable] = useState([]);
     const [countries, setCountries] = useState({ "AT": "Austria" });
     const [info, setInfo] = useState("");
@@ -215,8 +216,10 @@ const AddReservation = (props) => {
     }
 
     const onModify = (data) => {
-
+        setLoading(true);
+        data = removeEmptyFields(data);
         console.log(data);
+
     }
 
     const deleteReservation = () => {
@@ -411,6 +414,16 @@ const AddReservation = (props) => {
                                 })}
                             </ReactHookFormSelect>
                         </Grid>
+                        {props.modifyReservation && (
+                            <Grid item xs={12} sm={6}>
+                                <BookedRoomList
+                                    bookedRoomsData={props.modifyBookedRoomsData}
+                                    register={register}
+                                    rooms={props.rooms}
+                                    deleteReservation={deleteReservation}
+                                    setValue={setValue} />
+                            </Grid>
+                        )}
                         <Grid item xs={12} sm={6}>
                             {props.modifyReservation && bookedRoomsHelper()}
                             <FormGroup>
@@ -468,7 +481,6 @@ const AddReservation = (props) => {
                                     <ButtonGroup variant="contained">
                                         <Button color="primary" onClick={handleSubmit(onModify)}>Update</Button>
                                         <Button color="secondary" onClick={resetForm}>Cancel</Button>
-                                        <Button color="secondary" onClick={deleteReservation}>Delete Reservation</Button>
                                     </ButtonGroup>
                                 )}
                             </FormControl>
