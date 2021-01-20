@@ -3,7 +3,7 @@ import { addDays, format, differenceInDays, parse } from 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { removeEmptyFields } from '../../Helpers/removeEmptyFields';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers';
+import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import axios from "axios";
 import { Button, ButtonGroup, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, FormControlLabel, FormGroup, Grid, List, ListItem, ListSubheader, TextField, FormControl } from '@material-ui/core';

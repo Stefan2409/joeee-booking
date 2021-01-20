@@ -8,18 +8,18 @@
     "@fullcalendar/interaction": "^5.3.1",
     "@fullcalendar/react": "^5.3.1",
     "@fullcalendar/resource-timeline": "^5.3.1",
-    "@hookform/resolvers": "^0.1.1",
+    "@hookform/resolvers": "1.x",
     "@material-ui/core": "^4.11.0",
     "@material-ui/pickers": "^3.2.10",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
+    "@testing-library/jest-dom": "5.x",
+    "@testing-library/react": "11.x",
+    "@testing-library/user-event": "12.x",
     "date-fns": "^2.16.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hook-form": "^6.8.4",
     "react-scripts": "4.0.1",
-    "yup": "^0.29.3"
+    "yup": "0.x"
   },
   "scripts": {
     "start": "react-scripts start",

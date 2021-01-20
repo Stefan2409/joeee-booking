@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { removeEmptyFields } from '../../Helpers/removeEmptyFields';
 import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers';
+import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import axios from "axios";
 import { Button, ButtonGroup, CircularProgress, Dialog, DialogContent, DialogActions, FormControlLabel, Grid, DialogTitle, Switch, TextField } from '@material-ui/core';
