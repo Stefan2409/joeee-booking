@@ -1,6 +1,6 @@
 <?php
 
-namespace Joeee_Booking;
+namespace Joeee_Booking\Core;
 
 use Joeee_Booking\Core\Extras as Extras;
 use Joeee_Booking\Core\InternationalizationI18n as Internationalization;

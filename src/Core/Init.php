@@ -6,7 +6,7 @@ use Joeee_Booking\Admin as Admin;
 use Joeee_Booking\Common as Common;
 use Joeee_Booking\Frontend as Frontend;
 use Joeee_Booking\PluginData as PluginData;
-use Joeee_Booking\RestController as RestController;
+use Joeee_Booking\Core\RestController as RestController;
 use Joeee_Booking\Shortcodes as Shortcodes;
 
 // Abort if this file is called directly.
