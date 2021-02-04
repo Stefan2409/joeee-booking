@@ -3,10 +3,11 @@ import './App.css';
 import Calendar from './Components/Calendar/Calendar';
 
 
-function App() {
+function App(props) {
+
   return (
     <div className="joeee-booking-calendar">
-      <Calendar rest_url={process.env.REACT_APP_URL} />
+      <Calendar rest_url={props.rest_url}/>
     </div>
   );
 }

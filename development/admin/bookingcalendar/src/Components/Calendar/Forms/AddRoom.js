@@ -39,7 +39,7 @@ const AddRoom = (props) => {
         data = removeEmptyFields(data);
         let calendarApi = props.calendar.current.getApi();
         console.log(data);
-        axios.post(props.url + "room", data)
+        axios.post("joeee-booking/v1/room", data)
             .then(function (response) {
                 console.log(response);
                 setLoading(false);
@@ -70,7 +70,7 @@ const AddRoom = (props) => {
         delete data.id;
 
         console.log(data);
-        axios.post(props.url + "room/" + props.modifyRoomData.id, data)
+        axios.post("joeee-booking/v1/room/" + props.modifyRoomData.id, data)
             .then(function (response) {
                 setLoading(false);
                 console.log(response);

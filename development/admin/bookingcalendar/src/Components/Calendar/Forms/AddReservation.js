@@ -47,7 +47,7 @@ const AddReservation = (props) => {
     useEffect(() => {
         // We need to check the length otherwise the get request gets triggered infinite times
         if (Object.keys(countries).length === 1) {
-            axios.get(props.url + "country")
+            axios.get("joeee-booking/v1/country")
                 .then((data) => {
                     setCountries(data.data);
                 })
@@ -58,7 +58,7 @@ const AddReservation = (props) => {
         let checkAvailability = {};
         checkAvailability.from = format(arrivalDate, 'yyyy-MM-dd') + " 12:01:00";
         checkAvailability.to = format(departureDate, 'yyyy-MM-dd') + " 11:59:00";
-        axios.post(props.url + 'room/availability', checkAvailability)
+        axios.post('joeee-booking/v1/room/availability', checkAvailability)
             .then((rooms) => {
                 setRoomAvailable(rooms.data);
                 console.log("Sended availability.");
@@ -137,7 +137,7 @@ const AddReservation = (props) => {
 
     const createReservation = (reservationData) => {
         let calendarApi = props.calendar.current.getApi();
-        axios.post(props.url + 'reservation', reservationData)
+        axios.post('joeee-booking/v1/reservation', reservationData)
             .then((data) => {
                 setLoading(false);
                 console.log(data.response);
@@ -176,7 +176,7 @@ const AddReservation = (props) => {
         }
         console.log(reservationData);
 
-        axios.post(props.url + 'user', userdata)
+        axios.post('joeee-booking/v1/user', userdata)
             .then((data) => {
                 reservationData.person_id = data.data.id;
                 createReservation(reservationData);

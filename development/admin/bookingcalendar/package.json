@@ -23,7 +23,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "node ./scripts/build-non-split.js",
+    "postbuild": "cp ./build/static/js/*.js ../../../src/Admin/js && cp ./build/static/css/*.css ../../../src/Admin/css",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -43,6 +44,7 @@
     ]
   },
   "devDependencies": {
-    "axios": "^0.21.0"
+    "axios": "^0.21.0",
+    "rewire": "^5.0.0"
   }
 }

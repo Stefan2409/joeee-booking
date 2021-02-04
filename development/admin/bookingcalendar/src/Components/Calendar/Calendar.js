@@ -25,7 +25,7 @@ class Calendar extends React.Component {
     };
 
     componentDidMount() {
-        axios.get(this.props.rest_url + 'room')
+        axios.get('joeee-booking/v1/room')
             .then((roomData) => {
                 console.log("Fetched room data:");
                 this.setState({ rooms: roomData.data });
@@ -58,7 +58,7 @@ class Calendar extends React.Component {
         getReservationData.room_id = clickInfo.event._def.resourceIds;
         console.log("Reservation ID:");
         console.log(getReservationData.id);
-        axios.get(this.props.rest_url + 'reservation/' + getReservationData.id)
+        axios.get('joeee-booking/v1/reservation/' + getReservationData.id)
             .then((reservationData) => {
                 console.log("Reservation Data from Calendar:");
                 console.log(reservationData);
@@ -81,7 +81,7 @@ class Calendar extends React.Component {
     handleResourceClick = (arg) => {
         arg.el.addEventListener("click", () => {
             console.log(arg.resource.id);
-            axios.get(this.props.rest_url + 'room/' + arg.resource.id)
+            axios.get('joeee-booking/v1/room/' + arg.resource.id)
                 .then((roomInfo) => {
                     console.log(roomInfo.data);
                     if (roomInfo.data.active === "1") {
@@ -142,11 +142,11 @@ class Calendar extends React.Component {
                             }
                         },
                     }}
-                    events={this.props.rest_url + "reservation"}
+                    events={this.props.rest_url + "joeee-booking/v1/reservation"}
                     eventClick={this.handleEventClick}
                     resourceAreaWidth={'12%'}
                     resourceLabelClassNames={['joeee-booking-resource-label']}
-                    resources={this.props.rest_url + "room"}
+                    resources={this.props.rest_url + "joeee-booking/v1/room"}
                     resourceOrder="title"
                     resourceAreaColumns={[
                         {
@@ -169,7 +169,6 @@ class Calendar extends React.Component {
                     show={this.state.showAddRoom}
                     translate='translateY(-100vh)'
                     closeRoomAddHandler={this.closeRoomAddHandler}
-                    url={this.props.rest_url}
                     modifyRoomData={this.state.modifyRoomData}
                     addRoom={this.state.addRoom}
                     modifyRoom={this.state.modifyRoom}
@@ -180,7 +179,6 @@ class Calendar extends React.Component {
                     show={this.state.showAddReservation}
                     translate='translatey(-100vh)'
                     closeReservationAddHandler={this.closeReservationAddHandler}
-                    url={this.props.rest_url}
                     calendar={this.calendarRef}
                     addReservation={this.state.addReservation}
                     modifyReservation={this.state.modifyReservation}
