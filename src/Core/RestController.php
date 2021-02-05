@@ -572,6 +572,7 @@ if (!class_exists(RestController::class)) {
                 array(
                     'methods' => 'POST',
                     'callback' => array($this, 'getAvailability'),
+                    'permission_callback' => array($this, 'checkUsersPermissionPublic'),
                     'args' => array(
                         'from' => array(
                             'type' => 'string',
@@ -730,10 +731,12 @@ if (!class_exists(RestController::class)) {
 
         public function createReservation($request)
         {
+
             $Reservation = new Reservation();
             $data = $request->get_json_params();
+            return $data;
             $result = $Reservation->createReservation($data);
-            return $result;
+
         }
 
         public function modifyReservation($request)
@@ -853,6 +856,11 @@ if (!class_exists(RestController::class)) {
             if (!current_user_can('edit_others_pages')) {
                 return new WP_Error('rest_forbidden', esc_html__("You aren't allowed to go this way.", 'joeee-booking'));
             }
+            return true;
+        }
+
+        public function checkUsersPermissionPublic()
+        {
             return true;
         }
 

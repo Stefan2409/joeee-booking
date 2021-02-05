@@ -6,7 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import axios from 'axios';
 
 
-const restRoute = window.restRoute;
+const restRoute = window.joeeeRest;
 var rest_url = "";
 if (process.env.NODE_ENV === 'development') {
   axios.defaults.baseURL = process.env.REACT_APP_URL;
@@ -19,9 +19,9 @@ else {
 
 ReactDOM.render(
   <React.StrictMode>
-    <App rest_url={rest_url}/>
+    <App rest_url={rest_url} />
   </React.StrictMode>,
-  document.getElementById('joeee-booking-calendar')
+  document.getElementById('joeee-booking-calendar-app')
 );
 
 // If you want your app to work offline and load faster, you can change

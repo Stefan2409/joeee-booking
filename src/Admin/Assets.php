@@ -21,11 +21,7 @@ if (!class_exists(Assets::class)) {
          */
         public function enqueueStyles(): void
         {
-            if (defined('WP_DEBUG') && true === WP_DEBUG) {
-                wp_enqueue_style('joeee-booking', plugin_dir_url(__FILE__) . 'css/style.css', [], PluginData::pluginVersion(), 'all');
-            } else {
-                wp_enqueue_style('joeee-booking', plugin_dir_url(__FILE__) . 'css/style.min.css', [], PluginData::pluginVersion(), 'all');
-            }
+            wp_enqueue_style('joeee-booking', plugin_dir_url(__FILE__) . 'css/bookingcalendar.css', [], PluginData::pluginVersion(), 'all');
         }
 
         /**
@@ -33,11 +29,9 @@ if (!class_exists(Assets::class)) {
          */
         public function enqueueScripts(): void
         {
-            if (defined('WP_DEBUG') && true === WP_DEBUG) {
-                wp_enqueue_script('joeee-booking', plugin_dir_url(__FILE__) . 'js/script.js', ['jquery', 'jquery-ui-autocomplete', 'wp-i18n'], PluginData::pluginVersion(), false);
-            } else {
-                wp_enqueue_script('joeee-booking', plugin_dir_url(__FILE__) . 'js/script.min.js', ['jquery', 'jquery-ui-autocomplete', 'wp-i18n'], PluginData::pluginVersion(), false);
-            }
+            wp_enqueue_script('axios', 'https://unpkg.com/axios/dist/axios.min.js', [], PluginData::pluginVersion(), false);
+            wp_enqueue_script('joeee-booking', plugin_dir_url(__FILE__) . 'js/bookingcalendar.js', ['wp-element', 'wp-i18n', 'axios', 'joeee-booking-map'], PluginData::pluginVersion(), true);
+
             wp_localize_script('joeee-booking', 'joeeeRest', array(
                 'restURL' => rest_url(),
                 'restNonce' => wp_create_nonce('wp_rest'),

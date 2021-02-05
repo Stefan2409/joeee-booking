@@ -3,7 +3,6 @@
 namespace Joeee_Booking\Frontend;
 
 use Joeee_Booking\PluginData as PluginData;
-use WPS\WPS_Hide_Login\Plugin;
 
 // Abort if this file is called directly.
 if (!defined('ABSPATH')) {
@@ -48,7 +47,7 @@ if (!class_exists(Assets::class)) {
                         'restURL' => rest_url(),
                         'loggedIn' => is_user_logged_in(),
                         'restNonce' => wp_create_nonce('wp_rest'),
-                        'frontendPath' => get_site_url(null, "/wp-content/plugins/joeee-booking/src/frontend/"),
+                        'frontendPath' => get_site_url(null, "/wp-content/plugins/joeee-booking/src/Frontend/"),
                         'memberPicture' => get_option('joeee_booking_membersite_picture'),
                     ));
                 }
