@@ -119,7 +119,7 @@ const AddReservation = (props) => {
                     if (data.roomkids[room] === "") {
                         data.roomkids[room] = 0;
                     }
-                    roomData[room] = { adults: parseInt(number), kids: parseInt(data.roomkids[room]) };
+                    roomData[room] = { adults: parseInt(number), kids: parseInt(data.roomkids[room]), room_id: parseInt(room) };
                 }
             });
             reservationData.room_data = roomData;
@@ -221,22 +221,22 @@ const AddReservation = (props) => {
         data = removeEmptyFields(data);
         console.log(data);
         let updatedRooms = {};
-        data.bookedadults.forEach( (element, index) => {
-            updatedRooms[index] = {adults: parseInt(element)};
+        data.bookedadults.forEach((element, index) => {
+            updatedRooms[index] = { adults: parseInt(element) };
         });
 
-        data.bookedkids.forEach( (element, index) => {
-            updatedRooms[index] = {...updatedRooms[index], kids: parseInt(element)};
+        data.bookedkids.forEach((element, index) => {
+            updatedRooms[index] = { ...updatedRooms[index], kids: parseInt(element) };
         });
         console.log(updatedRooms);
 
         let newRooms = {};
-        data.roomadults.forEach( (element, index) => {
-            newRooms[index] = {adults: parseInt(element)};
+        data.roomadults.forEach((element, index) => {
+            newRooms[index] = { adults: parseInt(element) };
         });
 
-        data.roomkids.forEach( (element, index) => {
-            newRooms[index] = {...newRooms[index], kids: parseInt(element)};
+        data.roomkids.forEach((element, index) => {
+            newRooms[index] = { ...newRooms[index], kids: parseInt(element) };
         });
         console.log(newRooms);
 

@@ -132,7 +132,7 @@ if (!class_exists(Reservation::class)) {
             foreach ($data["room_data"] as $room) {
                 $number_persons += $room['adults'] + $room['kids'];
             }
-            
+
             $person_ids = $data['person_id'];
             unset($person_ids[0]);
             if (count($data['person_id']) == 1 && $number_persons > 1) {
@@ -157,9 +157,10 @@ if (!class_exists(Reservation::class)) {
             $booked_to = $data['booked_to'];
 
             foreach ($data['room_data'] as $room => $occupancy) {
-                $room_price = $wpdb->get_var("SELECT price FROM $this->table_room WHERE id = $room");
+                $room_id = $occupancy['room_id'];
+                $room_price = $wpdb->get_var("SELECT price FROM $this->table_room WHERE id = $room_id");
                 $room_booked_data = array(
-                    'room_id' => $room,
+                    'room_id' => $room_id,
                     'reservation_id' => $reservation_id,
                     'booked_from' => $booked_from,
                     'booked_to' => $booked_to,
@@ -348,7 +349,7 @@ if (!class_exists(Reservation::class)) {
         public function getUsersReservations($user_id)
         {
             global $wpdb;
-            $sql = "SELECT res.id, res.confirmation, res.adults, res.kids, book.room_id, book.booked_from, book.booked_to, room.description, room.floor  FROM $this->table_person as p 
+            $sql = "SELECT res.id, res.confirmation, res.adults, res.kids, book.room_id, book.booked_from, book.booked_to, room.description, room.floor  FROM $this->table_person as p
                 INNER JOIN $this->table_reservation as res ON res.person_id = p.id
                 INNER JOIN $this->table_room_booked as book ON res.id = book.reservation_id
                 INNER JOIN $this->table_room as room ON book.room_id = room.id
@@ -378,8 +379,8 @@ if (!class_exists(Reservation::class)) {
                     };
                     $result[$reservation['id']] = array(
                         "confirmation" => $confirm($reservation['confirmation']),
-                        "adults"    => $reservation['adults'],
-                        "kids"      => $reservation['kids'],
+                        "adults" => $reservation['adults'],
+                        "kids" => $reservation['kids'],
                         "booked_from" => str_replace('12:00:00', "", $reservation['booked_from']),
                         "booked_to" => str_replace('12:00:00', "", $reservation['booked_to']),
                         "rooms" => array(

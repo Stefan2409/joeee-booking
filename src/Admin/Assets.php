@@ -30,7 +30,7 @@ if (!class_exists(Assets::class)) {
         public function enqueueScripts(): void
         {
             wp_enqueue_script('axios', 'https://unpkg.com/axios/dist/axios.min.js', [], PluginData::pluginVersion(), false);
-            wp_enqueue_script('joeee-booking', plugin_dir_url(__FILE__) . 'js/bookingcalendar.js', ['wp-element', 'wp-i18n', 'axios', 'joeee-booking-map'], PluginData::pluginVersion(), true);
+            wp_enqueue_script('joeee-booking', plugin_dir_url(__FILE__) . 'js/bookingcalendar.js', ['wp-element', 'wp-i18n', 'axios'], PluginData::pluginVersion(), true);
 
             wp_localize_script('joeee-booking', 'joeeeRest', array(
                 'restURL' => rest_url(),

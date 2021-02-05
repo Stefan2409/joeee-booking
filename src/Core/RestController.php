@@ -731,12 +731,10 @@ if (!class_exists(RestController::class)) {
 
         public function createReservation($request)
         {
-
             $Reservation = new Reservation();
             $data = $request->get_json_params();
-            return $data;
             $result = $Reservation->createReservation($data);
-
+            return $result;
         }
 
         public function modifyReservation($request)
