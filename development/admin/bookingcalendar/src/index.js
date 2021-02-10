@@ -14,6 +14,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 else {
   axios.defaults.baseURL = restRoute.restURL;
+  axios.defaults.headers.common['X-WP-Nonce'] = restRoute.restNonce;
+  axios.defaults.headers.common['content-type'] = 'application/json';
   rest_url = restRoute.restURL;
 }
 

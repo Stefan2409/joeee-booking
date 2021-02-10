@@ -33,6 +33,7 @@ if (!class_exists(AdminMenus::class)) {
 
             $Assets = new Assets();
             $Assets->enqueueScripts();
+            $Assets->enqueueStyles();
         }
 
         /**

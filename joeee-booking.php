@@ -71,6 +71,11 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 // Define Constants
 
+//Start Wonolog logging:
+if (defined('Inpsyde\Wonolog\LOG')) {
+    \Inpsyde\Wonolog\bootstrap();
+}
+
 /**
  * Register Activation and Deactivation Hooks
  * This action is documented in src/core/class-activator.php
@@ -84,4 +89,9 @@ register_activation_hook(__FILE__, [__NAMESPACE__ . '\Core\Activator', 'activate
 register_deactivation_hook(__FILE__, [__NAMESPACE__ . '\Core\Deactivator', 'deactivate']);
 
 // Begin execution of the plugin.
+do_action("wonolog.log.info", [
+    'message' => 'Initialising the joeee-booking plugin...',
+    'channel' => 'DEBUG',
+    'context' => [],
+]);
 (new Bootstrap())->init();

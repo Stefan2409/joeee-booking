@@ -182,10 +182,39 @@ if (!class_exists(User::class)) {
                 }
                 $data['id'] = $wpdb->insert_id;
             }
+
+            $check_capability = 'manage_options';
+            $user_current_log = wp_get_current_user();
+            if (current_user_can($check_capability)) {
+                $user_can = "true";
+            } else {
+                $user_can = "false";
+            }
+            do_action('wonolog.log.info', [
+                'message' => 'The current user can manage options',
+                'channel' => 'DEBUG',
+                'context' => compact('check_capability', 'user_can'),
+            ]);
+            do_action('wonolog.log.info', [
+                'message' => 'The current user is: ',
+                'channel' => 'DEBUG',
+                'context' => compact('user_current_log'),
+            ]);
             // Logs the user in if he isn't a user with user creation privileges.
-            if ($user_id && !current_user_can('upload_files')) {
+            if (!current_user_can("manage_options")) {
+                do_action('wonolog.log.info', [
+                    'message' => 'In if clause by creating the user',
+                    'channel' => 'DEBUG',
+                    'context' => [],
+                ]);
                 $current_user = get_user_by('id', $user_id);
+                wp_set_current_user($user_id);
                 wp_set_auth_cookie($user_id, true, is_ssl());
+                do_action('wonolog.log.info', [
+                    'message' => 'After setting user',
+                    'channel' => 'DEBUG',
+                    'context' => [],
+                ]);
             }
 
             return $data;
