@@ -123,6 +123,8 @@ if (!class_exists(Reservation::class)) {
                 return new WP_Error('joeee_booking_reservation_error', esc_html__('You have to give me a room id!', 'joeee-booking'), array('status' => 400));
             }
             if (count($data['person_id']) == 0) {
+                // $user = new User();
+                
                 return new WP_Error('joeee_booking_reservation_error', esc_html__('You have to give me a user id!', 'joeee-booking'), array('status' => 400));
             }
 

@@ -129,9 +129,9 @@ const AddReservation = (props) => {
             return false;
         }
 
-        reservationData.booked_from = data.arrival + "T12:00:00";
-        reservationData.booked_to = data.departure + "T12:00:00";
-        reservationData.confirmation = parseInt(data.confirmation);
+        // reservationData.booked_from = data.arrival + "T12:00:00";
+        // reservationData.booked_to = data.departure + "T12:00:00";
+        // reservationData.confirmation = parseInt(data.confirmation);
         return reservationData;
     }
 
@@ -167,32 +167,57 @@ const AddReservation = (props) => {
         setLoading(true);
         console.log(data);
         data = removeEmptyFields(data);
-        let userdata = create_userdata(data);
-        userdata = removeEmptyFields(userdata);
-        console.log(userdata);
+        console.log("Data after removing empty fields:");
+        console.log(data);
+        // let userdata = create_userdata(data);
+        // userdata = removeEmptyFields(userdata);
+        // console.log("Userdata: ");
+        // console.log(userdata);
         let reservationData = createReservationData(data);
         if (!reservationData) {
             return;
         }
+        console.log("Reservation Data: ");
         console.log(reservationData);
 
-        axios.post('joeee-booking/v1/user', userdata)
-            .then((data) => {
-                reservationData.person_id = data.data.id;
-                createReservation(reservationData);
+        data.confirmation = parseInt(data.confirmation);
+        data.room_data = reservationData.room_data;
+        delete data.roomadults;
+        delete data.roomkids;
+        data.birth = data.birth + "T12:00:00";
+        data.arrival = data.arrival + "T12:00:00";
+        data.departure = data.departure + "T12:00:00";
 
+        console.log(data);
+        axios.post('joeee-booking/v1/reservation', data)
+            .then((data) => {
+                setLoading(false);
+                console.log("Returned reservation data: ");
+                console.log(data);
             })
             .catch((error) => {
                 setLoading(false);
-                setInfo("Error by creating the user.")
+                setInfo("Error by creating the reservation.");
                 console.log(error);
-                setInfoColor("red");
-                setShowInfo("visible");
 
-                setTimeout(() => {
-                    setShowInfo("hidden");
-                }, 1500);
-            });
+            })
+        // axios.post('joeee-booking/v1/user', userdata)
+        //     .then((data) => {
+        //         reservationData.person_id = data.data.id;
+        //         createReservation(reservationData);
+
+        //     })
+        //     .catch((error) => {
+        //         setLoading(false);
+        //         setInfo("Error by creating the user.")
+        //         console.log(error);
+        //         setInfoColor("red");
+        //         setShowInfo("visible");
+
+        //         setTimeout(() => {
+        //             setShowInfo("hidden");
+        //         }, 1500);
+        //     });
 
     }
 

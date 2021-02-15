@@ -361,20 +361,56 @@ if (!class_exists(RestController::class)) {
                             'items' => array(
                                 'type' => 'number',
                             ),
-                            'required' => true,
                         ),
-                        'booked_from' => array(
+                        'email' => array(
                             'type' => 'string',
-                            'format' => 'date-time',
-                            'required' => true,
+                            'format' => 'email',
                         ),
-                        'booked_to' => array(
+                        'first_name' => array(
                             'type' => 'string',
-                            'format' => 'date-time',
-                            'required' => true,
                         ),
-                        'price' => array(
+                        'last_name' => array(
+                            'type' => 'string',
+                        ),
+                        'gender' => array(
                             'type' => 'number',
+                            'enum' => array(
+                                1,
+                                2,
+                                3,
+                            ),
+                        ),
+                        'birth' => array(
+                            'type' => 'string',
+                            'format' => 'date-time',
+                        ),
+                        'nationality' => array(
+                            'type' => 'string',
+                        ),
+                        'tin' => array(
+                            'type' => 'string',
+                        ),
+                        'street' => array(
+                            'type' => 'string',
+                        ),
+                        'zip' => array(
+                            'type' => 'string',
+                        ),
+                        'city' => array(
+                            'type' => 'string',
+                        ),
+                        'country' => array(
+                            'type' => 'string',
+                        ),
+                        'arrival' => array(
+                            'type' => 'string',
+                            'format' => 'date-time',
+                            'required' => true,
+                        ),
+                        'departure' => array(
+                            'type' => 'string',
+                            'format' => 'date-time',
+                            'required' => true,
                         ),
                         'confirmation' => array(
                             'type' => 'number',
@@ -383,12 +419,6 @@ if (!class_exists(RestController::class)) {
                                 2,
                                 3,
                             ),
-                        ),
-                        'adults' => array(
-                            'type' => 'number',
-                        ),
-                        'kids' => array(
-                            'type' => 'number',
                         ),
                         'extras' => array(
                             'type' => 'object',
