@@ -107,7 +107,7 @@ if (!class_exists(User::class)) {
             $username = "";
             $firstname = $data['first_name'];
             $lastname = $data['last_name'];
-            $birthday = $data['birthday'];
+            $birthday = $data['birth'];
             $nationality = $data['nationality'];
             $tin = $data['tin'];
             $street = $data['street'];
@@ -181,6 +181,8 @@ if (!class_exists(User::class)) {
                     return new WP_Error('joeee-booking-person-error', esc_html__('Error by creating the user.', 'joeee-booking'), array('status' => 400));
                 }
                 $data['id'] = $wpdb->insert_id;
+
+                return $data;
             }
 
             $check_capability = 'manage_options';
