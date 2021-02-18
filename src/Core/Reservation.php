@@ -130,86 +130,86 @@ if (!class_exists(Reservation::class)) {
                 $createdUser = $userClass->createUser($data);
                 if (is_wp_error($createdUser)) {
                     $wpdb->query('ROLLBACK');
-                    return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured an error by creating the new user.', 'joeee-booking'), array('status' => 400));
+                    return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured an error by creating the new user.', 'joeee-booking'), array('status' => 500));
                 }
-            } else {
-                $createdUser = $data['person_id'][0];
+                $data['person_id'] = array($createdUser['id']);
+            } 
+
+            $booker_id = $data['person_id'][0];
+            $booker = $wpdb->get_row("SELECT * FROM $this->table_person WHERE id = $booker_id", ARRAY_A);
+            $number_persons = 0;
+            foreach ($data["room_data"] as $room) {
+                $number_persons += $room['adults'] + $room['kids'];
             }
-            $wpdb->query('ROLLBACK');
-            return $createdUser;
 
-            // $booker_id = $data['person_id'][0];
-            // $booker = $wpdb->get_row("SELECT * FROM $this->table_person WHERE id = $booker_id", ARRAY_A);
-            // $number_persons = 0;
-            // foreach ($data["room_data"] as $room) {
-            //     $number_persons += $room['adults'] + $room['kids'];
-            // }
+            $person_ids = $data['person_id'];
+            unset($person_ids[0]);
+            if (count($data['person_id']) == 1 && $number_persons > 1) {
+                $person_ids = $this->createFellows($number_persons, $booker);
 
-            // $person_ids = $data['person_id'];
-            // unset($person_ids[0]);
-            // if (count($data['person_id']) == 1 && $number_persons > 1) {
-            //     $person_ids = $this->createFellows($number_persons, $booker);
+                if (is_wp_error($person_ids)) {
+                    $wpdb->query('ROLLBACK');
+                    return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured an error by creating the fellows.', 'joeee-booking'), array('status' => 500));;
+                }
+            }
 
-            //     if (is_wp_error($person_ids)) {
-            //         return $person_ids;
-            //     }
-            // }
+            $reservation_data = array(
+                'person_id' => $booker_id,
+                'confirmation' => $data['confirmation'],
+            );
 
-            // $reservation_data = array(
-            //     'person_id' => $booker_id,
-            //     'confirmation' => $data['confirmation'],
-            // );
+            $reservation_check = $wpdb->insert($this->table_reservation, $reservation_data, array('%d', '%d'));
+            if (!$reservation_check) {
+                $wpdb->query('ROLLBACK');
+                return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured an error by saving the reservation.', 'joeee-booking'), array('status' => 400));
+            }
+            $reservation_id = $wpdb->insert_id;
+            $booked_from = $data['arrival'];
+            $booked_to = $data['departure'];
 
-            // $reservation_check = $wpdb->insert($this->table_reservation, $reservation_data, array('%d', '%d'));
-            // if (!$reservation_check) {
-            //     return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured an error by saving the reservation.', 'joeee-booking'), array('status' => 400));
-            // }
-            // $reservation_id = $wpdb->insert_id;
-            // $booked_from = $data['booked_from'];
-            // $booked_to = $data['booked_to'];
+            foreach ($data['room_data'] as $room => $occupancy) {
+                $room_id = $occupancy['room_id'];
+                $room_price = $wpdb->get_var("SELECT price FROM $this->table_room WHERE id = $room_id");
+                $room_booked_data = array(
+                    'room_id' => $room_id,
+                    'reservation_id' => $reservation_id,
+                    'booked_from' => $booked_from,
+                    'booked_to' => $booked_to,
+                    'price' => $room_price,
+                    'adults' => $occupancy['adults'],
+                    'kids' => $occupancy['kids'],
+                );
 
-            // foreach ($data['room_data'] as $room => $occupancy) {
-            //     $room_id = $occupancy['room_id'];
-            //     $room_price = $wpdb->get_var("SELECT price FROM $this->table_room WHERE id = $room_id");
-            //     $room_booked_data = array(
-            //         'room_id' => $room_id,
-            //         'reservation_id' => $reservation_id,
-            //         'booked_from' => $booked_from,
-            //         'booked_to' => $booked_to,
-            //         'price' => $room_price,
-            //         'adults' => $occupancy['adults'],
-            //         'kids' => $occupancy['kids'],
-            //     );
+                $room_booked_check = $wpdb->insert($this->table_room_booked, $room_booked_data, array('%d', '%d', '%s', '%s', '%f', '%d', '%d'));
 
-            //     $room_booked_check = $wpdb->insert($this->table_room_booked, $room_booked_data, array('%d', '%d', '%s', '%s', '%f', '%d', '%d'));
+                if (!$room_booked_check) {
+                    $wpdb->query('ROLLBACK');
+                    return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured an error by saving the reserved room. Please try again!', 'joeee-booking'), array('status' => 500));
+                }
+            }
 
-            //     if (!$room_booked_check) {
-            //         $this->resetDatabaseAfterError($reservation_id);
-            //         return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured an error by saving the reserved room. Please try again!', 'joeee-booking'), array('status' => 400));
-            //     }
-            // }
+            if (isset($person_ids) && $number_persons > 1) {
+                foreach ($person_ids as $fellow) {
+                    $fellow_check = $wpdb->insert($this->table_fellow, array('reservation_id' => $reservation_id, 'person_id' => $fellow), array('%d', '%d'));
+                    if (!$fellow_check) {
+                        $wpdb->query('ROLLBACK');
+                        return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured errors by creating the fellow travelers reservations. Please try again!', 'joeee-booking'), array('status' => 500));
+                    }
+                }
+            }
+            $extras = $data['extras'];
 
-            // if (isset($person_ids) && $number_persons > 1) {
-            //     foreach ($person_ids as $fellow) {
-            //         $fellow_check = $wpdb->insert($this->table_fellow, array('reservation_id' => $reservation_id, 'person_id' => $fellow), array('%d', '%d'));
-            //         if (!$fellow_check) {
-            //             $this->resetDatabaseAfterError($reservation_id);
-            //             return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured errors by creating the fellow travelers reservations. Please try again!', 'joeee-booking'), array('status' => 400));
-            //         }
-            //     }
-            // }
-            // $extras = $data['extras'];
+            if (isset($extras)) {
+                $extras_check = $this->createExtras($extras, $reservation_id);
 
-            // if (isset($extras)) {
-            //     $extras_check = $this->createExtras($extras, $reservation_id);
+                if (is_wp_error($extras_check)) {
+                    $wpdb->query('ROLLBACK');
+                    return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured errors by creating the reservation extras. Please try again!', 'joeee-booking'), array('status' => 500));
+                }
+            }
 
-            //     if (is_wp_error($extras_check)) {
-            //         $this->resetDatabaseAfterError($reservation_id);
-            //         return $extras_check;
-            //     }
-            // }
-
-            // return $data;
+            $wpdb->query('COMMIT');
+            return $data;
         }
 
         public function createReservationFrontend($data)

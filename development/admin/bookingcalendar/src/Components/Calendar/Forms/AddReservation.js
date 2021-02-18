@@ -135,44 +135,12 @@ const AddReservation = (props) => {
         return reservationData;
     }
 
-    const createReservation = (reservationData) => {
-        let calendarApi = props.calendar.current.getApi();
-        axios.post('joeee-booking/v1/reservation', reservationData)
-            .then((data) => {
-                setLoading(false);
-                console.log(data.response);
-                setRoomAvailable([]);
-                setInfo("Successfully saved the reservation.")
-                setInfoColor("green");
-                setShowInfo("visible");
-                calendarApi.refetchEvents();
-                setTimeout(() => {
-                    reset();
-                    setShowInfo("hidden");
-                    props.closeReservationAddHandler();
-                }, 1500);
-            })
-            .catch((error) => {
-                setInfo("Error by saving the reservation!")
-                console.log(error);
-                setInfoColor("red");
-                setShowInfo("visible");
-                setTimeout(() => {
-                    setShowInfo("hidden");
-                }, 2000);
-            })
-    }
-
     const onSubmit = (data) => {
         setLoading(true);
         console.log(data);
         data = removeEmptyFields(data);
         console.log("Data after removing empty fields:");
         console.log(data);
-        // let userdata = create_userdata(data);
-        // userdata = removeEmptyFields(userdata);
-        // console.log("Userdata: ");
-        // console.log(userdata);
         let reservationData = createReservationData(data);
         if (!reservationData) {
             return;
@@ -191,9 +159,19 @@ const AddReservation = (props) => {
         console.log(data);
         axios.post('joeee-booking/v1/reservation', data)
             .then((data) => {
+                let calendarApi = props.calendar.current.getApi();
                 setLoading(false);
-                console.log("Returned reservation data: ");
-                console.log(data);
+                console.log(data.response);
+                setRoomAvailable([]);
+                setInfo("Successfully saved the reservation.")
+                setInfoColor("green");
+                setShowInfo("visible");
+                calendarApi.refetchEvents();
+                setTimeout(() => {
+                    reset();
+                    setShowInfo("hidden");
+                    props.closeReservationAddHandler();
+                }, 1500);
             })
             .catch((error) => {
                 setLoading(false);
@@ -201,24 +179,6 @@ const AddReservation = (props) => {
                 console.log(error);
 
             })
-        // axios.post('joeee-booking/v1/user', userdata)
-        //     .then((data) => {
-        //         reservationData.person_id = data.data.id;
-        //         createReservation(reservationData);
-
-        //     })
-        //     .catch((error) => {
-        //         setLoading(false);
-        //         setInfo("Error by creating the user.")
-        //         console.log(error);
-        //         setInfoColor("red");
-        //         setShowInfo("visible");
-
-        //         setTimeout(() => {
-        //             setShowInfo("hidden");
-        //         }, 1500);
-        //     });
-
     }
 
     const resetForm = (e) => {
