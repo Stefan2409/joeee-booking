@@ -118,10 +118,10 @@ if (!class_exists(User::class)) {
             if (isset($data['email'])) {
                 $email = $data['email'];
             } else {
-                $email = "";
+                $data['email'] = "";
             }
 
-            $user_id = email_exists($email);
+            $user_id = email_exists($data['email']);
 
             if ($user_id !== false && !current_user_can('manage_options')) {
                 return new WP_Error("joeee-booking-user-error", esc_html__("A user with the E-Mail: $email already exists.", 'joeee-booking'), array('status' => 400));

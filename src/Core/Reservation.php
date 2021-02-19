@@ -133,7 +133,7 @@ if (!class_exists(Reservation::class)) {
                     return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured an error by creating the new user.', 'joeee-booking'), array('status' => 500));
                 }
                 $data['person_id'] = array($createdUser['id']);
-            } 
+            }
 
             $booker_id = $data['person_id'][0];
             $booker = $wpdb->get_row("SELECT * FROM $this->table_person WHERE id = $booker_id", ARRAY_A);
@@ -149,7 +149,7 @@ if (!class_exists(Reservation::class)) {
 
                 if (is_wp_error($person_ids)) {
                     $wpdb->query('ROLLBACK');
-                    return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured an error by creating the fellows.', 'joeee-booking'), array('status' => 500));;
+                    return new WP_Error('joeee_booking_reservation_error', esc_html__('There occured an error by creating the fellows.', 'joeee-booking'), array('status' => 500));
                 }
             }
 
